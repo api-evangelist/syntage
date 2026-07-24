@@ -1,0 +1,1161 @@
+openapi: 3.0.2
+info:
+  version: '2020-06-28'
+  title: Syntage Accounts Payable Insight Entities API
+  contact:
+    name: Email
+    email: support@syntage.com
+  description: "# Introduction\n\nThe Syntage API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer).\nOur API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns [JSON-LD](https://json-ld.org) responses, and uses standard HTTP response codes, authentication, and verbs.\n\n# Environments\n\n| Name | Description | Base URL |\n|------|-------------|----------|\n| **Sandbox** | The Sandbox environment is dedicated to development and testing. In this environment, no real taxpayer credentials are required and all interaction with the SAT is simulated generating life-like data, allowing you to pull test data from all endpoints. | https://api.sandbox.syntage.com |\n| **Production** | The Production environment is dedicated to live applications with real connections to the SAT. In this environment, real taxpayer credentials are required, and you will pull real fiscal data directly from the SAT. | https://api.syntage.com |\n\nEach environment has a different API Key for [authentication](#section/Authentication).\n\n# Request IDs\n\nEach API request has an associated request identifier.\nYou can find this value in the response headers, under `X-Request-ID`:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-Request-ID: Root=1-6532dcae-169bf139354cd48959f55c55\n```\n\nIf you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution.\n\n# Rate Limiting\n\nOur API employs a number of safeguards against bursts of incoming traffic to help maximize its stability.\nThe returned HTTP headers of any API request show your current rate limit status:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 56\nX-RateLimit-Reset: 1606678044\n```\n\n| Header Name           | Description |\n|-----------------------|------------------------------------------------------------------------------|\n| X-RateLimit-Limit     | The maximum number of requests you're permitted to make.                     |\n| X-RateLimit-Remaining | The number of requests remaining in the current rate limit window.           |\n| X-RateLimit-Reset     | The time at which the current rate limit window resets in UTC epoch seconds. |\n\nIf you exceed the rate limit, a [429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) response is returned:\n\n```http\nHTTP/1.1 429 Too Many Requests\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1606678044\n```\n\nWe may reduce limits to prevent abuse, or increase limits to enable high-traffic operations.\nYou can check your current limits in the [dashboard](https://app.syntage.com/settings/usage).\nTo request an increased rate limit, please [contact support](https://support.syntage.com/).\n# Pagination\nWhen issuing a GET request on a collection containing more than 1 page (e.g. [/events](#operation/ListEvent)),  a collection is returned. Links to the first, the last, previous and the next page in the collection are displayed as well as the  number of total items in the collection.\nAll endpoints that support this operation have a query parameter defined by:\n  - `itemsPerPage` The number of items per page (default: 20, max: 1000)\n  - `page` The collection page number\n\n```bash\n  \"hydra:totalItems\": 1,\n  \"hydra:view\": {\n    \"@id\": \"/events?page=1\",\n    \"@type\": \"hydra:PartialCollectionView\",\n    \"hydra:first\": \"/events?page=1\",\n    \"hydra:next\": \"/events?page=2\",\n    \"hydra:last\": \"/events?page=3\"\n  },\n```\n## Cursor Pagination\nCursor pagination is a technique used for navigating through large datasets efficiently. It allows you to retrieve a specific subset of results from a collection by using a cursor value that represents the position within the collection. The cursor serves as a reference point for fetching the next or previous set of results.\n### Benefits of Cursor Pagination:\n1. **Efficient Navigation:** Cursor pagination eliminates the need to fetch the entire dataset at once, making it more scalable and faster. You can retrieve data in smaller, manageable chunks based on the cursor values.\n2. **Consistent Results:** Each page of results in cursor pagination is stable and doesn't change even if new items are added or removed from the collection. This ensures that you get consistent and reliable results.\n3. **Flexibility:** Cursors can be used to navigate forwards and backwards in the collection without impacting performance.\n\n### How to Use Cursor Pagination:\nTo use cursor pagination with our API, follow these instructions:\n1. Make a request to retrieve the initial page of results. The response will be a JSON-LD document that includes a `hydra:next` attribute with the URI for the next page. The URI already includes the cursor attribute.\n2. To retrieve the next page of results, make a GET request to the URI provided in the `hydra:next` attribute. This URI will automatically include the cursor value for the next page.\n3. If you want to navigate to the previous page, you can use the `hydra:previous` attribute in the JSON-LD response. It will contain the URI for the previous page, including the cursor value.\n4. You can continue making requests to the `hydra:next` and `hydra:previous` URIs to navigate through the paginated results, based on your requirements.\nMake sure to update your request headers to include the necessary headers for JSON-LD content negotiation, such as `Accept: application/ld+json` or `Content-Type: application/ld+json`.\nBy following these instructions, you can effectively navigate through the paginated results using the cursor values provided in the `hydra:next` and `hydra:previous` attributes, without the need to manually include the cursor in your requests. This simplifies the pagination process and enhances the usability of our API.\n\n### Considerations About Cursor Pagination:\n\n  - By default, the API uses offset-based pagination (except for a few endpoints that we will list below). If you want to switch to cursor pagination, you need to include an additional header in your request. Set the `X-Pagination-Style` header with the value `\"cursor\"` to enable cursor pagination. If not specified, the API will assume offset-based pagination.\n\n  - After enabling cursor pagination, the API response will no longer include the `hydra:totalItems` field by default. Retrieving the total count can be resource intensive and impact response times, especially for large datasets. However, if you need the `hydra:totalItems` information, you can include an additional header in your request. Set the `X-Pagination-Enable-Partial` header with the value `0` to indicate that the response should include extra information, including the `hydra:totalItems` count. Please be aware that enabling this feature may impact API response times, as the backend needs to perform a count operation on the dataset.\n\nIf you require the `hydra:totalItems` count, please consider the potential impact on API response times.\n### Example\n```bash\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices?itemsPerPage=10' \\\n    --header 'Accept: application/ld+json' \\\n    --header 'X-Api-Key: {apiKey}' \\\n    --header 'X-Pagination-Style: cursor' \\\n    --header 'X-Pagination-Enable-Partial: 0'\n```\n**Note:** We only support cursor pagination for the following endpoints:\n - `GET /entities/{entityId}/invoices`\n - `GET /entities/{entityId}/invoices/line-items`\n - `GET /entities/{entityId}/invoices/{invoiceId}/line-items`\n - `GET /invoices/{invoiceId}/line-items`\n - `GET /entities/{entityId}/invoices/payments`\n\nFeel free to reach out if you have any further questions or need additional assistance!\n\n# Property Filtering\nThe property filter adds the possibility to select the properties for GET operations.\nSyntax: `?properties[]=<property>&properties[<relation>][]=<property>`\nYou can add as many properties as you need. The following example shows how to select `paymentType` and  `issuer.rfc` when fetching a list of invoices.\n```curl\n  curl -i https://api.syntage.com/entities/{entityId}/invoices?properties[]=paymentType&properties[issuer]=rfc\n```\n# Filtering\n**Warning:** Collection endpoints only apply the filter query parameters documented for that endpoint. If you send an unsupported or misspelled filter query parameter, the API ignores it and processes the request as if that parameter was not sent.\n\n# API Versioning Guide\nGuidance on changes between versions.\n## Version: 2020-01-01 to 2020-06-28\n### **Invoice**\n_**Affected Endpoints:** `GET /invoices/{id}` and `GET /entities/{entityId}/invoices`_\n- The `amount` property has been removed from API responses. Use the `total` property instead.\n- Retrieval by invoice's `uuid` at `/invoices/{id}` is now removed. To retrieve an invoice, use the invoice's `id` at the specified endpoint. To find an invoice using its `uuid`, filter the invoice collection at `/entities/{entityId}/invoices?uuid[]={uuid}`.\n- Previously, the `@iri` property for an invoice pointed to the resource using `uuid`, like `/invoices/{uuid}`. Now, it points using its `id`, like `/invoices/{id}`.\n\n### **Entity (Formerly Link)**\n_**Affected Endpoint:** `GET /entities`_\n- Filtering entities by `status` is removed. Use `credential.status` instead. For example, utilize `GET /entities?credential.status[]=active` instead of `GET /entities?status[]=active`.\n\n### **Tax Return**\n_**Affected Endpoints:** `GET /tax-returns/{id}` and `GET /entities/{entityId}/tax-returns`_\n- Retrieval by tax return's `operationNumber` at `/tax-returns/{id}` is removed. To retrieve a tax return, use the tax return's `id` at the mentioned endpoint. To find a tax return using its `operationNumber`, filter the collection at `/entities/{entityId}/tax-returns?operationNumber[]={operationNumber}`.\n- Previously, the `@iri` property for a tax return pointed to the resource using `operationNumber`, like `/tax-returns/{operationNumber}`. Now, it directs to its `id`, like `/tax-returns/{id}`.\n\n### **Event**\n_**Affected Endpoints:** `GET /events` and `GET /events/{id}`_\n- For events associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}` instead of the previous `/tax-returns/{operationNumber}`.\n- For events associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}` instead of the previous `/invoices/{uuid}`.\n\n### **Extraction**\n_**Affected Endpoints:** `GET /extractions` and `GET /extractions/{id}`_\n- The `periodFrom` property has been removed. Use `options.period.from` instead.\n- The `periodTo` property has been removed. Use `options.period.to` instead.\n\n### **File**\n_**Affected Endpoint:** `GET /file/{id}`_\n- For files associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}`, instead of the previous `/tax-returns/{operationNumber}`.\n- For files associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}`, instead of the previous `/invoices/{uuid}`.\n\n### Trying Out This Version\nIf you want to test this version, you can do so by making any request with the `Accept-Version` header pointing to the latest version:\n```curl\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices' \\\n    --header 'Accept-Version: 2020-06-28' \\\n    --header 'X-Api-Key: {apiKey}'\n```\n"
+servers:
+- url: https://api.syntage.com
+  description: Production
+- url: https://api.sandbox.syntage.com
+  description: Sandbox
+security:
+- ApiKey: []
+tags:
+- name: Entities
+  description: 'An Entity is a resource that represents a person or company. Entities can be added via Add Entity, or automatically when a credential is validated (when the status becomes "valid"). This resource controls your access to data and allows you to create new extractions. When an Entity is deleted, all data related to the entity is deleted as well.
+
+    '
+paths:
+  /entities:
+    get:
+      tags:
+      - Entities
+      operationId: ListEntity
+      summary: List all entities
+      description: List entities in your organization and filter by RFC, name, person type, or dates.
+      parameters:
+      - name: taxpayer.id
+        in: query
+        description: Filter by RFC (Registro Federal de Contribuyentes, partial match)
+        schema:
+          type: string
+          minLength: 12
+          maxLength: 13
+          example: PEIC211118IS0
+      - name: taxpayer.name
+        in: query
+        description: Filter by taxpayer name (partial match)
+        example: Pedro Infante
+        schema:
+          $ref: '#/components/schemas/TaxpayerName'
+      - name: taxpayer.personType
+        in: query
+        description: Filter by taxpayer type (exact match)
+        schema:
+          $ref: '#/components/schemas/TaxpayerPersonType'
+      - name: taxpayer.registrationDate[before]
+        in: query
+        description: Filter by taxpayer registration date (less than or equal `<=`)
+        example: '2020-01-17 11:47:27'
+        schema:
+          type: string
+          format: date-time
+      - name: taxpayer.registrationDate[strictly_before]
+        in: query
+        description: Filter by taxpayer registration date (less than `<`)
+        example: '2020-01-17 11:47:27'
+        schema:
+          type: string
+          format: date-time
+      - name: taxpayer.registrationDate[after]
+        in: query
+        description: Filter by taxpayer registration date (greater than or equal `>=`)
+        example: '2020-01-17 11:47:27'
+        schema:
+          type: string
+          format: date-time
+      - name: taxpayer.registrationDate[strictly_after]
+        in: query
+        description: Filter by taxpayer registration date (greater than `>`)
+        example: '2020-01-17 11:47:27'
+        schema:
+          type: string
+          format: date-time
+      - $ref: '#/components/parameters/createdAtBefore'
+      - $ref: '#/components/parameters/createdAtStrictlyBefore'
+      - $ref: '#/components/parameters/createdAtAfter'
+      - $ref: '#/components/parameters/createdAtStrictlyAfter'
+      - $ref: '#/components/parameters/updatedAtBefore'
+      - $ref: '#/components/parameters/updatedAtStrictlyBefore'
+      - $ref: '#/components/parameters/updatedAtAfter'
+      - $ref: '#/components/parameters/updatedAtStrictlyAfter'
+      - $ref: '#/components/parameters/orderCreatedAt'
+      - $ref: '#/components/parameters/orderUpdatedAt'
+      - $ref: '#/components/parameters/collectionCursorNextPageParam'
+      - $ref: '#/components/parameters/collectionCursorPreviousPageParam'
+      - $ref: '#/components/parameters/collectionLimit'
+      responses:
+        '200':
+          $ref: '#/components/responses/EntityCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+      - Entities
+      operationId: AddEntity
+      summary: Add an Entity
+      description: 'Add an entity to your organization.
+
+
+        If `datasources` contains one or more datasources, Syntage creates first-time extractions for the selected datasources. When a selected datasource has first-time scheduler rules, those rules determine which extractors and options are used. For selected datasources not covered by first-time scheduler rules, Syntage creates first-time extractions for the datasource''s available extractors using the options from the request, or the extractor defaults.
+
+
+        Omit `datasources` or send an empty array to create the entity without starting extractions.
+
+        '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - type
+              properties:
+                name:
+                  type: string
+                  writeOnly: true
+                  description: Entity name
+                  example: Syntage
+                rfc:
+                  type: string
+                  writeOnly: true
+                  description: Entity RFC if known; if it is not input here, extractions that require the RFC wait until the entity provides the RFC
+                  example: XAXX010101000
+                type:
+                  type: string
+                  writeOnly: true
+                  description: Entity type, either company or person
+                  example: company
+                  enum:
+                  - company
+                  - person
+                datasources:
+                  type: array
+                  writeOnly: true
+                  description: Datasources to extract for the new entity
+                  example: null
+                  items:
+                    type: object
+                    required:
+                    - name
+                    properties:
+                      name:
+                        $ref: '#/components/schemas/DatasourceName'
+                      options:
+                        type: object
+                        description: Datasource options; these mirror extraction options
+                identifiers:
+                  type: array
+                  writeOnly: true
+                  description: Optional country-specific identifiers to add to the entity
+                  items:
+                    $ref: '#/components/schemas/EntityIdentifierCreateInput'
+      responses:
+        '201':
+          description: Add entity resource response
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                required:
+                - id
+                - name
+                properties:
+                  '@context':
+                    type: string
+                    default: /contexts/EntityAddedResponse
+                  id:
+                    type: string
+                    example: 5c7c3ac7-5c49-49f4-be0a-7824bfcf3060
+                  name:
+                    type: string
+                    example: Syntage
+                  rfc:
+                    type: string
+                    example: XAXX010101000
+                  onboardingUrl:
+                    type: string
+                    example: https://onboarding.syntage.com/onboarding/018f3f8f-4538-7bbb-b432-9e97e34a564a
+                    description: Onboarding URL returned when adding the entity requires input from the entity
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /entities/{entityId}:
+    get:
+      tags:
+      - Entities
+      operationId: GetEntity
+      summary: Retrieve an Entity
+      description: Retrieve a single entity by ID, including taxpayer, credential, and tag information when available.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Entity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Entities
+      operationId: UpdateEntity
+      summary: Update an Entity
+      description: Update an entity. Sending `tags` replaces the entity's existing tag assignments with the provided collection.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      requestBody:
+        $ref: '#/components/requestBodies/EntityUpdate'
+      responses:
+        '200':
+          $ref: '#/components/responses/Entity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags:
+      - Entities
+      summary: Delete an Entity
+      operationId: DeleteEntity
+      description: Delete an entity and the data associated with that entity.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      responses:
+        '204':
+          description: Entity resource deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /entities/batch/tags:
+    post:
+      tags:
+      - Entities
+      operationId: TagEntitiesBatch
+      summary: Tag multiple entities
+      description: 'Add one or more tags to up to 100 entities in a single request. Tag IRIs are accepted in both the `/entity-tags/{id}` and `/link-tags/{id}` forms.
+
+
+        The operation is atomic: if any entity or tag in the request cannot be found, no entity is modified. Tags an entity already has are kept as-is, so retrying the same request is safe.
+
+        '
+      requestBody:
+        $ref: '#/components/requestBodies/TagEntitiesBatch'
+      responses:
+        '201':
+          $ref: '#/components/responses/TagEntitiesBatch'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: An entity or tag in the request was not found
+        '422':
+          description: Validation error, e.g. empty lists or more than 100 entities / 50 tags
+  /entities/batch/tags/remove:
+    post:
+      tags:
+      - Entities
+      operationId: UntagEntitiesBatch
+      summary: Untag multiple entities
+      description: 'Remove one or more tags from up to 100 entities in a single request. Tag IRIs are accepted in both the `/entity-tags/{id}` and `/link-tags/{id}` forms.
+
+
+        The operation is atomic: if any entity or tag in the request cannot be found, no entity is modified. Tags an entity does not have are ignored, so retrying the same request is safe.
+
+        '
+      requestBody:
+        $ref: '#/components/requestBodies/TagEntitiesBatch'
+      responses:
+        '201':
+          $ref: '#/components/responses/TagEntitiesBatch'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: An entity or tag in the request was not found
+        '422':
+          description: Validation error, e.g. empty lists or more than 100 entities / 50 tags
+  /entities/{entityId}/tags:
+    get:
+      tags:
+      - Entities
+      operationId: ListEntityTags
+      summary: List an entity's tags
+      description: List the tags assigned to a specific entity.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      - $ref: '#/components/parameters/collectionCursorNextPageParam'
+      - $ref: '#/components/parameters/collectionCursorPreviousPageParam'
+      - $ref: '#/components/parameters/collectionLimit'
+      responses:
+        '200':
+          $ref: '#/components/responses/EntityTagCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /entities/{entityId}/identifiers:
+    get:
+      tags:
+      - Entities
+      operationId: ListEntityIdentifiers
+      summary: List an entity's identifiers
+      description: List country-specific identifiers for an entity, such as RFC or CURP for Mexico.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      responses:
+        '200':
+          $ref: '#/components/responses/EntityIdentifierCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - Entities
+      operationId: AddEntityIdentifier
+      summary: Add an entity identifier
+      description: Add a country-specific identifier to an entity.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      requestBody:
+        $ref: '#/components/requestBodies/EntityIdentifierCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/EntityIdentifier'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /entity-tags:
+    get:
+      tags:
+      - Entities
+      operationId: ListAllEntityTags
+      summary: List all entity tags
+      description: List entity tags that can be assigned to entities.
+      parameters:
+      - $ref: '#/components/parameters/collectionCursorNextPageParam'
+      - $ref: '#/components/parameters/collectionCursorPreviousPageParam'
+      - $ref: '#/components/parameters/collectionLimit'
+      responses:
+        '200':
+          $ref: '#/components/responses/EntityTagCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+      - Entities
+      operationId: CreateEntityTag
+      summary: Create an entity tag
+      description: 'Create a tag that can be assigned to entities. The created tag is returned with an `/entity-tags/{id}` IRI.
+
+        '
+      requestBody:
+        $ref: '#/components/requestBodies/EntityTagCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/EntityTag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /entity-tags/{id}:
+    get:
+      tags:
+      - Entities
+      operationId: GetEntityTag
+      summary: Retrieve an entity tag
+      description: Retrieve a single entity tag by ID.
+      parameters:
+      - $ref: '#/components/parameters/resourceId'
+      responses:
+        '200':
+          $ref: '#/components/responses/EntityTag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Entities
+      operationId: UpdateEntityTag
+      summary: Update an entity tag
+      description: Update the display name for an entity tag.
+      parameters:
+      - $ref: '#/components/parameters/resourceId'
+      requestBody:
+        $ref: '#/components/requestBodies/EntityTagUpdate'
+      responses:
+        '200':
+          $ref: '#/components/responses/EntityTag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags:
+      - Entities
+      summary: Delete an entity tag
+      operationId: DeleteEntityTag
+      description: Delete an entity tag.
+      parameters:
+      - $ref: '#/components/parameters/resourceId'
+      responses:
+        '204':
+          description: Entity tag resource deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
+      in: query
+      description: Filter by resource creation date (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
+      in: query
+      description: Filter by resource creation date (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    createdAtBefore:
+      name: createdAt[before]
+      in: query
+      description: Filter by resource creation date (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtStrictlyAfter:
+      name: updatedAt[strictly_after]
+      in: query
+      description: Filter by the date the resource was last updated (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    updatedAtStrictlyBefore:
+      name: updatedAt[strictly_before]
+      in: query
+      description: Filter by the date the resource was last updated (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtAfter:
+      name: updatedAt[after]
+      in: query
+      description: Filter by the date the resource was last updated (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtBefore:
+      name: updatedAt[before]
+      in: query
+      description: Filter by the date the resource was last updated (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    createdAtAfter:
+      name: createdAt[after]
+      in: query
+      description: Filter by resource creation date (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    TagEntitiesBatchInput:
+      type: object
+      required:
+      - resources
+      - tags
+      properties:
+        resources:
+          type: array
+          writeOnly: true
+          description: Entities to tag or untag, as IRI references
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+            format: iri-reference
+          example:
+          - /entities/91106968-1abd-4d64-85c1-4e73d96fb997
+        tags:
+          type: array
+          writeOnly: true
+          description: Entity tags to add or remove, as IRI references
+          minItems: 1
+          maxItems: 50
+          items:
+            type: string
+            format: iri-reference
+          example:
+          - /entity-tags/018d9dd9-459f-768e-bc55-a8a72d0d3e9a
+    EntityCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/Entity
+          '@id':
+            default: /entities
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/Entity'
+    TaxpayerPersonType:
+      type: string
+      enum:
+      - physical
+      - legal
+      example: physical
+    Entity:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Entity IRI reference
+          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type; Entity resources currently use the legacy `Link` JSON-LD type for backwards compatibility
+          default: Link
+        id:
+          $ref: '#/components/schemas/uuid'
+        type:
+          $ref: '#/components/schemas/EntityType'
+        taxpayer:
+          $ref: '#/components/schemas/Taxpayer'
+        credential:
+          $ref: '#/components/schemas/Credential'
+        tags:
+          $ref: '#/components/schemas/EntityTagCollection'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    EntityTagUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          writeOnly: true
+          description: Entity tag name
+          example: Priority Entity
+        color:
+          type: string
+          writeOnly: true
+          description: Optional display color as a 7-character hexadecimal string (`#RRGGBB`). Send `null` to clear the color and fall back to the default.
+          example: '#22c558'
+          nullable: true
+    EntityIdentifierCreateInput:
+      type: object
+      required:
+      - country
+      - identifier
+      - value
+      properties:
+        country:
+          type: string
+          description: Country that issued the identifier
+          enum:
+          - mx
+          writeOnly: true
+          example: mx
+        identifier:
+          type: string
+          description: Kind of identifier to add to the entity
+          enum:
+          - curp
+          - rfc
+          writeOnly: true
+          example: rfc
+        value:
+          type: string
+          writeOnly: true
+          description: Identifier value
+          example: XAXX010101000
+    Collection:
+      allOf:
+      - $ref: '#/components/schemas/HydraView'
+      - type: object
+        properties:
+          hydra:search:
+            type: object
+            properties:
+              '@type':
+                type: string
+              hydra:template:
+                type: string
+              hydra:variableRepresentation:
+                type: string
+              hydra:mapping:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                    variable:
+                      type: string
+                    property:
+                      type: string
+                    required:
+                      type: boolean
+    DatasourceName:
+      type: string
+      enum:
+      - sat
+      - buro_de_credito
+      - rpc
+      - rug
+      - bil
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    Credential:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: SAT Credential IRI reference
+          example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          default: Credential
+        id:
+          type: string
+          format: uuid
+          description: Credential ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          $ref: '#/components/schemas/CredentialType'
+        rfc:
+          $ref: '#/components/schemas/TaxpayerID'
+        status:
+          $ref: '#/components/schemas/CredentialStatus'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    EntityTagCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntityTag'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    EntityType:
+      type: string
+      enum:
+      - company
+      - person
+      description: Type of entity
+      example: company
+    EntityTagCreateInput:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          writeOnly: true
+          description: Entity tag name
+          example: Priority Entity
+        color:
+          type: string
+          writeOnly: true
+          description: Optional display color as a 7-character hexadecimal string (`#RRGGBB`). Omit or send `null` to fall back to the default color.
+          example: '#22c558'
+          nullable: true
+    EntityIdentifier:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Entity identifier IRI reference
+          example: /.well-known/genid/78c595ac88fa9659fa80
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: EntityIdentifier
+        id:
+          $ref: '#/components/schemas/uuid'
+        link:
+          type: string
+          format: iri-reference
+          description: Entity IRI reference
+          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997
+        country:
+          type: string
+          description: Country that issued the identifier
+          enum:
+          - mx
+          example: mx
+        identifier:
+          type: string
+          description: Kind of identifier for the entity
+          enum:
+          - curp
+          - rfc
+          example: rfc
+        value:
+          type: string
+          description: Identifier value
+          example: XAXX010101000
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    TagEntitiesBatch:
+      type: object
+      properties:
+        resources:
+          type: array
+          description: IDs of the entities the operation was applied to
+          items:
+            type: string
+            format: uuid
+        tags:
+          type: array
+          description: IDs of the entity tags added or removed
+          items:
+            type: string
+            format: uuid
+    Taxpayer:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Taxpayer IRI reference
+          example: /taxpayers/PEIC211118IS0
+        '@type':
+          type: string
+          default: Taxpayer
+        id:
+          $ref: '#/components/schemas/TaxpayerID'
+        personType:
+          $ref: '#/components/schemas/TaxpayerPersonType'
+        registrationDate:
+          type: string
+          format: date
+          description: Taxpayer registration date
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    CredentialType:
+      type: string
+      enum:
+      - ciec
+      - efirma
+      example: ciec
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
+    CredentialStatus:
+      type: string
+      enum:
+      - waiting
+      - pending
+      - valid
+      - invalid
+      - disabled
+      - deactivated
+      - error
+      x-enumDeprecated:
+        deactivated: Legacy status retained for existing records. The `disabled` status is used for credentials that can no longer be used.
+      description: 'Credential validation status:
+
+
+        | Value | Description |
+
+        | --- | --- |
+
+        | `waiting` | Credential validation is temporarily disabled, usually because of an ongoing incident. The credential will be validated later. |
+
+        | `pending` | Credential validation has been requested and is waiting to be processed. |
+
+        | `valid` | The credential was accepted by SAT and can be used for extractions. |
+
+        | `invalid` | SAT rejected the credential during validation. |
+
+        | `disabled` | SAT reported the credential as disabled or otherwise unrecoverable during validation. |
+
+        | `deactivated` | **Deprecated.** Legacy status retained for existing records. The `disabled` status is used for credentials that can no longer be used. |
+
+        | `error` | Credential validation failed because of an unexpected error. |
+
+        '
+      example: pending
+    EntityTag:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Entity Tag IRI reference
+          example: /entity-tags/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: EntityTag
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+          description: Display name for the entity tag
+          example: Priority Entity
+          nullable: false
+        color:
+          type: string
+          description: Lowercase 7-character hexadecimal color used to display the tag (`#RRGGBB`). Defaults to `#a3aab5` when an entity tag is created without a color.
+          example: '#22c558'
+          nullable: true
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    HydraView:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:totalItems:
+          type: integer
+          description: Total number of items found
+          minimum: 0
+          example: 1
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:first:
+              type: string
+              format: iri-reference
+              description: First page IRI reference; omitted when there is no pagination
+            hydra:next:
+              type: string
+              format: iri-reference
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              format: iri-reference
+              description: Last page IRI reference; omitted when there is no pagination
+    EntityIdentifierCollection:
+      allOf:
+      - $ref: '#/components/schemas/Collection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/EntityIdentifier
+          '@id':
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/identifiers
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/EntityIdentifier'
+    EntityUpdateInput:
+      properties:
+        tags:
+          type: array
+          writeOnly: true
+          description: Tags to associate with the entity; sending this key replaces the existing tag collection
+          items:
+            type: string
+            format: iri-reference
+          example:
+          - /entity-tags/91106968-1abd-4d64-85c1-4e73d96fb997
+        name:
+          type: string
+          writeOnly: true
+          description: Entity name
+          example: Syntage
+  responses:
+    EntityCollection:
+      description: Entity collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityCollection'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    EntityIdentifierCollection:
+      description: Entity identifier collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityIdentifierCollection'
+    TagEntitiesBatch:
+      description: Result of a batch entity tag operation
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/TagEntitiesBatch'
+    EntityTag:
+      description: Entity tag resource response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityTag'
+    Entity:
+      description: Entity resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Entity
+            - $ref: '#/components/schemas/Entity'
+    EntityIdentifier:
+      description: Entity identifier resource response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityIdentifier'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    EntityTagCollection:
+      description: Entity tag collection response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/CursorCollection'
+            - type: object
+              properties:
+                '@context':
+                  default: /contexts/LinkTag
+                '@id':
+                  example: /entity-tags
+                hydra:member:
+                  items:
+                    $ref: '#/components/schemas/EntityTag'
+  requestBodies:
+    TagEntitiesBatch:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TagEntitiesBatchInput'
+    EntityUpdate:
+      required: true
+      content:
+        application/merge-patch+json:
+          schema:
+            $ref: '#/components/schemas/EntityUpdateInput'
+    EntityTagUpdate:
+      required: true
+      content:
+        application/merge-patch+json:
+          schema:
+            $ref: '#/components/schemas/EntityTagUpdateInput'
+    EntityIdentifierCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EntityIdentifierCreateInput'
+    EntityTagCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EntityTagCreateInput'
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'Your API key is available in the [Production](https://app.syntage.com/settings/api-keys) and [Sandbox](https://app.sandbox.syntage.com/settings/api-keys) dashboards.
+
+        '
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

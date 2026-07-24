@@ -1,0 +1,944 @@
+openapi: 3.0.2
+info:
+  version: '2020-06-28'
+  title: Syntage Accounts Payable Insight DS MX SAT Tax Retentions API
+  contact:
+    name: Email
+    email: support@syntage.com
+  description: "# Introduction\n\nThe Syntage API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer).\nOur API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns [JSON-LD](https://json-ld.org) responses, and uses standard HTTP response codes, authentication, and verbs.\n\n# Environments\n\n| Name | Description | Base URL |\n|------|-------------|----------|\n| **Sandbox** | The Sandbox environment is dedicated to development and testing. In this environment, no real taxpayer credentials are required and all interaction with the SAT is simulated generating life-like data, allowing you to pull test data from all endpoints. | https://api.sandbox.syntage.com |\n| **Production** | The Production environment is dedicated to live applications with real connections to the SAT. In this environment, real taxpayer credentials are required, and you will pull real fiscal data directly from the SAT. | https://api.syntage.com |\n\nEach environment has a different API Key for [authentication](#section/Authentication).\n\n# Request IDs\n\nEach API request has an associated request identifier.\nYou can find this value in the response headers, under `X-Request-ID`:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-Request-ID: Root=1-6532dcae-169bf139354cd48959f55c55\n```\n\nIf you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution.\n\n# Rate Limiting\n\nOur API employs a number of safeguards against bursts of incoming traffic to help maximize its stability.\nThe returned HTTP headers of any API request show your current rate limit status:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 56\nX-RateLimit-Reset: 1606678044\n```\n\n| Header Name           | Description |\n|-----------------------|------------------------------------------------------------------------------|\n| X-RateLimit-Limit     | The maximum number of requests you're permitted to make.                     |\n| X-RateLimit-Remaining | The number of requests remaining in the current rate limit window.           |\n| X-RateLimit-Reset     | The time at which the current rate limit window resets in UTC epoch seconds. |\n\nIf you exceed the rate limit, a [429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) response is returned:\n\n```http\nHTTP/1.1 429 Too Many Requests\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1606678044\n```\n\nWe may reduce limits to prevent abuse, or increase limits to enable high-traffic operations.\nYou can check your current limits in the [dashboard](https://app.syntage.com/settings/usage).\nTo request an increased rate limit, please [contact support](https://support.syntage.com/).\n# Pagination\nWhen issuing a GET request on a collection containing more than 1 page (e.g. [/events](#operation/ListEvent)),  a collection is returned. Links to the first, the last, previous and the next page in the collection are displayed as well as the  number of total items in the collection.\nAll endpoints that support this operation have a query parameter defined by:\n  - `itemsPerPage` The number of items per page (default: 20, max: 1000)\n  - `page` The collection page number\n\n```bash\n  \"hydra:totalItems\": 1,\n  \"hydra:view\": {\n    \"@id\": \"/events?page=1\",\n    \"@type\": \"hydra:PartialCollectionView\",\n    \"hydra:first\": \"/events?page=1\",\n    \"hydra:next\": \"/events?page=2\",\n    \"hydra:last\": \"/events?page=3\"\n  },\n```\n## Cursor Pagination\nCursor pagination is a technique used for navigating through large datasets efficiently. It allows you to retrieve a specific subset of results from a collection by using a cursor value that represents the position within the collection. The cursor serves as a reference point for fetching the next or previous set of results.\n### Benefits of Cursor Pagination:\n1. **Efficient Navigation:** Cursor pagination eliminates the need to fetch the entire dataset at once, making it more scalable and faster. You can retrieve data in smaller, manageable chunks based on the cursor values.\n2. **Consistent Results:** Each page of results in cursor pagination is stable and doesn't change even if new items are added or removed from the collection. This ensures that you get consistent and reliable results.\n3. **Flexibility:** Cursors can be used to navigate forwards and backwards in the collection without impacting performance.\n\n### How to Use Cursor Pagination:\nTo use cursor pagination with our API, follow these instructions:\n1. Make a request to retrieve the initial page of results. The response will be a JSON-LD document that includes a `hydra:next` attribute with the URI for the next page. The URI already includes the cursor attribute.\n2. To retrieve the next page of results, make a GET request to the URI provided in the `hydra:next` attribute. This URI will automatically include the cursor value for the next page.\n3. If you want to navigate to the previous page, you can use the `hydra:previous` attribute in the JSON-LD response. It will contain the URI for the previous page, including the cursor value.\n4. You can continue making requests to the `hydra:next` and `hydra:previous` URIs to navigate through the paginated results, based on your requirements.\nMake sure to update your request headers to include the necessary headers for JSON-LD content negotiation, such as `Accept: application/ld+json` or `Content-Type: application/ld+json`.\nBy following these instructions, you can effectively navigate through the paginated results using the cursor values provided in the `hydra:next` and `hydra:previous` attributes, without the need to manually include the cursor in your requests. This simplifies the pagination process and enhances the usability of our API.\n\n### Considerations About Cursor Pagination:\n\n  - By default, the API uses offset-based pagination (except for a few endpoints that we will list below). If you want to switch to cursor pagination, you need to include an additional header in your request. Set the `X-Pagination-Style` header with the value `\"cursor\"` to enable cursor pagination. If not specified, the API will assume offset-based pagination.\n\n  - After enabling cursor pagination, the API response will no longer include the `hydra:totalItems` field by default. Retrieving the total count can be resource intensive and impact response times, especially for large datasets. However, if you need the `hydra:totalItems` information, you can include an additional header in your request. Set the `X-Pagination-Enable-Partial` header with the value `0` to indicate that the response should include extra information, including the `hydra:totalItems` count. Please be aware that enabling this feature may impact API response times, as the backend needs to perform a count operation on the dataset.\n\nIf you require the `hydra:totalItems` count, please consider the potential impact on API response times.\n### Example\n```bash\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices?itemsPerPage=10' \\\n    --header 'Accept: application/ld+json' \\\n    --header 'X-Api-Key: {apiKey}' \\\n    --header 'X-Pagination-Style: cursor' \\\n    --header 'X-Pagination-Enable-Partial: 0'\n```\n**Note:** We only support cursor pagination for the following endpoints:\n - `GET /entities/{entityId}/invoices`\n - `GET /entities/{entityId}/invoices/line-items`\n - `GET /entities/{entityId}/invoices/{invoiceId}/line-items`\n - `GET /invoices/{invoiceId}/line-items`\n - `GET /entities/{entityId}/invoices/payments`\n\nFeel free to reach out if you have any further questions or need additional assistance!\n\n# Property Filtering\nThe property filter adds the possibility to select the properties for GET operations.\nSyntax: `?properties[]=<property>&properties[<relation>][]=<property>`\nYou can add as many properties as you need. The following example shows how to select `paymentType` and  `issuer.rfc` when fetching a list of invoices.\n```curl\n  curl -i https://api.syntage.com/entities/{entityId}/invoices?properties[]=paymentType&properties[issuer]=rfc\n```\n# Filtering\n**Warning:** Collection endpoints only apply the filter query parameters documented for that endpoint. If you send an unsupported or misspelled filter query parameter, the API ignores it and processes the request as if that parameter was not sent.\n\n# API Versioning Guide\nGuidance on changes between versions.\n## Version: 2020-01-01 to 2020-06-28\n### **Invoice**\n_**Affected Endpoints:** `GET /invoices/{id}` and `GET /entities/{entityId}/invoices`_\n- The `amount` property has been removed from API responses. Use the `total` property instead.\n- Retrieval by invoice's `uuid` at `/invoices/{id}` is now removed. To retrieve an invoice, use the invoice's `id` at the specified endpoint. To find an invoice using its `uuid`, filter the invoice collection at `/entities/{entityId}/invoices?uuid[]={uuid}`.\n- Previously, the `@iri` property for an invoice pointed to the resource using `uuid`, like `/invoices/{uuid}`. Now, it points using its `id`, like `/invoices/{id}`.\n\n### **Entity (Formerly Link)**\n_**Affected Endpoint:** `GET /entities`_\n- Filtering entities by `status` is removed. Use `credential.status` instead. For example, utilize `GET /entities?credential.status[]=active` instead of `GET /entities?status[]=active`.\n\n### **Tax Return**\n_**Affected Endpoints:** `GET /tax-returns/{id}` and `GET /entities/{entityId}/tax-returns`_\n- Retrieval by tax return's `operationNumber` at `/tax-returns/{id}` is removed. To retrieve a tax return, use the tax return's `id` at the mentioned endpoint. To find a tax return using its `operationNumber`, filter the collection at `/entities/{entityId}/tax-returns?operationNumber[]={operationNumber}`.\n- Previously, the `@iri` property for a tax return pointed to the resource using `operationNumber`, like `/tax-returns/{operationNumber}`. Now, it directs to its `id`, like `/tax-returns/{id}`.\n\n### **Event**\n_**Affected Endpoints:** `GET /events` and `GET /events/{id}`_\n- For events associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}` instead of the previous `/tax-returns/{operationNumber}`.\n- For events associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}` instead of the previous `/invoices/{uuid}`.\n\n### **Extraction**\n_**Affected Endpoints:** `GET /extractions` and `GET /extractions/{id}`_\n- The `periodFrom` property has been removed. Use `options.period.from` instead.\n- The `periodTo` property has been removed. Use `options.period.to` instead.\n\n### **File**\n_**Affected Endpoint:** `GET /file/{id}`_\n- For files associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}`, instead of the previous `/tax-returns/{operationNumber}`.\n- For files associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}`, instead of the previous `/invoices/{uuid}`.\n\n### Trying Out This Version\nIf you want to test this version, you can do so by making any request with the `Accept-Version` header pointing to the latest version:\n```curl\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices' \\\n    --header 'Accept-Version: 2020-06-28' \\\n    --header 'X-Api-Key: {apiKey}'\n```\n"
+servers:
+- url: https://api.syntage.com
+  description: Production
+- url: https://api.sandbox.syntage.com
+  description: Sandbox
+security:
+- ApiKey: []
+tags:
+- name: DS MX SAT Tax Retentions
+paths:
+  /tax-retentions/{id}:
+    get:
+      tags:
+      - DS MX SAT Tax Retentions
+      summary: Retrieve a tax retention
+      operationId: GetTaxRetention
+      description: 'Retrieve a tax retention by ID, including issuer, receiver, retained taxes, fiscal period, totals, and file availability.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/resourceId'
+      responses:
+        '200':
+          $ref: '#/components/responses/TaxRetention'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /tax-retentions/{id}/cfdi:
+    get:
+      tags:
+      - DS MX SAT Tax Retentions
+      operationId: GetTaxRetentionCFDI
+      summary: Retrieve a tax retention CFDI
+      description: 'Retrieve the tax retention CFDI in the requested format.
+
+
+        By default, this endpoint returns the CFDI parsed from XML to JSON. Set `Accept: text/xml` to retrieve the original XML file, or `Accept: application/pdf` to retrieve the PDF representation when one is available.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/invoiceId'
+      - name: Accept
+        in: header
+        schema:
+          type: string
+          description: 'This header controls the output format:
+
+            - **text/xml:** Original XML file
+
+            - **application/pdf:** Original PDF file (XML''s visual representation)
+
+            - **application/json:** Original XML file converted to JSON
+
+            '
+          enum:
+          - text/xml
+          - application/pdf
+          - application/json
+          default: application/json
+      responses:
+        '200':
+          $ref: '#/components/responses/TaxRetentionCFDI'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /entities/{entityId}/tax-retentions:
+    get:
+      tags:
+      - DS MX SAT Tax Retentions
+      operationId: ListTaxpayerTaxRetention
+      summary: List an entity's tax retentions
+      description: 'List tax retentions extracted for an entity.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      - name: uuid
+        in: query
+        description: Filter by UUID/Folio Fiscal (exact match)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionUUID'
+      - name: version
+        in: query
+        description: Filter by CFDI version (exact match)
+        example: 1
+        schema:
+          $ref: '#/components/schemas/TaxRetentionVersion'
+      - name: internalIdentifier
+        in: query
+        description: Internal identifier (exact match)
+        example: 1495494
+        schema:
+          $ref: '#/components/schemas/TaxRetentionInternalIdentifier'
+      - name: pac
+        in: query
+        description: Filter by certification provider (partial match)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPac'
+      - name: code
+        in: query
+        description: Filter by code (exact match)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCode'
+      - name: issuer.rfc
+        in: query
+        example: AOM920820BEA
+        description: Filter by issuer RFC (partial match)
+        schema:
+          $ref: '#/components/schemas/TaxpayerID'
+      - name: issuer.name
+        in: query
+        description: Filter by issuer name (partial match)
+        example: Apple
+        schema:
+          $ref: '#/components/schemas/TaxpayerName'
+      - name: issuer.curp
+        in: query
+        description: Filter by issuer CURP (partial match)
+        example: APPL91021XXXXXXXXX
+        schema:
+          $ref: '#/components/schemas/TaxpayerCurp'
+      - name: receiver.rfc
+        in: query
+        description: Filter by receiver RFC (partial match)
+        schema:
+          $ref: '#/components/schemas/TaxpayerID'
+      - name: receiver.name
+        in: query
+        description: Filter by receiver name (partial match)
+        example: Pedro
+        schema:
+          $ref: '#/components/schemas/TaxpayerName'
+      - name: receiver.curp
+        in: query
+        description: Filter by receiver CURP (partial match)
+        example: PESL9127XXXXXXXXXX
+        schema:
+          $ref: '#/components/schemas/TaxpayerCurp'
+      - name: receiver.nationality
+        in: query
+        description: Filter by receiver nationality (exact match)
+        example: foreign
+        schema:
+          $ref: '#/components/schemas/TaxpayerNationality'
+      - name: totalOperationAmount[between]
+        in: query
+        description: Filter by total operation amount between two values
+        example: 12.99..15.99
+        schema:
+          type: string
+      - name: totalOperationAmount[gt]
+        in: query
+        description: Filter by total operation amount (greater than `>`)
+        example: 12.99
+        schema:
+          type: number
+      - name: totalOperationAmount[gte]
+        in: query
+        description: Filter by total operation amount (greater than or equal `>=`)
+        example: 12.99
+        schema:
+          type: number
+      - name: totalOperationAmount[lt]
+        in: query
+        description: Filter by total operation amount (less than `<`)
+        example: 15.99
+        schema:
+          type: number
+      - name: totalOperationAmount[lte]
+        in: query
+        description: Filter by total operation amount (less than or equal `<=`)
+        example: 15.99
+        schema:
+          type: number
+      - name: totalTaxableAmount[between]
+        in: query
+        description: Filter by total taxable amount between two values
+        example: 12.99..15.99
+        schema:
+          type: string
+      - name: totalTaxableAmount[gt]
+        in: query
+        description: Filter by total taxable amount (greater than `>`)
+        example: 12.99
+        schema:
+          type: number
+      - name: totalTaxableAmount[gte]
+        in: query
+        description: Filter by total taxable amount (greater than or equal `>=`)
+        example: 12.99
+        schema:
+          type: number
+      - name: totalTaxableAmount[lt]
+        in: query
+        description: Filter by total taxable amount (less than `<`)
+        example: 15.99
+        schema:
+          type: number
+      - name: totalTaxableAmount[lte]
+        in: query
+        description: Filter by total taxable amount (less than or equal `<=`)
+        example: 15.99
+        schema:
+          type: number
+      - name: totalExemptAmount[between]
+        in: query
+        description: Filter by total exempt amount between two values
+        example: 12.99..15.99
+        schema:
+          type: string
+      - name: totalExemptAmount[gt]
+        in: query
+        description: Filter by total exempt amount (greater than `>`)
+        example: 12.99
+        schema:
+          type: number
+      - name: totalExemptAmount[gte]
+        in: query
+        description: Filter by total exempt amount (greater than or equal `>=`)
+        example: 12.99
+        schema:
+          type: number
+      - name: totalExemptAmount[lt]
+        in: query
+        description: Filter by total exempt amount (less than `<`)
+        example: 15.99
+        schema:
+          type: number
+      - name: totalExemptAmount[lte]
+        in: query
+        description: Filter by total exempt amount (less than or equal `<=`)
+        example: 15.99
+        schema:
+          type: number
+      - name: totalRetainedAmount[between]
+        in: query
+        description: Filter by total retained amount between two values
+        example: 12.99..15.99
+        schema:
+          type: string
+      - name: totalRetainedAmount[gt]
+        in: query
+        description: Filter by total retained amount (greater than `>`)
+        example: 12.99
+        schema:
+          type: number
+      - name: totalRetainedAmount[gte]
+        in: query
+        description: Filter by total retained amount (greater than or equal `>=`)
+        example: 12.99
+        schema:
+          type: number
+      - name: totalRetainedAmount[lt]
+        in: query
+        description: Filter by total retained amount (less than `<`)
+        example: 15.99
+        schema:
+          type: number
+      - name: totalRetainedAmount[lte]
+        in: query
+        description: Filter by total retained amount (less than or equal `<=`)
+        example: 15.99
+        schema:
+          type: number
+      - name: issuedAt[before]
+        in: query
+        description: Filter by issue date (less than or equal `<=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionIssuedAt'
+      - name: issuedAt[strictly_before]
+        in: query
+        description: Filter by issue date (less than `<`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionIssuedAt'
+      - name: issuedAt[after]
+        in: query
+        description: Filter by issue date (greater than or equal `>=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionIssuedAt'
+      - name: issuedAt[strictly_after]
+        in: query
+        description: Filter by issue date (greater than `>`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionIssuedAt'
+      - name: canceledAt[before]
+        in: query
+        description: Filter by cancellation date (less than or equal `<=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCanceledAt'
+      - name: canceledAt[strictly_before]
+        in: query
+        description: Filter by cancellation date (less than `<`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCanceledAt'
+      - name: canceledAt[after]
+        in: query
+        description: Filter by cancellation date (greater than or equal `>=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCanceledAt'
+      - name: canceledAt[strictly_after]
+        in: query
+        description: Filter by cancellation date (greater than `>`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCanceledAt'
+      - name: certifiedAt[before]
+        in: query
+        description: Filter by certification date (less than or equal `<=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCertifiedAt'
+      - name: certifiedAt[strictly_before]
+        in: query
+        description: Filter by certification date (less than `<`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCertifiedAt'
+      - name: certifiedAt[after]
+        in: query
+        description: Filter by certification date (greater than or equal `>=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCertifiedAt'
+      - name: certifiedAt[strictly_after]
+        in: query
+        description: Filter by certification date (greater than `>`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionCertifiedAt'
+      - name: periodFrom[before]
+        in: query
+        description: Filter by "period from" date (less than or equal `<=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPeriodFrom'
+      - name: periodFrom[strictly_before]
+        in: query
+        description: Filter by "period from" date (less than `<`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPeriodFrom'
+      - name: periodFrom[after]
+        in: query
+        description: Filter by "period from" date (greater than or equal `>=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPeriodFrom'
+      - name: periodFrom[strictly_after]
+        in: query
+        description: Filter by "period from" date (greater than `>`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPeriodFrom'
+      - name: periodTo[before]
+        in: query
+        description: Filter by "period to" date (less than or equal `<=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPeriodTo'
+      - name: periodTo[strictly_before]
+        in: query
+        description: Filter by "period to" date (less than `<`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPeriodTo'
+      - name: periodTo[after]
+        in: query
+        description: Filter by "period to" date (greater than or equal `>=`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPeriodTo'
+      - name: periodTo[strictly_after]
+        in: query
+        description: Filter by "period to" date (greater than `>`)
+        schema:
+          $ref: '#/components/schemas/TaxRetentionPeriodTo'
+      - name: hasXml
+        in: query
+        description: Filter by tax retentions that have the CFDI available in XML format
+        example: true
+        schema:
+          $ref: '#/components/schemas/TaxRetentionHasXML'
+      - name: hasPdf
+        in: query
+        description: Filter by tax retentions that have the CFDI available in PDF format
+        example: true
+        schema:
+          $ref: '#/components/schemas/TaxRetentionHasPDF'
+      - name: order[issuedAt]
+        in: query
+        description: Order by issue date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[canceledAt]
+        in: query
+        description: Order by cancellation date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[certifiedAt]
+        in: query
+        description: Order by certification date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[periodFrom]
+        in: query
+        description: Order by "period from" date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[periodTo]
+        in: query
+        description: Order by "period to" date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[totalOperationAmount]
+        in: query
+        description: Order by total operation amount date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[totalTaxableAmount]
+        in: query
+        description: Order by total taxable amount date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[totalExemptAmount]
+        in: query
+        description: Order by total exempt amount date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[totalRetainedAmount]
+        in: query
+        description: Order by total retained amount date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - $ref: '#/components/parameters/collectionCursorNextPageParam'
+      - $ref: '#/components/parameters/collectionCursorPreviousPageParam'
+      - $ref: '#/components/parameters/collectionLimit'
+      responses:
+        '200':
+          $ref: '#/components/responses/TaxpayerTaxRetentionCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    TaxpayerCurp:
+      type: string
+      minLength: 18
+      maxLength: 18
+      description: Unique Population Registry Code (CURP)
+      example: PEIC123456ABCDEF12
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    TaxRetentionDescription:
+      type: string
+      example: Información referente a la fiduciaria
+      description: Retention type description when `code` is `25` (other retention types)
+      nullable: true
+    TaxRetentionInternalIdentifier:
+      type: string
+      description: An open field for internal identification. Commonly used to identify a tax retention
+      maxLength: 40
+      nullable: true
+      example: '00001'
+    TaxpayerTaxRetentionCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/TaxRetention
+          '@id':
+            default: /entities/{entityId}/tax-retentions
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/tax-retentions
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/TaxRetention'
+    TaxRetentionHasPDF:
+      type: boolean
+      description: '`true` when the CFDI is available in the PDF format. The file can be downloaded through the [retrieve a tax retention CFDI](#operation/GetTaxRetentionCFDI) operation
+
+        '
+    TaxRetentionReceiver:
+      type: object
+      properties:
+        rfc:
+          $ref: '#/components/schemas/TaxpayerID'
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+        nationality:
+          $ref: '#/components/schemas/TaxpayerNationality'
+        curp:
+          $ref: '#/components/schemas/TaxpayerCurp'
+    TaxRetentionTotalExemptAmount:
+      type: number
+      format: float
+      description: Exempt amount
+      example: 1000.8
+    TaxRetentionPeriodFrom:
+      type: string
+      format: date-time
+      description: Start date for the tax retention period
+      nullable: true
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    TaxRetentionItem:
+      type: object
+      properties:
+        baseAmount:
+          type: number
+          format: float
+          description: Tax base amount for this retained tax item
+          example: 45905
+        taxType:
+          type: string
+          description: SAT tax type code
+          example: '002'
+        retainedAmount:
+          type: number
+          format: float
+          description: Amount retained for this tax item
+          example: 7344
+        paymentType:
+          type: string
+          description: Whether the retained tax payment is provisional or definitive
+          example: provisional
+          enum:
+          - provisional
+          - definitive
+    TaxRetentionCanceledAt:
+      type: string
+      format: date-time
+      description: Set when the tax retention is canceled.
+      nullable: true
+    TaxRetentionTotalTaxableAmount:
+      type: number
+      format: float
+      description: Subtraction between `totalOperationAmount` and `totalExemptAmount`
+      example: 43249
+    TaxRetentionIssuer:
+      type: object
+      properties:
+        rfc:
+          $ref: '#/components/schemas/TaxpayerID'
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+        curp:
+          $ref: '#/components/schemas/TaxpayerCurp'
+    TaxRetentionTotalRetainedAmount:
+      type: number
+      format: float
+      description: Total retained tax amount
+      example: 1550.7
+    TaxRetentionCertifiedAt:
+      type: string
+      format: date-time
+      description: Tax return certification date
+      example: '2019-01-03T21:10:41.000Z'
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    TaxRetentionPac:
+      type: string
+      minLength: 12
+      maxLength: 12
+      description: Certification provider tax ID (Proveedor Autorizado de Certificación)
+      example: SAT970701NN3
+    TaxRetentionCode:
+      type: string
+      example: '25'
+      description: Retention type code from the [Clave de retenciones](/guides/catalogs#clave-de-retenciones) catalog
+      enum:
+      - '01'
+      - '02'
+      - '03'
+      - '04'
+      - '05'
+      - '06'
+      - '07'
+      - 08
+      - 09
+      - '10'
+      - '11'
+      - '12'
+      - '13'
+      - '14'
+      - '15'
+      - '16'
+      - '17'
+      - '18'
+      - '19'
+      - '20'
+      - '21'
+      - '22'
+      - '23'
+      - '24'
+      - '25'
+      - '26'
+      nullable: true
+      externalDocs:
+        url: https://syntage.com/docs/catalogs#clave-de-retenciones
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    TaxRetentionUUID:
+      type: string
+      format: uuid
+      description: Tax retention UUID (Folio fiscal)
+      example: def404af-5eef-4112-aa99-d1ec8493b89a
+    TaxpayerNationality:
+      type: string
+      description: Indicator to know if the taxpayer is Mexican or from other countries.
+      example: national
+      enum:
+      - national
+      - foreign
+    InvoiceID:
+      type: string
+      format: uuid
+      description: Invoice ID
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+    TaxRetention:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Tax retention IRI reference
+          example: /tax-retentions/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          default: TaxRetention
+        id:
+          $ref: '#/components/schemas/TaxRetentionID'
+        uuid:
+          $ref: '#/components/schemas/TaxRetentionUUID'
+        version:
+          $ref: '#/components/schemas/TaxRetentionVersion'
+        code:
+          $ref: '#/components/schemas/TaxRetentionCode'
+        description:
+          $ref: '#/components/schemas/TaxRetentionDescription'
+        issuer:
+          allOf:
+          - $ref: '#/components/schemas/TaxRetentionIssuer'
+          - type: object
+            example:
+              rfc: AOM920820BEA
+              name: APPLE OPERATIONS MEXICO S.A. DE C.V.
+        receiver:
+          $ref: '#/components/schemas/TaxRetentionReceiver'
+        pac:
+          $ref: '#/components/schemas/TaxRetentionPac'
+        internalIdentifier:
+          $ref: '#/components/schemas/TaxRetentionInternalIdentifier'
+        issuedAt:
+          $ref: '#/components/schemas/TaxRetentionIssuedAt'
+        certifiedAt:
+          $ref: '#/components/schemas/TaxRetentionCertifiedAt'
+        canceledAt:
+          $ref: '#/components/schemas/TaxRetentionCanceledAt'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaxRetentionItem'
+        totalOperationAmount:
+          $ref: '#/components/schemas/TaxRetentionTotalOperationAmount'
+        totalTaxableAmount:
+          $ref: '#/components/schemas/TaxRetentionTotalTaxableAmount'
+        totalExemptAmount:
+          $ref: '#/components/schemas/TaxRetentionTotalExemptAmount'
+        totalRetainedAmount:
+          $ref: '#/components/schemas/TaxRetentionTotalRetainedAmount'
+        periodFrom:
+          $ref: '#/components/schemas/TaxRetentionPeriodFrom'
+        periodTo:
+          $ref: '#/components/schemas/TaxRetentionPeriodTo'
+        pdf:
+          $ref: '#/components/schemas/TaxRetentionHasPDF'
+        xml:
+          $ref: '#/components/schemas/TaxRetentionHasXML'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
+    TaxRetentionVersion:
+      type: number
+      format: float
+      description: CFDI version
+      nullable: true
+      example: 1
+    TaxRetentionIssuedAt:
+      type: string
+      format: date-time
+      description: Tax retention issue date
+      example: '2019-01-03T21:10:40.000Z'
+    TaxRetentionPeriodTo:
+      type: string
+      format: date-time
+      description: End date for the tax retention period
+      nullable: true
+    TaxRetentionTotalOperationAmount:
+      type: number
+      format: float
+      description: Operation amount
+      example: 53249.8
+    TaxRetentionID:
+      type: string
+      format: uuid
+      description: Tax retention ID
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+    TaxRetentionHasXML:
+      type: boolean
+      description: '`true` when the CFDI is available in the XML format. The file can be downloaded through the [retrieve a tax retention CFDI](#operation/GetTaxRetentionCFDI) operation
+
+        '
+  parameters:
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    invoiceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/InvoiceID'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    TaxpayerTaxRetentionCollection:
+      description: Taxpayer tax retention collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/TaxpayerTaxRetentionCollection'
+    TaxRetentionCFDI:
+      description: Tax retention CFDI response
+      content:
+        application/json:
+          schema:
+            type: object
+            example:
+              Version: 1
+              Folio: 6787763004
+              Sello: pd77md8+...wiMlMQ==
+              NumCert: 1000000502192402
+              Cert: MIIGTDCC...rOSkAn8=
+              FechaExp: '2019-01-03T21:10:40'
+              CveRetenc: '26'
+              Emisor:
+                RFCEmisor: AOM920820BEA
+                NomDenRazSocE: APPLE OPERATIONS MEXICO S.A. DE C.V.
+              Receptor:
+                Nacionalidad: Nacional
+                Nacional:
+                  RFCRecep: PEIC211118IS0
+                  NomDenRazSocR: Pedro Infante Cruz
+              Periodo:
+                MesIni: 4
+                MesFin: 4
+                Ejerc: 2020
+              Totales:
+                MontoTotOperacion: 59.78
+                MontoTotGrav: 59.78
+                MontoTotExent: 0
+                MontoTotRet: 6.56
+                ImpRetenidos:
+                - BaseRet": 59.78
+                  Impuesto": '02'
+                  MontoRet": 4.77
+                  TipoPagoRet": Pago definitivo
+                - BaseRet": 59.78
+                  Impuesto": '01'
+                  MontoRet": 1.79
+                  TipoPagoRet": Pago definitivo
+              Complemento:
+                TimbreFiscalDigital:
+                  Version: 1
+                  UUID: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+                  FechaTimbrado: '2019-01-03T23:10:40'
+                  SelloCFD: pd77md8+...wiMlMQ==
+                  NoCertificadoSAT: 1000000514965721
+                  SelloSAT: R9TebKU2...q7lDgA==
+        text/xml:
+          schema:
+            type: string
+            format: xml
+            example: <?xml version="1.0" encoding="utf-8"?><retenciones:Retenciones Version="1.0" FolioInt="246213160" CveRetenc="26">...</retenciones:Retenciones>
+          example: "<?xml version=\"1.0\" encoding=\"utf-8\"?> <retenciones:Retenciones xmlns:retenciones=\"http://www.sat.gob.mx/esquemas/retencionpago/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:c_retenciones=\"http://www.sat.gob.mx/esquemas/retencionpago/1/catalogos\" xmlns:plataformasTecnologicas=\"http://www.sat.gob.mx/esquemas/retencionpago/1/PlataformasTecnologicas10\" xsi:schemaLocation=\"http://www.sat.gob.mx/esquemas/retencionpago/1 http://www.sat.gob.mx/esquemas/retencionpago/1/retencionpagov1.xsd http://www.sat.gob.mx/esquemas/retencionpago/1/catalogos http://www.sat.gob.mx/esquemas/retencionpago/1/catalogos/catRetenciones.xsd http://www.sat.gob.mx/esquemas/retencionpago/1/PlataformasTecnologicas10 http://www.sat.gob.mx/esquemas/retencionpago/1/PlataformasTecnologicas10/ServiciosPlataformasTecnologicas10.xsd\" Version=\"1.0\" FolioInt=\"246213160\" Sello=\"stOdbSxX.../HIRFQ==\" NumCert=\"0001000000610593657\" Cert=\"MIIGijCC...AHJXMQ==\" FechaExp=\"2020-06-30T23:59:59\" CveRetenc=\"26\">\n  <retenciones:Emisor RFCEmisor=\"AOM920820BEA\" NomDenRazSocE=\"APPLE OPERATIONS MEXICO S.A. DE C.V.\">\n    </retenciones:Emisor>\n  <retenciones:Receptor Nacionalidad=\"Nacional\">\n    <retenciones:Nacional RFCRecep=\"PEIC211118IS0\" NomDenRazSocR=\"Pedro Infante Cruz\">\n        </retenciones:Nacional>\n  </retenciones:Receptor>\n  <retenciones:Periodo MesIni=\"06\" MesFin=\"06\" Ejerc=\"2020\">\n    </retenciones:Periodo>\n  <retenciones:Totales montoTotOperacion=\"4323.49\" montoTotGrav=\"3875.74\" montoTotExent=\"447.75\" montoTotRet=\"116.2722\">\n    <retenciones:ImpRetenidos BaseRet=\"132.99\" Impuesto=\"02\" montoRet=\"39.897\" TipoPagoRet=\"provisional\">\n            </retenciones:ImpRetenidos>\n  </retenciones:Totales>\n  <retenciones:Complemento>\n    <tfd:TimbreFiscalDigital xmlns:tfd=\"http://www.sat.gob.mx/TimbreFiscalDigital\" xsi:schemaLocation=\"http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigital.xsd\" version=\"1.0\" UUID=\"E0A24894-7FBF-48AE-BFB0-EFAAE30A6319\" FechaTimbrado=\"2020-06-30T23:59:59\" selloCFD=\"stOdbSxX.../HIRFQ==\" noCertificadoSAT=\"00001000000404477432\" selloSAT=\"TP1UvfoF...uwST2Q==\">\n        </tfd:TimbreFiscalDigital>\n    <plataformasTecnologicas:ServiciosPlataformasTecnologicas Version=\"1.0\" Periodicidad=\"01\" NumServ=\"1\" MonTotServSIVA=\"330.35\" TotalIVATrasladado=\"52.91\" TotalIVARetenido=\"26.37\" TotalISRRetenido=\"9.91\" DifIVAEntregadoPrestServ=\"26.54\" MonTotalporUsoPlataforma=\"0.01\">\n      <plataformasTecnologicas:Servicios>\n        <plataformasTecnologicas:DetallesDelServicio FormaPagoServ=\"02\" TipoDeServ=\"02\" FechaServ=\"2020-02-10\" PrecioServSinIVA=\"330.35\">\n          <plataformasTecnologicas:ImpuestosTrasladadosdelServicio Base=\"330.35\" Impuesto=\"02\" TipoFactor=\"Tasa\" TasaCuota=\"0.16\" Importe=\"52.91\">\n                    </plataformasTecnologicas:ImpuestosTrasladadosdelServicio>\n          <plataformasTecnologicas:ComisionDelServicio Importe=\"0.01\">\n                    </plataformasTecnologicas:ComisionDelServicio>\n        </plataformasTecnologicas:DetallesDelServicio>\n      </plataformasTecnologicas:Servicios>\n    </plataformasTecnologicas:ServiciosPlataformasTecnologicas>\n  </retenciones:Complemento>\n</retenciones:Retenciones>\n"
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+          example: <pdf-binary-data>
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    TaxRetention:
+      description: Tax retention resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/TaxRetention
+            - $ref: '#/components/schemas/TaxRetention'
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'Your API key is available in the [Production](https://app.syntage.com/settings/api-keys) and [Sandbox](https://app.sandbox.syntage.com/settings/api-keys) dashboards.
+
+        '
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

@@ -1,0 +1,1908 @@
+openapi: 3.0.2
+info:
+  version: '2020-06-28'
+  title: Syntage Accounts Payable Insight DS MX SAT Tax Returns API
+  contact:
+    name: Email
+    email: support@syntage.com
+  description: "# Introduction\n\nThe Syntage API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer).\nOur API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns [JSON-LD](https://json-ld.org) responses, and uses standard HTTP response codes, authentication, and verbs.\n\n# Environments\n\n| Name | Description | Base URL |\n|------|-------------|----------|\n| **Sandbox** | The Sandbox environment is dedicated to development and testing. In this environment, no real taxpayer credentials are required and all interaction with the SAT is simulated generating life-like data, allowing you to pull test data from all endpoints. | https://api.sandbox.syntage.com |\n| **Production** | The Production environment is dedicated to live applications with real connections to the SAT. In this environment, real taxpayer credentials are required, and you will pull real fiscal data directly from the SAT. | https://api.syntage.com |\n\nEach environment has a different API Key for [authentication](#section/Authentication).\n\n# Request IDs\n\nEach API request has an associated request identifier.\nYou can find this value in the response headers, under `X-Request-ID`:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-Request-ID: Root=1-6532dcae-169bf139354cd48959f55c55\n```\n\nIf you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution.\n\n# Rate Limiting\n\nOur API employs a number of safeguards against bursts of incoming traffic to help maximize its stability.\nThe returned HTTP headers of any API request show your current rate limit status:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 56\nX-RateLimit-Reset: 1606678044\n```\n\n| Header Name           | Description |\n|-----------------------|------------------------------------------------------------------------------|\n| X-RateLimit-Limit     | The maximum number of requests you're permitted to make.                     |\n| X-RateLimit-Remaining | The number of requests remaining in the current rate limit window.           |\n| X-RateLimit-Reset     | The time at which the current rate limit window resets in UTC epoch seconds. |\n\nIf you exceed the rate limit, a [429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) response is returned:\n\n```http\nHTTP/1.1 429 Too Many Requests\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1606678044\n```\n\nWe may reduce limits to prevent abuse, or increase limits to enable high-traffic operations.\nYou can check your current limits in the [dashboard](https://app.syntage.com/settings/usage).\nTo request an increased rate limit, please [contact support](https://support.syntage.com/).\n# Pagination\nWhen issuing a GET request on a collection containing more than 1 page (e.g. [/events](#operation/ListEvent)),  a collection is returned. Links to the first, the last, previous and the next page in the collection are displayed as well as the  number of total items in the collection.\nAll endpoints that support this operation have a query parameter defined by:\n  - `itemsPerPage` The number of items per page (default: 20, max: 1000)\n  - `page` The collection page number\n\n```bash\n  \"hydra:totalItems\": 1,\n  \"hydra:view\": {\n    \"@id\": \"/events?page=1\",\n    \"@type\": \"hydra:PartialCollectionView\",\n    \"hydra:first\": \"/events?page=1\",\n    \"hydra:next\": \"/events?page=2\",\n    \"hydra:last\": \"/events?page=3\"\n  },\n```\n## Cursor Pagination\nCursor pagination is a technique used for navigating through large datasets efficiently. It allows you to retrieve a specific subset of results from a collection by using a cursor value that represents the position within the collection. The cursor serves as a reference point for fetching the next or previous set of results.\n### Benefits of Cursor Pagination:\n1. **Efficient Navigation:** Cursor pagination eliminates the need to fetch the entire dataset at once, making it more scalable and faster. You can retrieve data in smaller, manageable chunks based on the cursor values.\n2. **Consistent Results:** Each page of results in cursor pagination is stable and doesn't change even if new items are added or removed from the collection. This ensures that you get consistent and reliable results.\n3. **Flexibility:** Cursors can be used to navigate forwards and backwards in the collection without impacting performance.\n\n### How to Use Cursor Pagination:\nTo use cursor pagination with our API, follow these instructions:\n1. Make a request to retrieve the initial page of results. The response will be a JSON-LD document that includes a `hydra:next` attribute with the URI for the next page. The URI already includes the cursor attribute.\n2. To retrieve the next page of results, make a GET request to the URI provided in the `hydra:next` attribute. This URI will automatically include the cursor value for the next page.\n3. If you want to navigate to the previous page, you can use the `hydra:previous` attribute in the JSON-LD response. It will contain the URI for the previous page, including the cursor value.\n4. You can continue making requests to the `hydra:next` and `hydra:previous` URIs to navigate through the paginated results, based on your requirements.\nMake sure to update your request headers to include the necessary headers for JSON-LD content negotiation, such as `Accept: application/ld+json` or `Content-Type: application/ld+json`.\nBy following these instructions, you can effectively navigate through the paginated results using the cursor values provided in the `hydra:next` and `hydra:previous` attributes, without the need to manually include the cursor in your requests. This simplifies the pagination process and enhances the usability of our API.\n\n### Considerations About Cursor Pagination:\n\n  - By default, the API uses offset-based pagination (except for a few endpoints that we will list below). If you want to switch to cursor pagination, you need to include an additional header in your request. Set the `X-Pagination-Style` header with the value `\"cursor\"` to enable cursor pagination. If not specified, the API will assume offset-based pagination.\n\n  - After enabling cursor pagination, the API response will no longer include the `hydra:totalItems` field by default. Retrieving the total count can be resource intensive and impact response times, especially for large datasets. However, if you need the `hydra:totalItems` information, you can include an additional header in your request. Set the `X-Pagination-Enable-Partial` header with the value `0` to indicate that the response should include extra information, including the `hydra:totalItems` count. Please be aware that enabling this feature may impact API response times, as the backend needs to perform a count operation on the dataset.\n\nIf you require the `hydra:totalItems` count, please consider the potential impact on API response times.\n### Example\n```bash\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices?itemsPerPage=10' \\\n    --header 'Accept: application/ld+json' \\\n    --header 'X-Api-Key: {apiKey}' \\\n    --header 'X-Pagination-Style: cursor' \\\n    --header 'X-Pagination-Enable-Partial: 0'\n```\n**Note:** We only support cursor pagination for the following endpoints:\n - `GET /entities/{entityId}/invoices`\n - `GET /entities/{entityId}/invoices/line-items`\n - `GET /entities/{entityId}/invoices/{invoiceId}/line-items`\n - `GET /invoices/{invoiceId}/line-items`\n - `GET /entities/{entityId}/invoices/payments`\n\nFeel free to reach out if you have any further questions or need additional assistance!\n\n# Property Filtering\nThe property filter adds the possibility to select the properties for GET operations.\nSyntax: `?properties[]=<property>&properties[<relation>][]=<property>`\nYou can add as many properties as you need. The following example shows how to select `paymentType` and  `issuer.rfc` when fetching a list of invoices.\n```curl\n  curl -i https://api.syntage.com/entities/{entityId}/invoices?properties[]=paymentType&properties[issuer]=rfc\n```\n# Filtering\n**Warning:** Collection endpoints only apply the filter query parameters documented for that endpoint. If you send an unsupported or misspelled filter query parameter, the API ignores it and processes the request as if that parameter was not sent.\n\n# API Versioning Guide\nGuidance on changes between versions.\n## Version: 2020-01-01 to 2020-06-28\n### **Invoice**\n_**Affected Endpoints:** `GET /invoices/{id}` and `GET /entities/{entityId}/invoices`_\n- The `amount` property has been removed from API responses. Use the `total` property instead.\n- Retrieval by invoice's `uuid` at `/invoices/{id}` is now removed. To retrieve an invoice, use the invoice's `id` at the specified endpoint. To find an invoice using its `uuid`, filter the invoice collection at `/entities/{entityId}/invoices?uuid[]={uuid}`.\n- Previously, the `@iri` property for an invoice pointed to the resource using `uuid`, like `/invoices/{uuid}`. Now, it points using its `id`, like `/invoices/{id}`.\n\n### **Entity (Formerly Link)**\n_**Affected Endpoint:** `GET /entities`_\n- Filtering entities by `status` is removed. Use `credential.status` instead. For example, utilize `GET /entities?credential.status[]=active` instead of `GET /entities?status[]=active`.\n\n### **Tax Return**\n_**Affected Endpoints:** `GET /tax-returns/{id}` and `GET /entities/{entityId}/tax-returns`_\n- Retrieval by tax return's `operationNumber` at `/tax-returns/{id}` is removed. To retrieve a tax return, use the tax return's `id` at the mentioned endpoint. To find a tax return using its `operationNumber`, filter the collection at `/entities/{entityId}/tax-returns?operationNumber[]={operationNumber}`.\n- Previously, the `@iri` property for a tax return pointed to the resource using `operationNumber`, like `/tax-returns/{operationNumber}`. Now, it directs to its `id`, like `/tax-returns/{id}`.\n\n### **Event**\n_**Affected Endpoints:** `GET /events` and `GET /events/{id}`_\n- For events associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}` instead of the previous `/tax-returns/{operationNumber}`.\n- For events associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}` instead of the previous `/invoices/{uuid}`.\n\n### **Extraction**\n_**Affected Endpoints:** `GET /extractions` and `GET /extractions/{id}`_\n- The `periodFrom` property has been removed. Use `options.period.from` instead.\n- The `periodTo` property has been removed. Use `options.period.to` instead.\n\n### **File**\n_**Affected Endpoint:** `GET /file/{id}`_\n- For files associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}`, instead of the previous `/tax-returns/{operationNumber}`.\n- For files associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}`, instead of the previous `/invoices/{uuid}`.\n\n### Trying Out This Version\nIf you want to test this version, you can do so by making any request with the `Accept-Version` header pointing to the latest version:\n```curl\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices' \\\n    --header 'Accept-Version: 2020-06-28' \\\n    --header 'X-Api-Key: {apiKey}'\n```\n"
+servers:
+- url: https://api.syntage.com
+  description: Production
+- url: https://api.sandbox.syntage.com
+  description: Sandbox
+security:
+- ApiKey: []
+tags:
+- name: DS MX SAT Tax Returns
+paths:
+  /tax-returns/{id}:
+    get:
+      tags:
+      - DS MX SAT Tax Returns
+      operationId: GetTaxReturn
+      summary: Retrieve a tax return
+      description: 'Retrieve a tax return by ID, including filing metadata, payment information, file references, and ISSIF availability.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/taxReturnId'
+      responses:
+        '200':
+          $ref: '#/components/responses/TaxReturn'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /tax-returns/{id}/pdf:
+    get:
+      tags:
+      - DS MX SAT Tax Returns
+      operationId: DownloadTaxReturnPdf
+      summary: Download a tax return PDF
+      description: 'Download the SAT transcript PDF for a tax return.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/taxReturnId'
+      responses:
+        '200':
+          description: Tax return PDF
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+              example: <pdf-binary-data>
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /tax-returns/{id}/data:
+    get:
+      tags:
+      - DS MX SAT Tax Returns
+      operationId: GetTaxReturnData
+      summary: Retrieve tax return data
+      description: 'Retrieve extracted data from a tax return.
+
+
+        For annual tax returns, there are two available formats:
+
+        - Financial statements 2022 format - This is available for non-pfae tax returns. Data will only be returned if the SAT provides the XLSX financial statements document.
+
+        - Financial statements 2014 format - This is available for pfae annual tax returns from 2014 to now, and all other annual tax returns from 2014-2021, as long as we are able to retrieve the PDF.
+
+
+        For provisional (monthly) tax returns, the response contains extracted financial variables including sales revenue, cash inflow, cash outflow, number of employees, and payroll amount. The available variables depend on the tax regime (601, 612, 626).
+
+
+        The response format here may change if SAT changes the categories or other formatting in the files they provide.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/taxReturnId'
+      responses:
+        '200':
+          $ref: '#/components/responses/TaxReturnData'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /entities/{entityId}/tax-returns:
+    get:
+      tags:
+      - DS MX SAT Tax Returns
+      operationId: ListTaxpayerTaxReturn
+      summary: List an entity's tax returns
+      description: 'List tax returns extracted for an entity.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      - name: operationNumber
+        in: query
+        description: Filter by operation number (partial match)
+        schema:
+          $ref: '#/components/schemas/TaxReturnOperationNumber'
+      - name: type
+        in: query
+        description: Filter by type (exact match)
+        schema:
+          $ref: '#/components/schemas/TaxReturnType'
+      - name: intervalUnit
+        in: query
+        description: Filter by interval unit (exact match)
+        schema:
+          $ref: '#/components/schemas/TaxReturnIntervalUnit'
+      - name: complementary
+        in: query
+        description: Filter by interval unit (partial match)
+        schema:
+          $ref: '#/components/schemas/TaxReturnComplementary'
+      - name: captureLine
+        in: query
+        description: Filter by payment code (partial match)
+        schema:
+          $ref: '#/components/schemas/TaxReturnCaptureLine'
+      - name: period
+        in: query
+        description: Filter by period (exact match)
+        schema:
+          $ref: '#/components/schemas/TaxReturnPeriod'
+      - name: presentedAt[before]
+        in: query
+        description: Filter by filing date (less than or equal `<=`)
+        schema:
+          $ref: '#/components/schemas/TaxReturnPresentedAt'
+      - name: presentedAt[strictly_before]
+        in: query
+        description: Filter by filing date (less than `<`)
+        schema:
+          $ref: '#/components/schemas/TaxReturnPresentedAt'
+      - name: presentedAt[after]
+        in: query
+        description: Filter by filing date (greater than or equal `>=`)
+        schema:
+          $ref: '#/components/schemas/TaxReturnPresentedAt'
+      - name: presentedAt[strictly_after]
+        in: query
+        description: Filter by filing date (greater than `>`)
+        schema:
+          $ref: '#/components/schemas/TaxReturnPresentedAt'
+      - name: fiscalYear
+        in: query
+        description: Filter by fiscal year (exact match)
+        schema:
+          $ref: '#/components/schemas/TaxReturnFiscalYear'
+      - name: order[period]
+        in: query
+        description: Order by period
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - name: order[presentedAt]
+        in: query
+        description: Order by filing date
+        schema:
+          $ref: '#/components/schemas/CollectionOrder'
+      - $ref: '#/components/parameters/collectionCursorNextPageParam'
+      - $ref: '#/components/parameters/collectionCursorPreviousPageParam'
+      - $ref: '#/components/parameters/collectionLimit'
+      responses:
+        '200':
+          $ref: '#/components/responses/TaxpayerTaxReturnCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    TaxpayerTaxReturnCollection:
+      description: Taxpayer tax return collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/TaxpayerTaxReturnCollection'
+    TaxReturnData:
+      description: Extracted data from tax returns
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            financial_statements_2022:
+              summary: Financial statements 2022 format
+              value:
+                ESTADO DE RESULTADOS:
+                  Pérdida neta:
+                    Notas: This field may contains a comment from the respective line
+                    Total: 123
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Utilidad neta:
+                    Notas: null
+                    Total: null
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Ingresos Netos:
+                    Notas: null
+                    Total: 123
+                    Sin Ingresos:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Otros Ingresos:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Primas cedidas:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Primas emitidas:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Partes Relacionadas: 0
+                    Gastos por intereses:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Ingresos por intereses:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Partes No Relacionadas: 123
+                    Ventas y/o servicios nacionales:
+                      Notas: null
+                      Total: 123
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 123
+                    Ventas y/o servicios extranjeros:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Estimación preventiva para riesgos crediticios:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Devoluciones, descuentos y bonificaciones nacionales:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Devoluciones, descuentos y bonificaciones extranjeras:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Estimación preventiva para riesgos crediticios (Recuperaciones):
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                  Pérdida Bruta:
+                    Notas: null
+                    Total: null
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Utilidad Bruta:
+                    Notas: null
+                    Total: 123
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Costo de ventas:
+                    Notas: null
+                    Total: 123
+                    Maquilas:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Otros costos:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Gastos Indirectos:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Partes Relacionadas: 0
+                    Sin Costo de ventas:
+                      Notas: null
+                      Total: 0
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 0
+                    Partes No Relacionadas: 123
+                    Deducciones de inversiones:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Mano de obra directa de fabricación:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Gastos relacionados a la mano de obra:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Mano de obra indirecta de fabricación:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                  Costo de servicios:
+                    Notas: null
+                    Total: 0
+                    Costo de servicios:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Partes Relacionadas: 0
+                    Partes No Relacionadas: 0
+                    Sin Costo de servicios:
+                      Notas: null
+                      Total: 0
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 0
+                    Costo neto de adquisición:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Comisiones y tarifas pagadas:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Comisiones y tarifas cobradas:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Otros ingresos (egresos) de la operación:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Incremento neto de otras reservas técnicas:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Costo neto de siniestralidad, reclamaciones y otras obligaciones pendientes de cumplir:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Incremento neto de las reservas técnicas (Riesgos en curso, obligaciones pendientes de cumplir, riesgos catastróficos):
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                  Gastos de operación:
+                    Notas: null
+                    Total: 123
+                    Gastos de venta:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Gastos generales:
+                      Notas: null
+                      Total: 123
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 123
+                    Partes Relacionadas: 0
+                    Partes No Relacionadas: 123
+                    Sin Gastos de operación:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Gastos de administración:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                  Pérdida de operación:
+                    Notas: null
+                    Total: null
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Utilidad de operación:
+                    Notas: null
+                    Total: 123
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Impuestos a la utilidad:
+                    Notas: null
+                    Total: 0
+                    Partes Relacionadas: 0
+                    Partes No Relacionadas: 0
+                    Impuesto sobre la renta:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Sin Impuestos a la utilidad:
+                      Notas: null
+                      Total: 0
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 0
+                    Impuesto sobre la renta diferido:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                  Operaciones discontinuadas:
+                    Notas: null
+                    Total: 0
+                    Partes Relacionadas: 0
+                    Partes No Relacionadas: 0
+                    Operaciones discontinuadas:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Sin Operaciones discontinuadas:
+                      Notas: null
+                      Total: 0
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 0
+                    Pérdida de enajenación de acciones:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Utilidad de enajenación de acciones:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Participación de los Trabajadores en las Utilidades:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Pérdida de segmento del negocio o segmento geográfico:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Utilidad de segmento del negocio o segmento geográfico:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                  Participación en asociadas:
+                    Notas: null
+                    Total: 0
+                    Partes Relacionadas: 0
+                    Partes No Relacionadas: 0
+                    Sin Participación en asociadas:
+                      Notas: null
+                      Total: 0
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 0
+                    Pérdida neta por participación en los resultados de subsidiarias no consolidadas, asociadas y negocios conjuntos:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Utilidad neta por participación en los resultados de subsidiarias no consolidadas, asociadas y negocios conjuntos:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                  Pérdida de operaciones continuas:
+                    Notas: null
+                    Total: null
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Utilidad de operaciones continuas:
+                    Notas: null
+                    Total: 123
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Resultado Integral de Financiamiento:
+                    Notas: null
+                    Total: 0
+                    Ganancia cambiaria:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Gastos Financieros:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Pérdida cambiaria:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Partes Relacionadas: 0
+                    Productos Financieros:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Partes No Relacionadas: 0
+                    Intereses devengados a cargo nacionales:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Intereses devengados a favor nacionales:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Intereses moratorios a cargo nacionales:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Intereses moratorios a favor nacionales:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Sin Resultado Integral de Financiamiento:
+                      Notas: null
+                      Total: 0
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 0
+                    Intereses devengados a cargo del extranjero:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Intereses devengados a favor del extranjero:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Intereses moratorios a cargo del extranjero:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Intereses moratorios a favor del extranjero:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Resultado por posición monetaria favorable:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Resultado por posición monetaria desfavorable:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Cambios en el valor razonable de activos y pasivos financieros deudor:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Cambios en el valor razonable de activos y pasivos financieros acreedor:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                  Pérdida antes de Impuestos a la utilidad:
+                    Notas: null
+                    Total: null
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Utilidad antes de Impuestos a la utilidad:
+                    Notas: null
+                    Total: 123
+                    Partes Relacionadas: null
+                    Partes No Relacionadas: null
+                  Total de materiales utilizados o comercializados:
+                    Notas: null
+                    Total: 123
+                    Inventario Final:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Inventario Inicial:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Partes Relacionadas: 0
+                    Partes No Relacionadas: 123
+                    Compras netas nacionales:
+                      Notas: null
+                      Total: 123
+                      Partes Relacionadas: 0
+                      Partes No Relacionadas: 123
+                    Compras netas extranjeras:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                    Sin materiales utilizados o comercializados:
+                      Notas: null
+                      Total: null
+                      Partes Relacionadas: null
+                      Partes No Relacionadas: null
+                PFAE - ESTADO DE RESULTADOS: []
+                PFAE - ESTADO DE POSICIÓN FINANCIERA: []
+                ESTADO DE POSICIÓN FINANCIERA (BALANCE):
+                  ACTIVO:
+                    TOTAL DE ACTIVO:
+                      Notas: null
+                      Total: 123
+                    ACTIVO A CORTO PLAZO:
+                      Clientes:
+                        Notas: null
+                        Total: 0
+                        Sin Clientes:
+                          Notas: null
+                          Total: null
+                        Cartera de crédito vencida:
+                          Notas: null
+                          Total: null
+                        Cartera de crédito vigente:
+                          Notas: null
+                          Total: null
+                        Derechos de cobro adquiridos (neto):
+                          Notas: null
+                          Total: null
+                        Clientes nacionales partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Clientes extranjeros partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Clientes nacionales partes no relacionadas:
+                          Notas: null
+                          Total: 0
+                        Clientes extranjeros partes no relacionadas:
+                          Notas: null
+                          Total: null
+                        Estimación preventiva para riesgos crediticios:
+                          Notas: null
+                          Total: null
+                        Cartera de crédito con riesgo de crédito etapa 1:
+                          Notas: null
+                          Total: null
+                        Cartera de crédito con riesgo de crédito etapa 2:
+                          Notas: null
+                          Total: null
+                        Cartera de crédito con riesgo de crédito etapa 3:
+                          Notas: null
+                          Total: null
+                      Inventarios:
+                        Notas: null
+                        Total: 0
+                        Sin Inventarios:
+                          Notas: null
+                          Total: 0
+                        Bienes adjudicados:
+                          Notas: null
+                          Total: null
+                        Productos terminados:
+                          Notas: null
+                          Total: null
+                        Producción en proceso:
+                          Notas: null
+                          Total: null
+                        Pérdida por deterioro:
+                          Notas: null
+                          Total: null
+                        Mercancías en tránsito:
+                          Notas: null
+                          Total: null
+                        Estimación de obsolescencia:
+                          Notas: null
+                          Total: null
+                        Materiales y materias primas:
+                          Notas: null
+                          Total: null
+                        Estimación de bienes adjudicados:
+                          Notas: null
+                          Total: null
+                      Deudores diversos:
+                        Notas: null
+                        Total: 123
+                        Sin Deudores diversos:
+                          Notas: null
+                          Total: null
+                        Deudores por primas nacionales:
+                          Notas: null
+                          Total: null
+                        Deudores por primas del extranjero:
+                          Notas: null
+                          Total: null
+                        Deudores diversos partes relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Deudores diversos partes no relacionadas nacionales:
+                          Notas: null
+                          Total: 123
+                        Deudores diversos partes relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                        Deudores diversos partes no relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                      Pagos anticipados:
+                        Notas: null
+                        Total: 0
+                        Pagos anticipados:
+                          Notas: null
+                          Total: null
+                        Sin Pagos anticipados:
+                          Notas: null
+                          Total: 0
+                        Depósitos en garantía:
+                          Notas: null
+                          Total: null
+                        Rentas pagadas por anticipado:
+                          Notas: null
+                          Total: null
+                        Impuestos pagados por anticipado:
+                          Notas: null
+                          Total: null
+                        Seguros y fianzas pagados por anticipado:
+                          Notas: null
+                          Total: null
+                        Anticipo a proveedores nacionales partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Anticipo a proveedores extranjeros partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Anticipo a proveedores nacionales partes no relacionadas:
+                          Notas: null
+                          Total: null
+                        Anticipo a proveedores extranjeros partes no relacionadas:
+                          Notas: null
+                          Total: null
+                      Impuesto por recuperar:
+                        Notas: null
+                        Total: 123
+                      Otros activos a corto plazo:
+                        Notas: null
+                        Total: null
+                      Total de Activo a corto plazo:
+                        Notas: null
+                        Total: 123
+                      Activos disponibles para venta:
+                        Notas: null
+                        Total: 0
+                      Cuentas y documentos por cobrar:
+                        Notas: null
+                        Total: 0
+                        Deudores por reporto:
+                          Notas: null
+                          Total: null
+                        Préstamo de valores:
+                          Notas: null
+                          Total: null
+                        Instrumentos Financieros Derivados:
+                          Notas: null
+                          Total: null
+                        Sin Cuentas y documentos por cobrar:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por cobrar a partes relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por cobrar a partes no relacionadas nacionales:
+                          Notas: null
+                          Total: 0
+                        Cuentas y documentos por cobrar a partes relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por cobrar a partes no relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                      Estimación de cuentas incobrables:
+                        Notas: null
+                        Total: 0
+                      Efectivo y equivalentes de efectivo:
+                        Notas: null
+                        Total: 123
+                        Cuentas de margen:
+                          Notas: null
+                          Total: null
+                        Sin Efectivo y equivalentes de efectivo:
+                          Notas: null
+                          Total: null
+                        Efectivo y equivalentes de efectivo nacionales:
+                          Notas: null
+                          Total: 123
+                        Efectivo y equivalentes de efectivo del extranjero:
+                          Notas: null
+                          Total: null
+                        Efectivo y equivalentes de efectivo, restringido nacionales:
+                          Notas: null
+                          Total: null
+                        Efectivo y equivalentes de efectivo, restringido del extranjero:
+                          Notas: null
+                          Total: null
+                      Instrumentos financieros de negociación:
+                        Notas: null
+                        Total: 0
+                        Sin Inversiones en valores con Instituciones:
+                          Notas: null
+                          Total: 0
+                        Inversiones permanentes en acciones nacionales:
+                          Notas: null
+                          Total: null
+                        Inversiones permanentes en acciones del extranjero:
+                          Notas: null
+                          Total: null
+                        Inversiones en instrumentos financieros negociables:
+                          Notas: null
+                          Total: null
+                        Inversiones en valores con Instituciones nacionales:
+                          Notas: null
+                          Total: null
+                        Inversiones en valores con Instituciones extranjeras:
+                          Notas: null
+                          Total: null
+                        Inversiones en instrumentos financieros para cobrar o vender:
+                          Notas: null
+                          Total: null
+                    ACTIVO A LARGO PLAZO:
+                      Crédito mercantil:
+                        Notas: null
+                        Total: 0
+                      Activos intangibles:
+                        Notas: null
+                        Total: 0
+                        Activos intangibles:
+                          Notas: null
+                          Total: null
+                        Sin Activos intangibles:
+                          Notas: null
+                          Total: 0
+                        Derechos de usufructo adquirido en el ejercicio:
+                          Notas: null
+                          Total: null
+                      Anticipo a proveedores:
+                        Notas: null
+                        Total: 0
+                        Pagos anticipados:
+                          Notas: null
+                          Total: null
+                        Depósitos en garantía:
+                          Notas: null
+                          Total: null
+                        Sin Anticipo a proveedores:
+                          Notas: null
+                          Total: 0
+                        Impuestos pagados por anticipado:
+                          Notas: null
+                          Total: null
+                        Seguros y fianzas pagados por anticipado:
+                          Notas: null
+                          Total: null
+                        Anticipo a proveedores nacionales a largo plazo (partes relacionadas):
+                          Notas: null
+                          Total: null
+                        Anticipo a proveedores extranjeros a largo plazo (partes relacionadas):
+                          Notas: null
+                          Total: null
+                        Anticipo a proveedores nacionales a largo plazo (partes no relacionadas):
+                          Notas: null
+                          Total: null
+                        Anticipo a proveedores extranjeros a largo plazo (partes no relacionadas):
+                          Notas: null
+                          Total: null
+                      Inversiones en asociadas:
+                        Notas: null
+                        Total: 0
+                      Otros activos a largo plazo:
+                        Notas: null
+                        Total: null
+                      Propiedades, plantas y equipo:
+                        Notas: null
+                        Total: 0
+                        Terrenos:
+                          Notas: null
+                          Total: null
+                        Maquinaria:
+                          Notas: null
+                          Total: null
+                        Construcciones:
+                          Notas: null
+                          Total: null
+                        Equipo de Computo:
+                          Notas: null
+                          Total: null
+                        Mobiliario y Equipo:
+                          Notas: null
+                          Total: null
+                        Equipo de Transporte:
+                          Notas: null
+                          Total: null
+                        Depreciación de maquinaria:
+                          Notas: null
+                          Total: null
+                        Mejoras a inmuebles arrendados:
+                          Notas: null
+                          Total: null
+                        Depreciación de construcciones:
+                          Notas: null
+                          Total: null
+                        Sin Propiedades, plantas y equipo:
+                          Notas: null
+                          Total: 0
+                        Depreciación de equipo de computo:
+                          Notas: null
+                          Total: null
+                        Depreciación de mobiliario y equipo:
+                          Notas: null
+                          Total: null
+                        Depreciación de equipo de transporte:
+                          Notas: null
+                          Total: null
+                      Total de Activo a largo plazo:
+                        Notas: null
+                        Total: 0
+                      Cuentas y documentos por cobrar a largo plazo:
+                        Notas: null
+                        Total: 0
+                        Sin Cuentas y documentos por cobrar a largo plazo:
+                          Notas: null
+                          Total: 0
+                        Cuentas y documentos por cobrar a largo plazo de partes relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por cobrar a largo plazo de partes relacionadas extranjeras:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por cobrar a largo plazo de partes no relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por cobrar a largo plazo de partes no relacionadas extranjeras:
+                          Notas: null
+                          Total: null
+                      Instrumentos financieros por cobrar a largo plazo:
+                        Notas: null
+                        Total: 0
+                  PASIVO:
+                    TOTAL DE PASIVO:
+                      Notas: null
+                      Total: 123
+                    PASIVO A CORTO PLAZO:
+                      Proveedores:
+                        Notas: null
+                        Total: 0
+                        Sin Proveedores:
+                          Notas: null
+                          Total: 0
+                        Proveedores nacionales partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Proveedores nacionales partes no relacionadas:
+                          Notas: null
+                          Total: null
+                        Proveedores del extranjero partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Proveedores del extranjero partes no relacionadas:
+                          Notas: null
+                          Total: null
+                      Provisiones:
+                        Notas: null
+                        Total: 0
+                      Acreedores diversos:
+                        Notas: null
+                        Total: 123
+                        Préstamo de valores:
+                          Notas: null
+                          Total: null
+                        Acreedores por reporto:
+                          Notas: null
+                          Total: null
+                        Sin Acreedores diversos:
+                          Notas: null
+                          Total: null
+                        Pasivo por arrendamiento:
+                          Notas: null
+                          Total: null
+                        Reaseguradores y reafianzadores:
+                          Notas: null
+                          Total: null
+                        Acreedores por cuentas de margen:
+                          Notas: null
+                          Total: null
+                        Impuestos a la utilidad por pagar:
+                          Notas: null
+                          Total: 0
+                        Colaterales vendidos o dados en garantía:
+                          Notas: null
+                          Total: null
+                        Acreedores por liquidación de operaciones:
+                          Notas: null
+                          Total: null
+                        Obligaciones en operaciones de bursatilización:
+                          Notas: null
+                          Total: null
+                        Acreedores por colaterales recibidos en efectivo:
+                          Notas: null
+                          Total: null
+                        Acreedores diversos nacionales partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Acreedores diversos nacionales partes no relacionadas:
+                          Notas: null
+                          Total: 123
+                        Acreedores diversos del extranjero partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Activos por derecho de uso derivados de arrendamientos:
+                          Notas: null
+                          Total: null
+                        Acreedores diversos del extranjero partes no relacionadas:
+                          Notas: null
+                          Total: null
+                      Impuestos por pagar:
+                        Notas: null
+                        Total: 123
+                        ISR diferido:
+                          Notas: null
+                          Total: null
+                        PTU por pagar:
+                          Notas: null
+                          Total: null
+                        Impuestos por pagar:
+                          Notas: null
+                          Total: null
+                        Impuestos retenidos:
+                          Notas: null
+                          Total: 123
+                        Sin Impuestos por pagar:
+                          Notas: null
+                          Total: null
+                        Otros pasivos a corto plazo:
+                          Notas: null
+                          Total: null
+                        Impuestos trasladados cobrados:
+                          Notas: null
+                          Total: null
+                        Impuestos trasladados por cobrar:
+                          Notas: null
+                          Total: 0
+                      Anticipo de clientes:
+                        Notas: null
+                        Total: 0
+                        Sin Anticipo de clientes:
+                          Notas: null
+                          Total: null
+                        Anticipos de clientes partes relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Anticipos de clientes partes no relacionadas nacionales:
+                          Notas: null
+                          Total: 0
+                        Anticipos de clientes partes relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                        Anticipos de clientes partes no relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                      Préstamos bancarios:
+                        Notas: null
+                        Total: 0
+                      Instrumentos financieros:
+                        Notas: null
+                        Total: 0
+                        Sin Instrumentos financieros:
+                          Notas: null
+                          Total: 0
+                        Instrumentos financieros nacionales partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Instrumentos financieros derivados con fines de cobertura:
+                          Notas: null
+                          Total: null
+                        Ajustes de valuación por cobertura de pasivos financieros:
+                          Notas: null
+                          Total: null
+                        Instrumentos financieros nacionales partes no relacionadas:
+                          Notas: null
+                          Total: null
+                        Instrumentos financieros del extranjero partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Instrumentos financieros derivados con fines de negociación:
+                          Notas: null
+                          Total: null
+                        Instrumentos financieros del extranjero partes no relacionadas:
+                          Notas: null
+                          Total: null
+                      Total de Pasivo a corto plazo:
+                        Notas: null
+                        Total: 123
+                      Cuentas y documentos por pagar:
+                        Notas: null
+                        Total: 0
+                        Captación tradicional:
+                          Notas: null
+                          Total: null
+                        Otras reservas técnicas:
+                          Notas: null
+                          Total: null
+                        Sin Cuentas y documentos por pagar:
+                          Notas: null
+                          Total: 0
+                        Préstamos interbancarios y de otros organismos:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por pagar a partes relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por pagar a partes no relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por pagar a partes relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por pagar a partes no relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                        Reservas técnicas (Riesgos en curso, obligaciones pendientes de cumplir, riesgos catastróficos):
+                          Notas: null
+                          Total: null
+                    PASIVO A LARGO PLAZO:
+                      Beneficio a empleados:
+                        Notas: null
+                        Total: 0
+                      Provisiones a largo plazo:
+                        Notas: null
+                        Total: 0
+                      Otros pasivos a largo plazo:
+                        Notas: null
+                        Total: null
+                      Total de Pasivo a largo plazo:
+                        Notas: null
+                        Total: 0
+                      Rentas cobradas por anticipado:
+                        Notas: null
+                        Total: 0
+                      Instrumentos financieros a largo plazo:
+                        Notas: null
+                        Total: 0
+                        Sin Instrumentos financieros a largo plazo:
+                          Notas: null
+                          Total: 0
+                        Instrumentos financieros a largo plazo nacionales de partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Instrumentos financieros a largo plazo nacionales de partes no relacionadas:
+                          Notas: null
+                          Total: null
+                        Instrumentos financieros a largo plazo del extranjero de partes relacionadas:
+                          Notas: null
+                          Total: null
+                        Instrumentos financieros a largo plazo del extranjero de partes no relacionadas:
+                          Notas: null
+                          Total: null
+                      Impuesto a la utilidad diferido por pagar:
+                        Notas: null
+                        Total: 0
+                      Cuentas y documentos por pagar a largo plazo:
+                        Notas: null
+                        Total: 0
+                        Sin Cuentas y documentos por pagar a largo plazo:
+                          Notas: null
+                          Total: 0
+                        Cuentas y documentos por pagar a largo plazo de partes relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por pagar a largo plazo de partes no relacionadas nacionales:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por pagar a largo plazo de partes relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                        Cuentas y documentos por pagar a largo plazo de partes no relacionadas del extranjero:
+                          Notas: null
+                          Total: null
+                      Aportaciones para futuros aumentos de capital:
+                        Notas: null
+                        Total: 0
+                  CAPITAL:
+                    CAPITAL CONTABLE:
+                      Capital Social:
+                        Notas: null
+                        Total: 123
+                        Reserva Legal:
+                          Notas: null
+                          Total: null
+                        Sin Capital social:
+                          Notas: null
+                          Total: null
+                        Reservas de capital:
+                          Notas: null
+                          Total: null
+                        Prima en venta de acciones:
+                          Notas: null
+                          Total: null
+                        Capital social (aportaciones):
+                          Notas: null
+                          Total: 123
+                        Capital social (capitalización):
+                          Notas: null
+                          Total: null
+                        Actualización del capital contable:
+                          Notas: null
+                          Total: null
+                        Exceso en la actualización del capital:
+                          Notas: null
+                          Total: null
+                        Aportaciones para futuros aumentos de capital:
+                          Notas: null
+                          Total: null
+                        Insuficiencia en la actualización del capital:
+                          Notas: null
+                          Total: null
+                      Utilidades acumuladas:
+                        Notas: null
+                        Total: -123
+                        Pérdida neta:
+                          Notas: null
+                          Total: 0
+                        Utilidad neta:
+                          Notas: null
+                          Total: 123
+                        Pérdidas acumuladas:
+                          Notas: null
+                          Total: -123
+                        Utilidades acumuladas:
+                          Notas: null
+                          Total: 123
+                        Sin Utilidades acumuladas:
+                          Notas: null
+                          Total: null
+                      Otros resultados integrales:
+                        Notas: null
+                        Total: 0
+                      Participación controladora:
+                        Notas: null
+                        Total: -123
+                      Participación no controladora:
+                        Notas: null
+                        Total: 0
+                    TOTAL DE CAPITAL CONTABLE:
+                      Notas: null
+                      Total: -123
+                    TOTAL DE PASIVO Y CAPITAL CONTABLE:
+                      Notas: null
+                      Total: 123
+            financial_statements_2014:
+              summary: Financial statements 2014 format
+              value:
+                ESTADO DE RESULTADOS:
+                  VENTAS Y/O SERVICIOS NACIONALES:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 25447832
+                    TOTAL: 25447832
+                  VENTAS Y/O SERVICIOS EXTRANJEROS:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 12340
+                    TOTAL: 12340
+                  DEVOLUCIONES, DESCUENTOS Y BONIFICACIONES SOBRE VENTAS NACIONALES:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  DEVOLUCIONES, DESCUENTOS Y BONIFICACIONES SOBRE VENTAS AL EXTRANJERO:
+                    PARTES RELACIONADAS: 0
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  INGRESOS NETOS:
+                    PARTES RELACIONADAS: 0
+                    PARTES NO RELACIONADAS: 17447933
+                    TOTAL: 17447933
+                  INVENTARIO INICIAL: null
+                  COMPRAS NETAS NACIONALES:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 5100423
+                    TOTAL: 5100423
+                  COMPRAS NETAS DE IMPORTACIÓN:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 1124038
+                    TOTAL: 1124038
+                  INVENTARIO FINAL: null
+                  COSTO DE LAS MERCANCÍAS: 6024467
+                  MANO DE OBRA:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  MAQUILAS:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  GASTOS INDIRECTOS DE FABRICACIÓN:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  COSTO DE VENTAS Y/O SERVICIOS:
+                    PARTES RELACIONADAS: 6024467
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 6024467
+                  UTILIDAD BRUTA: 9423466
+                  PÉRDIDA BRUTA: 0
+                  GASTOS DE OPERACIÓN:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 8155730
+                    TOTAL: 8155730
+                  UTILIDAD DE OPERACIÓN: 267734
+                  PÉRDIDA DE OPERACIÓN: null
+                  INTERESES DEVENGADOS A FAVOR NACIONALES:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  INTERESES DEVENGADOS A FAVOR DEL EXTRANJERO:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  INTERESES MORATORIOS A FAVOR NACIONALES:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  INTERESES MORATORIOS A FAVOR DEL EXTRANJERO:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  GANANCIA CAMBIARIA:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  INTERESES DEVENGADOS A CARGO NACIONALES:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  INTERESES DEVENGADOS A CARGO DEL EXTRANJERO:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  INTERESES MORATORIOS A CARGO NACIONALES:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  INTERESES MORATORIOS A CARGO DEL EXTRANJERO:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  PÉRDIDA CAMBIARIA:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  RESULTADO POR POSICIÓN MONETARIA FAVORABLE:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: null
+                    TOTAL: null
+                  RESULTADO POR POSICIÓN MONETARIA DESFAVORABLE:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: null
+                    TOTAL: null
+                  OTRAS OPERACIONES FINANCIERAS NACIONALES:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  OTRAS OPERACIONES FINANCIERAS EXTRANJERAS:
+                    PARTES RELACIONADAS: null
+                    PARTES NO RELACIONADAS: 0
+                    TOTAL: 0
+                  OTRAS OPERACIONES FINANCIERAS: 0
+                  RESULTADO INTEGRAL DE FINANCIAMIENTO: 0
+                  OTROS GASTOS NACIONALES: 125381
+                  OTROS GASTOS EXTRANJEROS: null
+                  OTROS GASTOS: 125381
+                  OTROS PRODUCTOS NACIONALES: 0
+                  OTROS PRODUCTOS EXTRANJEROS: 0
+                  OTROS PRODUCTOS: 0
+                  INGRESOS POR PARTIDAS DISCONTINUAS Y EXTRAORDINARIAS: null
+                  GASTOS POR PARTIDAS DISCONTINUAS Y EXTRAORDINARIAS: null
+                  UTILIDAD ANTES DE IMPUESTOS: 82354
+                  PÉRDIDA ANTES DE IMPUESTOS: null
+                  ISR: null
+                  IETU: null
+                  IMPAC: null
+                  PTU: null
+                  UTILIDAD EN PARTICIPACIÓN SUBSIDIARIA: null
+                  PÉRDIDA EN PARTICIPACIÓN SUBSIDIARIA: null
+                  EFECTOS DE REEXPRESIÓN FAVORABLES EXCEPTO RESULTADO POR POSICIÓN MONETARIA: null
+                  EFECTOS DE REEXPRESIÓN DESFAVORABLES EXCEPTO RESULTADO POR POSICIÓN MONETARIA: null
+                  UTILIDAD NETA: 52355
+                  PÉRDIDA NETA: null
+                ESTADO DE POSICIÓN FINANCIERA (BALANCE):
+                  ACTIVOS:
+                    EFECTIVO EN CAJA Y DEPÓSITOS EN INSTITUCIONES DE CRÉDITO NACIONALES: 115202
+                    EFECTIVO EN CAJA Y DEPÓSITOS EN INSTITUCIONES DE CRÉDITO DEL EXTRANJERO: null
+                    INVERSIONES EN VALORES CON INSTITUCIONES NACIONALES (EXCEPTO ACCIONES): null
+                    INVERSIONES EN VALORES CON INSTITUCIONES EXTRANJERAS (EXCEPTO ACCIONES): null
+                    CUENTAS Y DOCUMENTOS POR COBRAR NACIONALES:
+                      PARTES RELACIONADAS: null
+                      PARTES NO RELACIONADAS: 230000
+                      TOTAL: 230000
+                    CUENTAS Y DOCUMENTOS POR COBRAR DEL EXTRANJERO:
+                      PARTES RELACIONADAS: null
+                      PARTES NO RELACIONADAS: 0
+                      TOTAL: 0
+                    CONTRIBUCIONES A FAVOR: 43212
+                    INVENTARIOS: 0
+                    OTROS ACTIVOS CIRCULANTES: 5728
+                    INVERSIONES EN ACCIONES NACIONALES: null
+                    INVERSIONES EN ACCIONES DEL EXTRANJERO: 0
+                    INVERSIONES EN ACCIONES (TOTAL): 0
+                    TERRENOS: null
+                    CONSTRUCCIONES: null
+                    CONSTRUCCIONES EN PROCESO: null
+                    MAQUINARIA Y EQUIPO: null
+                    MOBILIARIO Y EQUIPO DE OFICINA: null
+                    EQUIPO DE CÓMPUTO: null
+                    EQUIPO DE TRANSPORTE: null
+                    OTROS ACTIVOS FIJOS: null
+                    DEPRECIACIÓN ACUMULADA: null
+                    CARGOS Y GASTOS DIFERIDOS: null
+                    AMORTIZACIÓN ACUMULADA: null
+                    SUMA ACTIVOS: 493142
+                  PASIVOS:
+                    CUENTAS Y DOCUMENTOS POR PAGAR NACIONALES:
+                      PARTES RELACIONADAS: null
+                      PARTES NO RELACIONADAS: 976911
+                      TOTAL: 976911
+                    CUENTAS Y DOCUMENTOS POR PAGAR DEL EXTRANJERO:
+                      PARTES RELACIONADAS: null
+                      PARTES NO RELACIONADAS: 0
+                      TOTAL: 0
+                    CONTRIBUCIONES POR PAGAR: 10474
+                    ANTICIPOS DE CLIENTES:
+                      PARTES RELACIONADAS: null
+                      PARTES NO RELACIONADAS: 0
+                      TOTAL: 0
+                    APORTACIONES PARA FUTUROS AUMENTOS DE CAPITAL: null
+                    OTROS PASIVOS: null
+                    SUMA PASIVOS: 987385
+                  CAPITAL CONTABLE:
+                    CAPITAL SOCIAL PROVENIENTE DE APORTACIONES: 100000
+                    CAPITAL SOCIAL PROVENIENTE DE CAPITALIZACIÓN: null
+                    RESERVAS: null
+                    OTRAS CUENTAS DE CAPITAL: null
+                    APORTACIONES PARA FUTUROS AUMENTOS DE CAPITAL: null
+                    UTILIDADES ACUMULADAS: 1399808
+                    UTILIDAD DEL EJERCICIO: 62355
+                    PÉRDIDAS ACUMULADAS: -2456702
+                    PÉRDIDA DEL EJERCICIO: null
+                    EXCESO EN LA ACTUALIZACIÓN DEL CAPITAL: null
+                    INSUFICIENCIA EN LA ACTUALIZACIÓN DEL CAPITAL: 0
+                    ACTUALIZACIÓN DEL CAPITAL CONTABLE: null
+                    SUMA CAPITAL CONTABLE: -694233
+                    SUMA PASIVO MÁS CAPITAL CONTABLE: 493132
+            provisional_variables:
+              summary: Provisional variables
+              value:
+                variables:
+                  sales_revenue: 1234567.89
+                  cash_inflow: 987654.32
+                  cash_outflow: 654321.1
+                  number_of_employees: 15
+                  payroll_amount: 234567.89
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    TaxReturn:
+      description: Tax return resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/TaxReturn
+            - $ref: '#/components/schemas/TaxReturn'
+  schemas:
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    TaxpayerPersonType:
+      type: string
+      enum:
+      - physical
+      - legal
+      example: physical
+    TaxReturnPayment:
+      description: Payment
+      type: object
+      properties:
+        dueAmount:
+          type: number
+          format: float
+          description: Amount due for the tax return payment
+          example: 53249.8
+        dueDate:
+          type: string
+          format: date-time
+          description: Payment due date
+          example: '2019-01-03T21:10:40.000Z'
+        code:
+          description: Payment code
+          type: string
+          example: '0777555544443332222'
+        bank:
+          description: Payer bank
+          type: string
+          example: BBVA Bancomer, S.A.
+        paidAmount:
+          type: number
+          format: float
+          description: Tax return paid amount
+        date:
+          type: string
+          format: date-time
+          description: Payment date
+        operationNumber:
+          type: string
+          description: Bank operation number for the payment
+          example: '123456'
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    TaxReturnCaptureLine:
+      type: string
+      description: Set when the an amount should be paid back to SAT
+      nullable: true
+      example: 042007HZ795527888246
+    TaxReturnID:
+      type: string
+      format: uuid
+      description: Tax Return ID
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+    TaxReturnIssifObligation:
+      type: boolean
+      nullable: true
+      description: 'Indicates whether the taxpayer is obligated to file the
+
+        Informative Statement on Tax Situation (ISSIF/DISIF) under
+
+        Article 32-H of the Mexican Federal Tax Code (CFF). Derived
+
+        from the annual return PDF, either from the 32-H obligation
+
+        question or from a referenced ISSIF artifact (the `ARCHIVO
+
+        ISSIF` section or a `.sb2x` filename).
+
+
+        When `true`, financial statements for this return are filed
+
+        separately via SIPRED and therefore are not present in the
+
+        standard annual-return Excel.
+
+
+        Only set on annual returns for Personas Morales filed from
+
+        fiscal year 2018 onward; older returns always return `false`.
+
+        '
+      example: false
+    TaxReturnFiles:
+      type: array
+      description: Tax return PDF files (ack receipt, transcript and payment receipt)
+      items:
+        $ref: '#/components/schemas/File'
+    TaxReturnIntervalUnit:
+      type: string
+      enum:
+      - Anual
+      - Mensual
+      - RIF
+      example: Mensual
+    TaxpayerTaxReturnCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/TaxReturn
+          '@id':
+            default: /entities/{entityId}/tax-returns
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/tax-returns
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/TaxReturn'
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    TaxReturnType:
+      type: string
+      enum:
+      - Complementaria
+      - Complementaria Corrección Fiscal
+      - Complementaria Dictamen
+      - Normal
+      - Normal por Corrección Fiscal
+      example: Complementaria
+    TaxReturnOperationNumber:
+      type: number
+      example: 200100172932
+      description: Tax return operation code generated by SAT (Número de operación)
+    File:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: File IRI reference
+          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: File
+          example: File
+        id:
+          type: string
+          format: uuid
+          description: Unique file ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          type: string
+          description: File category, such as an invoice CFDI XML or PDF
+          example: invoice.cfdi.xml
+        resource:
+          type: string
+          description: IRI of the resource that produced or owns the file
+          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
+        mimeType:
+          type: string
+          description: Media type of the file content
+          example: text/xml
+        extension:
+          type: string
+          description: File extension for the stored content
+          example: xml
+        size:
+          type: integer
+          description: File size in bytes
+          example: 40544
+        filename:
+          type: string
+          description: Suggested filename for the file content
+          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    Taxpayer:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Taxpayer IRI reference
+          example: /taxpayers/PEIC211118IS0
+        '@type':
+          type: string
+          default: Taxpayer
+        id:
+          $ref: '#/components/schemas/TaxpayerID'
+        personType:
+          $ref: '#/components/schemas/TaxpayerPersonType'
+        registrationDate:
+          type: string
+          format: date
+          description: Taxpayer registration date
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    TaxReturnComplementary:
+      type: string
+      description: Set when *type* is `complementaria*`
+      enum:
+      - Declaración no Presentada
+      - Dejar sin Efecto Declaración
+      - Dejar sin Efecto Obligación
+      - Esquema Anterior
+      - Modificación de Declaración
+      - Modificación de Obligaciones
+      - Obligación no presentada
+      nullable: true
+      example: Modificación de Obligaciones
+    TaxReturn:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Tax Return IRI reference
+          example: /tax-returns/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          default: TaxReturn
+        id:
+          $ref: '#/components/schemas/TaxReturnID'
+        taxpayer:
+          $ref: '#/components/schemas/Taxpayer'
+        operationNumber:
+          $ref: '#/components/schemas/TaxReturnOperationNumber'
+        intervalUnit:
+          $ref: '#/components/schemas/TaxReturnIntervalUnit'
+        period:
+          $ref: '#/components/schemas/TaxReturnPeriod'
+        fiscalYear:
+          $ref: '#/components/schemas/TaxReturnFiscalYear'
+        type:
+          $ref: '#/components/schemas/TaxReturnType'
+        complementary:
+          $ref: '#/components/schemas/TaxReturnComplementary'
+        presentedAt:
+          $ref: '#/components/schemas/TaxReturnPresentedAt'
+        captureLine:
+          $ref: '#/components/schemas/TaxReturnCaptureLine'
+        files:
+          $ref: '#/components/schemas/TaxReturnFiles'
+        issifObligation:
+          $ref: '#/components/schemas/TaxReturnIssifObligation'
+        payment:
+          $ref: '#/components/schemas/TaxReturnPayment'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
+    TaxReturnPresentedAt:
+      type: string
+      format: date-time
+      description: Tax return filing date
+    TaxReturnFiscalYear:
+      type: string
+      example: 2019
+      description: Fiscal year
+    TaxReturnPeriod:
+      type: string
+      description: Fiscal period. For an annual tax return, it is a year and for monthly tax return it is a month
+      example: Diciembre
+  parameters:
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    taxReturnId:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/TaxReturnID'
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'Your API key is available in the [Production](https://app.syntage.com/settings/api-keys) and [Sandbox](https://app.sandbox.syntage.com/settings/api-keys) dashboards.
+
+        '
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

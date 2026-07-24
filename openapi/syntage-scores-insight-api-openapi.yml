@@ -1,0 +1,384 @@
+openapi: 3.0.2
+info:
+  version: '2020-06-28'
+  title: Syntage Accounts Payable Insight Scores Insight API
+  contact:
+    name: Email
+    email: support@syntage.com
+  description: "# Introduction\n\nThe Syntage API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer).\nOur API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns [JSON-LD](https://json-ld.org) responses, and uses standard HTTP response codes, authentication, and verbs.\n\n# Environments\n\n| Name | Description | Base URL |\n|------|-------------|----------|\n| **Sandbox** | The Sandbox environment is dedicated to development and testing. In this environment, no real taxpayer credentials are required and all interaction with the SAT is simulated generating life-like data, allowing you to pull test data from all endpoints. | https://api.sandbox.syntage.com |\n| **Production** | The Production environment is dedicated to live applications with real connections to the SAT. In this environment, real taxpayer credentials are required, and you will pull real fiscal data directly from the SAT. | https://api.syntage.com |\n\nEach environment has a different API Key for [authentication](#section/Authentication).\n\n# Request IDs\n\nEach API request has an associated request identifier.\nYou can find this value in the response headers, under `X-Request-ID`:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-Request-ID: Root=1-6532dcae-169bf139354cd48959f55c55\n```\n\nIf you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution.\n\n# Rate Limiting\n\nOur API employs a number of safeguards against bursts of incoming traffic to help maximize its stability.\nThe returned HTTP headers of any API request show your current rate limit status:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 56\nX-RateLimit-Reset: 1606678044\n```\n\n| Header Name           | Description |\n|-----------------------|------------------------------------------------------------------------------|\n| X-RateLimit-Limit     | The maximum number of requests you're permitted to make.                     |\n| X-RateLimit-Remaining | The number of requests remaining in the current rate limit window.           |\n| X-RateLimit-Reset     | The time at which the current rate limit window resets in UTC epoch seconds. |\n\nIf you exceed the rate limit, a [429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) response is returned:\n\n```http\nHTTP/1.1 429 Too Many Requests\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1606678044\n```\n\nWe may reduce limits to prevent abuse, or increase limits to enable high-traffic operations.\nYou can check your current limits in the [dashboard](https://app.syntage.com/settings/usage).\nTo request an increased rate limit, please [contact support](https://support.syntage.com/).\n# Pagination\nWhen issuing a GET request on a collection containing more than 1 page (e.g. [/events](#operation/ListEvent)),  a collection is returned. Links to the first, the last, previous and the next page in the collection are displayed as well as the  number of total items in the collection.\nAll endpoints that support this operation have a query parameter defined by:\n  - `itemsPerPage` The number of items per page (default: 20, max: 1000)\n  - `page` The collection page number\n\n```bash\n  \"hydra:totalItems\": 1,\n  \"hydra:view\": {\n    \"@id\": \"/events?page=1\",\n    \"@type\": \"hydra:PartialCollectionView\",\n    \"hydra:first\": \"/events?page=1\",\n    \"hydra:next\": \"/events?page=2\",\n    \"hydra:last\": \"/events?page=3\"\n  },\n```\n## Cursor Pagination\nCursor pagination is a technique used for navigating through large datasets efficiently. It allows you to retrieve a specific subset of results from a collection by using a cursor value that represents the position within the collection. The cursor serves as a reference point for fetching the next or previous set of results.\n### Benefits of Cursor Pagination:\n1. **Efficient Navigation:** Cursor pagination eliminates the need to fetch the entire dataset at once, making it more scalable and faster. You can retrieve data in smaller, manageable chunks based on the cursor values.\n2. **Consistent Results:** Each page of results in cursor pagination is stable and doesn't change even if new items are added or removed from the collection. This ensures that you get consistent and reliable results.\n3. **Flexibility:** Cursors can be used to navigate forwards and backwards in the collection without impacting performance.\n\n### How to Use Cursor Pagination:\nTo use cursor pagination with our API, follow these instructions:\n1. Make a request to retrieve the initial page of results. The response will be a JSON-LD document that includes a `hydra:next` attribute with the URI for the next page. The URI already includes the cursor attribute.\n2. To retrieve the next page of results, make a GET request to the URI provided in the `hydra:next` attribute. This URI will automatically include the cursor value for the next page.\n3. If you want to navigate to the previous page, you can use the `hydra:previous` attribute in the JSON-LD response. It will contain the URI for the previous page, including the cursor value.\n4. You can continue making requests to the `hydra:next` and `hydra:previous` URIs to navigate through the paginated results, based on your requirements.\nMake sure to update your request headers to include the necessary headers for JSON-LD content negotiation, such as `Accept: application/ld+json` or `Content-Type: application/ld+json`.\nBy following these instructions, you can effectively navigate through the paginated results using the cursor values provided in the `hydra:next` and `hydra:previous` attributes, without the need to manually include the cursor in your requests. This simplifies the pagination process and enhances the usability of our API.\n\n### Considerations About Cursor Pagination:\n\n  - By default, the API uses offset-based pagination (except for a few endpoints that we will list below). If you want to switch to cursor pagination, you need to include an additional header in your request. Set the `X-Pagination-Style` header with the value `\"cursor\"` to enable cursor pagination. If not specified, the API will assume offset-based pagination.\n\n  - After enabling cursor pagination, the API response will no longer include the `hydra:totalItems` field by default. Retrieving the total count can be resource intensive and impact response times, especially for large datasets. However, if you need the `hydra:totalItems` information, you can include an additional header in your request. Set the `X-Pagination-Enable-Partial` header with the value `0` to indicate that the response should include extra information, including the `hydra:totalItems` count. Please be aware that enabling this feature may impact API response times, as the backend needs to perform a count operation on the dataset.\n\nIf you require the `hydra:totalItems` count, please consider the potential impact on API response times.\n### Example\n```bash\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices?itemsPerPage=10' \\\n    --header 'Accept: application/ld+json' \\\n    --header 'X-Api-Key: {apiKey}' \\\n    --header 'X-Pagination-Style: cursor' \\\n    --header 'X-Pagination-Enable-Partial: 0'\n```\n**Note:** We only support cursor pagination for the following endpoints:\n - `GET /entities/{entityId}/invoices`\n - `GET /entities/{entityId}/invoices/line-items`\n - `GET /entities/{entityId}/invoices/{invoiceId}/line-items`\n - `GET /invoices/{invoiceId}/line-items`\n - `GET /entities/{entityId}/invoices/payments`\n\nFeel free to reach out if you have any further questions or need additional assistance!\n\n# Property Filtering\nThe property filter adds the possibility to select the properties for GET operations.\nSyntax: `?properties[]=<property>&properties[<relation>][]=<property>`\nYou can add as many properties as you need. The following example shows how to select `paymentType` and  `issuer.rfc` when fetching a list of invoices.\n```curl\n  curl -i https://api.syntage.com/entities/{entityId}/invoices?properties[]=paymentType&properties[issuer]=rfc\n```\n# Filtering\n**Warning:** Collection endpoints only apply the filter query parameters documented for that endpoint. If you send an unsupported or misspelled filter query parameter, the API ignores it and processes the request as if that parameter was not sent.\n\n# API Versioning Guide\nGuidance on changes between versions.\n## Version: 2020-01-01 to 2020-06-28\n### **Invoice**\n_**Affected Endpoints:** `GET /invoices/{id}` and `GET /entities/{entityId}/invoices`_\n- The `amount` property has been removed from API responses. Use the `total` property instead.\n- Retrieval by invoice's `uuid` at `/invoices/{id}` is now removed. To retrieve an invoice, use the invoice's `id` at the specified endpoint. To find an invoice using its `uuid`, filter the invoice collection at `/entities/{entityId}/invoices?uuid[]={uuid}`.\n- Previously, the `@iri` property for an invoice pointed to the resource using `uuid`, like `/invoices/{uuid}`. Now, it points using its `id`, like `/invoices/{id}`.\n\n### **Entity (Formerly Link)**\n_**Affected Endpoint:** `GET /entities`_\n- Filtering entities by `status` is removed. Use `credential.status` instead. For example, utilize `GET /entities?credential.status[]=active` instead of `GET /entities?status[]=active`.\n\n### **Tax Return**\n_**Affected Endpoints:** `GET /tax-returns/{id}` and `GET /entities/{entityId}/tax-returns`_\n- Retrieval by tax return's `operationNumber` at `/tax-returns/{id}` is removed. To retrieve a tax return, use the tax return's `id` at the mentioned endpoint. To find a tax return using its `operationNumber`, filter the collection at `/entities/{entityId}/tax-returns?operationNumber[]={operationNumber}`.\n- Previously, the `@iri` property for a tax return pointed to the resource using `operationNumber`, like `/tax-returns/{operationNumber}`. Now, it directs to its `id`, like `/tax-returns/{id}`.\n\n### **Event**\n_**Affected Endpoints:** `GET /events` and `GET /events/{id}`_\n- For events associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}` instead of the previous `/tax-returns/{operationNumber}`.\n- For events associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}` instead of the previous `/invoices/{uuid}`.\n\n### **Extraction**\n_**Affected Endpoints:** `GET /extractions` and `GET /extractions/{id}`_\n- The `periodFrom` property has been removed. Use `options.period.from` instead.\n- The `periodTo` property has been removed. Use `options.period.to` instead.\n\n### **File**\n_**Affected Endpoint:** `GET /file/{id}`_\n- For files associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}`, instead of the previous `/tax-returns/{operationNumber}`.\n- For files associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}`, instead of the previous `/invoices/{uuid}`.\n\n### Trying Out This Version\nIf you want to test this version, you can do so by making any request with the `Accept-Version` header pointing to the latest version:\n```curl\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices' \\\n    --header 'Accept-Version: 2020-06-28' \\\n    --header 'X-Api-Key: {apiKey}'\n```\n"
+servers:
+- url: https://api.syntage.com
+  description: Production
+- url: https://api.sandbox.syntage.com
+  description: Sandbox
+security:
+- ApiKey: []
+tags:
+- name: Scores Insight
+paths:
+  /entities/{entityId}/insights/metrics/scores:
+    get:
+      tags:
+      - Scores Insight
+      operationId: GetScoresInsight
+      summary: Get scores
+      description: Entity scores aggregated from every configured score source (Syntage Score and any third-party rating providers enabled for the organization).
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ScoresInsight'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /insights/metrics/scores/syntage/distribution:
+    get:
+      tags:
+      - Scores Insight
+      operationId: GetSyntageScoreDistribution
+      summary: Get Syntage Score distribution
+      description: Get the distribution of current Syntage Score values across score buckets.
+      responses:
+        '200':
+          description: Syntage Score distribution
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/ScoreDistribution'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /entities/{entityId}/insights/metrics/buro-de-credito/summary:
+    get:
+      tags:
+      - Scores Insight
+      operationId: GetBuroDeCreditoSummaryInsight
+      summary: Get Buró de Crédito summary
+      description: List Buró de Crédito report score summaries for an entity.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      - name: options[from]
+        in: query
+        description: Filter by report creation date on or after this date
+        schema:
+          type: string
+          default: '2014-01-01'
+      - name: options[to]
+        in: query
+        description: Filter by report creation date on or before this date
+        schema:
+          type: string
+          default: now
+      responses:
+        '200':
+          description: Buró de Crédito summary
+          content:
+            application/ld+json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/HydraView'
+                - type: object
+                  properties:
+                    '@context':
+                      default: /contexts/BuroDeCreditoSummary
+                    '@id':
+                      example: /entities/9bd4a640-9f41-4cd5-a158-20767b386ca0/insights/metrics/buro-de-credito/summary
+                    hydra:member:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/BuroDeCreditoSummaryInsight'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /entities/{entityId}/insights/metrics/buro-de-credito/summary/export:
+    get:
+      tags:
+      - Scores Insight
+      operationId: ExportBuroDeCreditoSummaryInsight
+      summary: Export Buró de Crédito summary
+      description: Export Buró de Crédito report score summaries for an entity as CSV or XLSX.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      - name: Accept
+        in: header
+        required: true
+        description: Export format to return
+        schema:
+          type: string
+          enum:
+          - text/csv
+          - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - name: options[from]
+        in: query
+        description: Filter by report creation date on or after this date
+        schema:
+          type: string
+          default: '2014-01-01'
+      - name: options[to]
+        in: query
+        description: Filter by report creation date on or before this date
+        schema:
+          type: string
+          default: now
+      responses:
+        '200':
+          description: Buró de Crédito summary export
+          content:
+            text/csv:
+              schema:
+                type: string
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+components:
+  schemas:
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    Score:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Score IRI reference
+          example: /.well-known/genid/78c595ac88fa9659fa80
+        '@type':
+          type: string
+          description: Type of score object
+          default: ScoreBySource
+        id:
+          $ref: '#/components/schemas/uuid'
+        source:
+          type: string
+          description: Source of the score
+          example: syntage
+        type:
+          type: string
+          description: Type of score
+          example: internal
+        score:
+          type: string
+          description: Calculated score
+          example: '532'
+        generatedAt:
+          type: string
+          description: Date and time the resource was generated
+          example: '2020-01-01T12:15:00.000Z'
+        metadata:
+          type: object
+          description: Essential information and attributes about the score; structure changes depending on source and type
+          example:
+            breakdown:
+              offenders:
+                margen_bruto: Missing gross margin
+                margen_neto: Missing net margin
+              performers:
+                debt_to_income: Debt to income between 0.4 and 0.6
+                quick_ratio: Quick ratio > 3
+            distribution:
+            - label: 500
+              metric: 1
+    HydraView:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:totalItems:
+          type: integer
+          description: Total number of items found
+          minimum: 0
+          example: 1
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:first:
+              type: string
+              format: iri-reference
+              description: First page IRI reference; omitted when there is no pagination
+            hydra:next:
+              type: string
+              format: iri-reference
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              format: iri-reference
+              description: Last page IRI reference; omitted when there is no pagination
+    ScoreDistribution:
+      type: object
+      description: Distribution of current Syntage Score values across score buckets.
+      properties:
+        distribution:
+          type: array
+          description: Number of Syntage Score records in each score bucket
+          items:
+            type: object
+            properties:
+              label:
+                type: integer
+                description: Score bucket label
+                example: 500
+              metric:
+                type: integer
+                description: Number of scores in the bucket
+                example: 12
+    BuroDeCreditoSummaryInsight:
+      type: object
+      description: Summary row for one Buró de Crédito report score.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Buró de Crédito report ID
+          example: 9cc7fc78-5e84-4862-af83-c6c7022fcb41
+        productType:
+          type: string
+          enum:
+          - '007'
+          - '004'
+          - INFORME_BURO
+          - RCO
+          description: Buró de Crédito product type used to generate the report
+          example: '007'
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time when the report was created
+          example: '2024-01-31T00:00:00+00:00'
+        scoreValue:
+          type: string
+          nullable: true
+          description: Score value returned by Buró de Crédito when available
+          example: '0676'
+        scoreCode:
+          type: string
+          nullable: true
+          description: Buró de Crédito score code when available
+          example: '007'
+        scoreReasonCodes:
+          type: array
+          description: Buró de Crédito score reason codes
+          items:
+            type: string
+          example:
+          - '04'
+        externalReturnKey:
+          type: string
+          nullable: true
+          description: Provider return key for legal-entity report products when available
+          example: '1'
+    Scores:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Scores IRI reference
+          example: /.well-known/genid/78c595ac88fa9659fa80
+        '@type':
+          type: string
+          default: Scores
+        scores:
+          type: array
+          description: List of score objects
+          items:
+            $ref: '#/components/schemas/Score'
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            properties:
+              '@context':
+                type: string
+                default: /contexts/Error
+              '@type':
+                type: string
+                default: hydra:Error
+              hydra:title:
+                type: string
+                default: An error occurred
+              hydra:description:
+                type: string
+                description: Concatenated violation messages
+                example: 'exampleField: Syntage score already exists.'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    ScoresInsight:
+      description: Entity scores
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Scores
+            - $ref: '#/components/schemas/Scores'
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'Your API key is available in the [Production](https://app.syntage.com/settings/api-keys) and [Sandbox](https://app.sandbox.syntage.com/settings/api-keys) dashboards.
+
+        '
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

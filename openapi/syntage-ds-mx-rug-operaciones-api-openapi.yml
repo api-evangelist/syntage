@@ -1,0 +1,613 @@
+openapi: 3.0.2
+info:
+  version: '2020-06-28'
+  title: Syntage Accounts Payable Insight DS MX RUG Operaciones API
+  contact:
+    name: Email
+    email: support@syntage.com
+  description: "# Introduction\n\nThe Syntage API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer).\nOur API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns [JSON-LD](https://json-ld.org) responses, and uses standard HTTP response codes, authentication, and verbs.\n\n# Environments\n\n| Name | Description | Base URL |\n|------|-------------|----------|\n| **Sandbox** | The Sandbox environment is dedicated to development and testing. In this environment, no real taxpayer credentials are required and all interaction with the SAT is simulated generating life-like data, allowing you to pull test data from all endpoints. | https://api.sandbox.syntage.com |\n| **Production** | The Production environment is dedicated to live applications with real connections to the SAT. In this environment, real taxpayer credentials are required, and you will pull real fiscal data directly from the SAT. | https://api.syntage.com |\n\nEach environment has a different API Key for [authentication](#section/Authentication).\n\n# Request IDs\n\nEach API request has an associated request identifier.\nYou can find this value in the response headers, under `X-Request-ID`:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-Request-ID: Root=1-6532dcae-169bf139354cd48959f55c55\n```\n\nIf you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution.\n\n# Rate Limiting\n\nOur API employs a number of safeguards against bursts of incoming traffic to help maximize its stability.\nThe returned HTTP headers of any API request show your current rate limit status:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 56\nX-RateLimit-Reset: 1606678044\n```\n\n| Header Name           | Description |\n|-----------------------|------------------------------------------------------------------------------|\n| X-RateLimit-Limit     | The maximum number of requests you're permitted to make.                     |\n| X-RateLimit-Remaining | The number of requests remaining in the current rate limit window.           |\n| X-RateLimit-Reset     | The time at which the current rate limit window resets in UTC epoch seconds. |\n\nIf you exceed the rate limit, a [429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) response is returned:\n\n```http\nHTTP/1.1 429 Too Many Requests\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1606678044\n```\n\nWe may reduce limits to prevent abuse, or increase limits to enable high-traffic operations.\nYou can check your current limits in the [dashboard](https://app.syntage.com/settings/usage).\nTo request an increased rate limit, please [contact support](https://support.syntage.com/).\n# Pagination\nWhen issuing a GET request on a collection containing more than 1 page (e.g. [/events](#operation/ListEvent)),  a collection is returned. Links to the first, the last, previous and the next page in the collection are displayed as well as the  number of total items in the collection.\nAll endpoints that support this operation have a query parameter defined by:\n  - `itemsPerPage` The number of items per page (default: 20, max: 1000)\n  - `page` The collection page number\n\n```bash\n  \"hydra:totalItems\": 1,\n  \"hydra:view\": {\n    \"@id\": \"/events?page=1\",\n    \"@type\": \"hydra:PartialCollectionView\",\n    \"hydra:first\": \"/events?page=1\",\n    \"hydra:next\": \"/events?page=2\",\n    \"hydra:last\": \"/events?page=3\"\n  },\n```\n## Cursor Pagination\nCursor pagination is a technique used for navigating through large datasets efficiently. It allows you to retrieve a specific subset of results from a collection by using a cursor value that represents the position within the collection. The cursor serves as a reference point for fetching the next or previous set of results.\n### Benefits of Cursor Pagination:\n1. **Efficient Navigation:** Cursor pagination eliminates the need to fetch the entire dataset at once, making it more scalable and faster. You can retrieve data in smaller, manageable chunks based on the cursor values.\n2. **Consistent Results:** Each page of results in cursor pagination is stable and doesn't change even if new items are added or removed from the collection. This ensures that you get consistent and reliable results.\n3. **Flexibility:** Cursors can be used to navigate forwards and backwards in the collection without impacting performance.\n\n### How to Use Cursor Pagination:\nTo use cursor pagination with our API, follow these instructions:\n1. Make a request to retrieve the initial page of results. The response will be a JSON-LD document that includes a `hydra:next` attribute with the URI for the next page. The URI already includes the cursor attribute.\n2. To retrieve the next page of results, make a GET request to the URI provided in the `hydra:next` attribute. This URI will automatically include the cursor value for the next page.\n3. If you want to navigate to the previous page, you can use the `hydra:previous` attribute in the JSON-LD response. It will contain the URI for the previous page, including the cursor value.\n4. You can continue making requests to the `hydra:next` and `hydra:previous` URIs to navigate through the paginated results, based on your requirements.\nMake sure to update your request headers to include the necessary headers for JSON-LD content negotiation, such as `Accept: application/ld+json` or `Content-Type: application/ld+json`.\nBy following these instructions, you can effectively navigate through the paginated results using the cursor values provided in the `hydra:next` and `hydra:previous` attributes, without the need to manually include the cursor in your requests. This simplifies the pagination process and enhances the usability of our API.\n\n### Considerations About Cursor Pagination:\n\n  - By default, the API uses offset-based pagination (except for a few endpoints that we will list below). If you want to switch to cursor pagination, you need to include an additional header in your request. Set the `X-Pagination-Style` header with the value `\"cursor\"` to enable cursor pagination. If not specified, the API will assume offset-based pagination.\n\n  - After enabling cursor pagination, the API response will no longer include the `hydra:totalItems` field by default. Retrieving the total count can be resource intensive and impact response times, especially for large datasets. However, if you need the `hydra:totalItems` information, you can include an additional header in your request. Set the `X-Pagination-Enable-Partial` header with the value `0` to indicate that the response should include extra information, including the `hydra:totalItems` count. Please be aware that enabling this feature may impact API response times, as the backend needs to perform a count operation on the dataset.\n\nIf you require the `hydra:totalItems` count, please consider the potential impact on API response times.\n### Example\n```bash\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices?itemsPerPage=10' \\\n    --header 'Accept: application/ld+json' \\\n    --header 'X-Api-Key: {apiKey}' \\\n    --header 'X-Pagination-Style: cursor' \\\n    --header 'X-Pagination-Enable-Partial: 0'\n```\n**Note:** We only support cursor pagination for the following endpoints:\n - `GET /entities/{entityId}/invoices`\n - `GET /entities/{entityId}/invoices/line-items`\n - `GET /entities/{entityId}/invoices/{invoiceId}/line-items`\n - `GET /invoices/{invoiceId}/line-items`\n - `GET /entities/{entityId}/invoices/payments`\n\nFeel free to reach out if you have any further questions or need additional assistance!\n\n# Property Filtering\nThe property filter adds the possibility to select the properties for GET operations.\nSyntax: `?properties[]=<property>&properties[<relation>][]=<property>`\nYou can add as many properties as you need. The following example shows how to select `paymentType` and  `issuer.rfc` when fetching a list of invoices.\n```curl\n  curl -i https://api.syntage.com/entities/{entityId}/invoices?properties[]=paymentType&properties[issuer]=rfc\n```\n# Filtering\n**Warning:** Collection endpoints only apply the filter query parameters documented for that endpoint. If you send an unsupported or misspelled filter query parameter, the API ignores it and processes the request as if that parameter was not sent.\n\n# API Versioning Guide\nGuidance on changes between versions.\n## Version: 2020-01-01 to 2020-06-28\n### **Invoice**\n_**Affected Endpoints:** `GET /invoices/{id}` and `GET /entities/{entityId}/invoices`_\n- The `amount` property has been removed from API responses. Use the `total` property instead.\n- Retrieval by invoice's `uuid` at `/invoices/{id}` is now removed. To retrieve an invoice, use the invoice's `id` at the specified endpoint. To find an invoice using its `uuid`, filter the invoice collection at `/entities/{entityId}/invoices?uuid[]={uuid}`.\n- Previously, the `@iri` property for an invoice pointed to the resource using `uuid`, like `/invoices/{uuid}`. Now, it points using its `id`, like `/invoices/{id}`.\n\n### **Entity (Formerly Link)**\n_**Affected Endpoint:** `GET /entities`_\n- Filtering entities by `status` is removed. Use `credential.status` instead. For example, utilize `GET /entities?credential.status[]=active` instead of `GET /entities?status[]=active`.\n\n### **Tax Return**\n_**Affected Endpoints:** `GET /tax-returns/{id}` and `GET /entities/{entityId}/tax-returns`_\n- Retrieval by tax return's `operationNumber` at `/tax-returns/{id}` is removed. To retrieve a tax return, use the tax return's `id` at the mentioned endpoint. To find a tax return using its `operationNumber`, filter the collection at `/entities/{entityId}/tax-returns?operationNumber[]={operationNumber}`.\n- Previously, the `@iri` property for a tax return pointed to the resource using `operationNumber`, like `/tax-returns/{operationNumber}`. Now, it directs to its `id`, like `/tax-returns/{id}`.\n\n### **Event**\n_**Affected Endpoints:** `GET /events` and `GET /events/{id}`_\n- For events associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}` instead of the previous `/tax-returns/{operationNumber}`.\n- For events associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}` instead of the previous `/invoices/{uuid}`.\n\n### **Extraction**\n_**Affected Endpoints:** `GET /extractions` and `GET /extractions/{id}`_\n- The `periodFrom` property has been removed. Use `options.period.from` instead.\n- The `periodTo` property has been removed. Use `options.period.to` instead.\n\n### **File**\n_**Affected Endpoint:** `GET /file/{id}`_\n- For files associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}`, instead of the previous `/tax-returns/{operationNumber}`.\n- For files associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}`, instead of the previous `/invoices/{uuid}`.\n\n### Trying Out This Version\nIf you want to test this version, you can do so by making any request with the `Accept-Version` header pointing to the latest version:\n```curl\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices' \\\n    --header 'Accept-Version: 2020-06-28' \\\n    --header 'X-Api-Key: {apiKey}'\n```\n"
+servers:
+- url: https://api.syntage.com
+  description: Production
+- url: https://api.sandbox.syntage.com
+  description: Sandbox
+security:
+- ApiKey: []
+tags:
+- name: DS MX RUG Operaciones
+  description: 'RUG operations are registry acts associated with a movable collateral guarantee. They include operation metadata, guarantee numbers, grantors, parsed boleta data, and file references when available.
+
+    '
+paths:
+  /datasources/rug/operaciones/{id}:
+    get:
+      tags:
+      - DS MX RUG Operaciones
+      operationId: GetRugOperacion
+      summary: Retrieve RUG operation
+      description: Retrieve one RUG operation by ID, including operation type, seat number, guarantee number, grantors, parsed boleta data, and file reference when available.
+      parameters:
+      - $ref: '#/components/parameters/resourceId'
+      responses:
+        '200':
+          $ref: '#/components/responses/RugOperacion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /entities/{entityId}/datasources/rug/operaciones:
+    get:
+      tags:
+      - DS MX RUG Operaciones
+      operationId: ListRugOperaciones
+      summary: List an entity's RUG operations
+      description: List RUG operations extracted for an entity. Use this endpoint after a `rug` extraction finishes to review registry acts related to the entity's guarantees.
+      parameters:
+      - $ref: '#/components/parameters/entityId'
+      - $ref: '#/components/parameters/collectionCursorNextPageParam'
+      - $ref: '#/components/parameters/collectionCursorPreviousPageParam'
+      - $ref: '#/components/parameters/collectionLimit'
+      - name: numeroDeAsiento
+        in: query
+        schema:
+          $ref: '#/components/schemas/RugOperacionNumeroDeAsiento'
+      - name: tipo
+        in: query
+        schema:
+          $ref: '#/components/schemas/RugOperacionTipo'
+      - name: numeroDeGarantia
+        in: query
+        schema:
+          $ref: '#/components/schemas/RugNumeroDeGarantia'
+      - name: fecha[before]
+        in: query
+        schema:
+          $ref: '#/components/schemas/RugOperacionFecha'
+      - name: fecha[strictly_before]
+        in: query
+        schema:
+          $ref: '#/components/schemas/RugOperacionFecha'
+      - name: fecha[after]
+        in: query
+        schema:
+          $ref: '#/components/schemas/RugOperacionFecha'
+      - name: fecha[strictly_after]
+        in: query
+        schema:
+          $ref: '#/components/schemas/RugOperacionFecha'
+      - $ref: '#/components/parameters/createdAtAfter'
+      - $ref: '#/components/parameters/createdAtStrictlyAfter'
+      - $ref: '#/components/parameters/createdAtBefore'
+      - $ref: '#/components/parameters/createdAtStrictlyBefore'
+      - $ref: '#/components/parameters/updatedAtAfter'
+      - $ref: '#/components/parameters/updatedAtStrictlyAfter'
+      - $ref: '#/components/parameters/updatedAtBefore'
+      - $ref: '#/components/parameters/updatedAtStrictlyBefore'
+      - $ref: '#/components/parameters/orderCreatedAt'
+      - $ref: '#/components/parameters/orderUpdatedAt'
+      responses:
+        '200':
+          $ref: '#/components/responses/TaxpayerRugOperacionCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    RugOperacionPartial:
+      type: object
+      description: RUG operation summary
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: RUG operation IRI reference
+          example: /datasources/rug/operaciones/99c13810-868f-482e-a6f1-878254248d27
+        '@type':
+          type: string
+          default: RugOperacion
+        id:
+          $ref: '#/components/schemas/RugOperacionID'
+        numeroDeAsiento:
+          $ref: '#/components/schemas/RugOperacionNumeroDeAsiento'
+        tipo:
+          $ref: '#/components/schemas/RugOperacionTipo'
+        fecha:
+          $ref: '#/components/schemas/RugOperacionFecha'
+        file:
+          $ref: '#/components/schemas/RugOperacionFile'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    RugOperacionTipo:
+      type: string
+      description: Type of RUG operation
+      enum:
+      - anotacion
+      - aviso_preventivo
+      - cancelacion
+      - cancelacion_de_anotacion
+      - certificacion
+      - inscripcion
+      - modificacion
+      - modificacion_de_anotacion
+      - rectificacion_de_anotacion
+      - rectificacion_por_error
+      - renovacion_o_reduccion_de_vigencia
+      - renovacion_vigencia_de_anotacion
+      - transmision
+      example: inscripcion
+    TaxpayerRugOperacionCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/RugOperacion
+          '@id':
+            default: /entities/{entityId}/datasources/rug/operaciones
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/datasources/rug/operaciones
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/RugOperacionFull'
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    RugOperacionFecha:
+      type: string
+      format: date-time
+      description: Date and time of the RUG operation
+      example: 2021-10-12 00:00:00+00:00
+    RugOperacionFile:
+      type: string
+      format: iri-reference
+      description: File resource for the RUG operation document
+      example: /files/99c13810-868f-482e-a6f1-878254248d27
+    RugOperacionBoleta:
+      type: object
+      description: Parsed RUG boleta data for the operation
+      properties:
+        datos_del_asiento:
+          type: object
+          properties:
+            numero_de_asiento_cadena_unica_de_datos:
+              type: string
+              example: 12345678
+            numero_de_garantia_mobiliaria:
+              type: string
+              example: 123456
+            fecha_y_hora:
+              type: string
+              example: 11/03/2022 - 00:18:32 * ZULU GMT / UTC
+            vigencia:
+              type: string
+              example: 12 meses
+            inscrito_en_el_folio_mercantil_no:
+              type: string
+              example: 34011*7
+        datos_del_otorgante:
+          type: array
+          items:
+            type: object
+            properties:
+              nombre_denominacion_o_razon_social:
+                type: string
+                example: El Otorgante de Garantías Mobiliarias, S.A. de C.V.
+              folio_electronico:
+                type: string
+                example: 34011*7
+              el_otorgante_de_la_garantia_mobiliaria_es_deudor:
+                type: string
+                example: Si
+        datos_del_acreedor:
+          type: object
+          properties:
+            nombre_denominacion_o_razon_social:
+              type: string
+              example: Grupo Financiero Acreedor, S.A.P.I. de C.V., SOFOM E.N.R.
+            telefono:
+              type: string
+              example: 12345678
+            extension:
+              type: string
+              example: N/A
+            correo_electronico:
+              type: string
+              example: persona.a@acreedor.com.mx,persona.b@acreedor.com.mx
+            domicilio_para_efectos_del_rug:
+              type: string
+              example: Av. Paseo de la Reforma 296, Juárez, Cuauhtémoc, 06600 Ciudad de México, CDMX
+        datos_de_los_acreedores_adicionales:
+          type: array
+          items:
+            type: object
+            properties:
+              nombre_denominacion_o_razon_social:
+                type: string
+                example: Grupo Financiero Acreedor Adicional, S.A.P.I. de C.V., SOFOM E.N.R.
+              telefono:
+                type: string
+                example: 12345678
+              extension:
+                type: string
+                example: 543
+              correo_electronico:
+                type: string
+                example: persona@acredoor2.com.mx
+              domicilio_para_efectos_del_rug:
+                type: string
+                example: Av. Luis Barragan 505, Santa Fe, Contadero, Cuajimalpa de Morelos, 05348 Ciudad de México, CDMX
+              folio_electronico:
+                type: string
+                example: 12345*6
+        datos_de_los_deudores:
+          type: array
+          items:
+            type: object
+            properties:
+              nombre_denominacion_o_razon_social:
+                type: string
+                example: El Otorgante de Garantías Mobiliarias, S.A. de C.V.
+        datos_de_la_garantia_mobiliaria:
+          type: object
+          properties:
+            tipo_de_garantia_mobiliaria:
+              type: string
+              example: Factoraje Financiero
+            fecha_de_celebracion_del_acto_o_contrato_o_del_surgimiento_de_los_derechos_de_retencion_o_privilegios_especiales:
+              type: string
+              example: 08/03/2021
+            monto_maximo_garantizado_y_moneda:
+              type: string
+              example: $ 12345.67 Peso Mexicano
+            tipo_de_bienes_muebles_objeto_de_la_garantia_mobiliaria:
+              type: string
+              example: Derechos, incluyendo derechos de cobro.
+            descripcion_de_los_bienes_muebles_objeto_de_la_garantia_mobiliaria:
+              type: string
+              example: Factura con el folio fiscal 99c13810-868f-482e-a6f1-878254248d27
+            el_acto_o_contrato_preve_incrementos_reducciones_o_sustituciones_de_los_bienes_muebles_o_del_monto_garantizado:
+              type: string
+              example: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula blandit feugiat. Nullam ligula nunc, vehicula non porta quis, eleifend id leo. Nulla et nisl vulputate, commodo urna sit amet, pharetra leo. Aliquam erat volutpat.
+            datos_del_instrumento_publico_mediante_el_cual_se_formalizo_el_acto_o_contrato:
+              type: string
+              example: Proin laoreet posuere velit eget interdum. Donec interdum risus quam, porta laoreet dui consectetur nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+            terminos_y_condiciones_del_acto_o_contrato_de_la_garantia_mobiliaria:
+              type: string
+              example: Integer molestie urna vitae dolor consectetur, ut molestie libero pulvinar.
+        datos_del_acto_o_contrato_que_creo_la_obligacion_garantizada:
+          type: object
+          properties:
+            ? declaro_bajo_protesta_de_decir_verdad_que_se_solicito_al_otorgante_de_la_garantia_manifestacion_respecto_de_la_no_existencia_de_garantias_otorgadas_previamente_referente_a_los_bienes_objeto_de_esta_garantia
+            : type: string
+              example: Si
+            acto_o_contrato_que_creo_la_obligacion_garantizada:
+              type: string
+              example: Vivamus nisi leo, dapibus a tellus eu, dictum convallis neque. Suspendisse ut diam sollicitudin, congue tortor in, mollis felis. Vestibulum id ornare lacus.
+            fecha_de_celebracion_del_acto_o_contrato:
+              type: string
+              example: 08/03/2021
+            fecha_de_terminacion_del_acto_o_contrato:
+              type: string
+              example: 08/03/2022
+            terminos_y_condiciones_del_acto_o_contrato_que_creo_la_obligacion_garantizada:
+              type: string
+              example: Donec euismod bibendum porttitor. Suspendisse cursus venenatis fringilla. Nulla ornare elementum gravida. Nam lectus mi, tincidunt sed vehicula nec, interdum ut lacus. Vestibulum nec nibh elit.
+        persona_que_firmo_el_asiento:
+          type: object
+          properties:
+            nombre:
+              type: string
+              example: Juan Robles Hernández
+            en_su_caracter_de:
+              type: string
+              example: ACREEDOR
+        persona_que_solicita_o_autoridad_que_instruye_el_asiento:
+          type: object
+          properties:
+            nombre_y_cargo:
+              type: string
+              example: N/A
+        firma_electronica:
+          type: object
+          properties:
+            cadena_original_solicitante:
+              type: string
+              example: MkdQYUeOZGNIU3AXa080V05jQkNGMzNDSitZPXwzMzczLzA5NA==
+            sello_solicitante:
+              type: string
+              example: pBFfNh/Ox2+GiivFcx8xjMamo+njQpo/AtJlMCA/3TYByMnhPBP0kJjYhmAu7YhmCGg6K2AKrPIpVlOgS53nZH/kRBp0a0WdDCuhL7sZYdTuuGYa7IqvdkuGqCxppF6/JphYto7pgsKpozW5WleP+wE6Y37ZWSD9SvgfDIliL3faL3EBOQhNb3R3t+GcpzIyvhAtlONfsp0aHPo+1Ngr/7jwwXPaFQuKtVonWB7e0R4E4QmaEPAdkmFg0wfCCOuYufRCtqqgAVVHvV5DpBabp83w470qDVrmDyYTnbpFeg5pdN0k4vtESaSkVwGaxNnnVKNQ4j9sVG+KO0a2aej8xw==
+            certificado_solicitante:
+              type: string
+              example: SERIALNUMBER=ROSR561225HDFJNC00, OID.2.5.4.45=ROSR561225HD0, EMAILADDRESS=juan.roblesh@gmail.com, C=MX, O=JUAN ROBLES HERNÁNDEZ, OID.2.5.4.41=JUAN ROBLES HERNÁNDEZ, CN=JUAN ROBLES HERNÁNDEZ
+            sello_de_tiempo:
+              type: string
+              example: 'Certificado AC:O=Secretaria de Economia, OU=nCipher DSE ESN:48D7-2DFC-BF7B, CN=TS A1.economia.gob.mx, C=MX, ST=Ciudad de Mexico, L=Alvaro Obregon|Fecha: 202203110 01832.21Z|Numero de secuencia:107221737826163|Digestion: PUS8fSphg13dOKjPYoMVN82 DCLg='
+            cadena_original_rug:
+              type: string
+              example: MkdQYUdOZGNIx3RXa080V05jQkNGMzNDSitZPXrzMzczNzA2NA==|k|d
+            sello_rug:
+              type: string
+              example: B7auogaFXWzNO7EBganQX6Bm/XmU12bYsP8ahtNagGNEuLJ0EekYmjdNvBvzd5/x9Mr6ypXCcLue+2ZNEjf4BWzElZdmsI69/GWTOp6ULozM2eFZMzLSL/He6WGtkoceWulElNDApb0PUkfaDOovlkVSZYkG0HTmZ/C9fJLYMvzA2LrazeEDibqp/M9l9HTgwCa+7NcLi+eAKYDGXCfbhnfsdFpkk338hQoc4TPyoB0sy5bUFCwwM7kCD/6ZSTy8QAXm9nvdt8vX/UktryZwUB72shedXWqQx3QtWJWpWHgi1cl0gQSial00a1pQspFVXvcX5rC5mEdzeezhsECVfg==
+            numero_serie_rug:
+              type: string
+              example: 123
+            certificado_rug:
+              type: string
+              example: EMAILADDRESS=contacto_rug@economia.gob.mx, O=Secretaria de Economia, OU=Direccion General de Normatividad Mercantil, CN=RUG. Ernesto del Castillo Hernandez, T=Di rector de Coordinacion del Registro Publico de Comercio, STREET="Insurgentes Sur 1940, Piso 1", OID.2.5.4.17=01030, C=MX, ST=Ciudad de Mexico, L=Alvaro Obregon, OID.2.5.4.45=#030E0043414845363731313037535638, SERIALNUMBER=CAHE671107HDFSRR03 , OID.2.5.4.20=(55)5229 6100 Ext. 33529
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    RugOperacionNumeroDeAsiento:
+      type: number
+      description: RUG seat number for the operation
+      example: 12345678
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    RugNumeroDeGarantia:
+      type: number
+      description: RUG guarantee number
+      example: 123456
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
+    RugOperacionFull:
+      allOf:
+      - $ref: '#/components/schemas/RugOperacionPartial'
+      - type: object
+        description: Full RUG operation details
+        properties:
+          numeroDeGarantia:
+            $ref: '#/components/schemas/RugNumeroDeGarantia'
+          otorgantes:
+            type: array
+            items:
+              $ref: '#/components/schemas/RugOperacionOtorgante'
+          boleta:
+            $ref: '#/components/schemas/RugOperacionBoleta'
+    RugOperacionID:
+      type: string
+      format: uuid
+      description: RUG operación identifier
+      example: 99c13810-868f-482e-a6f1-878254248d27
+    RugOperacionOtorgante:
+      type: object
+      description: Grantor associated with a RUG operation
+      properties:
+        nombre:
+          type: string
+          description: Grantor name
+          example: El Otorgante de Garantías Mobiliarias, S.A. de C.V.
+        folio_electronico:
+          type: string
+          description: Grantor electronic folio
+          example: 34011*7
+  parameters:
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
+      in: query
+      description: Filter by resource creation date (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
+      in: query
+      description: Filter by resource creation date (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtBefore:
+      name: createdAt[before]
+      in: query
+      description: Filter by resource creation date (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtStrictlyAfter:
+      name: updatedAt[strictly_after]
+      in: query
+      description: Filter by the date the resource was last updated (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    updatedAtStrictlyBefore:
+      name: updatedAt[strictly_before]
+      in: query
+      description: Filter by the date the resource was last updated (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtAfter:
+      name: updatedAt[after]
+      in: query
+      description: Filter by the date the resource was last updated (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtBefore:
+      name: updatedAt[before]
+      in: query
+      description: Filter by the date the resource was last updated (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    createdAtAfter:
+      name: createdAt[after]
+      in: query
+      description: Filter by resource creation date (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    RugOperacion:
+      description: RUG operación resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/RugOperacion
+            - $ref: '#/components/schemas/RugOperacionFull'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    TaxpayerRugOperacionCollection:
+      description: RUG operación collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/TaxpayerRugOperacionCollection'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'Your API key is available in the [Production](https://app.syntage.com/settings/api-keys) and [Sandbox](https://app.sandbox.syntage.com/settings/api-keys) dashboards.
+
+        '
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true
