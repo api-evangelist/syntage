@@ -1,0 +1,22 @@
+generated: '2026-07-21'
+method: searched
+source: live probe of /.well-known/* on Syntage hosts
+hosts_probed:
+- https://api.syntage.com
+- https://www.syntage.com
+- https://docs.syntage.com
+documents:
+- path: /.well-known/api-catalog
+  host: https://docs.syntage.com
+  status: 200
+  file: syntage-api-catalog.json
+  standard: RFC 9727 (api-catalog linkset)
+  note: Mintlify-generated linkset advertising the Syntage OpenAPI service description.
+- path: /.well-known/security.txt
+  status: 404
+- path: /.well-known/openid-configuration
+  status: 404
+- path: /.well-known/oauth-authorization-server
+  status: 404
+- path: /.well-known/ai-plugin.json
+  status: 404

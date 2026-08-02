@@ -1,0 +1,81 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.syntage.com/api-reference/introduction
+api: openapi/syntage-openapi-original.yml
+summary: >-
+  Cross-cutting request/response semantics for the Syntage API. REST, resource-oriented
+  URLs, form-encoded request bodies, JSON-LD (Hydra) responses, standard HTTP verbs and
+  status codes. Mexican fiscal-data aggregation (SAT, RPC, RUG, Buro de Credito).
+authentication:
+  style: api-key
+  header: X-API-Key
+  environments_have_distinct_keys: true
+  docs: https://docs.syntage.com/api-reference/introduction
+  ref: authentication/syntage-authentication.yml
+content_negotiation:
+  default_media_type: application/ld+json
+  also_accepts: application/json
+  vocabulary: JSON-LD / Hydra (hydra:member, hydra:view, hydra:totalItems)
+idempotency:
+  supported: false
+  note: >-
+    The Syntage API does not document an idempotency-key header. Write operations are
+    not advertised as idempotent; safe retries are not guaranteed by an idempotency key.
+request_tracing:
+  header: X-Request-ID
+  direction: response
+  note: Every request carries an identifier returned in the X-Request-ID response header; quote it in support requests.
+pagination:
+  default_style: offset
+  params:
+    page: The collection page number
+    itemsPerPage: 'Items per page (default: 20, max: 1000)'
+  response_fields:
+  - hydra:totalItems
+  - hydra:view (hydra:first / hydra:previous / hydra:next / hydra:last)
+  cursor:
+    supported: true
+    opt_in_header: 'X-Pagination-Style: cursor'
+    partial_header: 'X-Pagination-Enable-Partial: 0 (to include hydra:totalItems)'
+    note: >-
+      Cursor pagination drops hydra:totalItems by default. Follow hydra:next / hydra:previous
+      URIs which embed the cursor. Only supported on select invoice/line-item/payment collections.
+    supported_endpoints:
+    - GET /entities/{entityId}/invoices
+    - GET /entities/{entityId}/invoices/line-items
+    - GET /entities/{entityId}/invoices/{invoiceId}/line-items
+    - GET /invoices/{invoiceId}/line-items
+    - GET /entities/{entityId}/invoices/payments
+property_filtering:
+  supported: true
+  syntax: '?properties[]=<property>&properties[<relation>][]=<property>'
+  note: Select which properties are returned on GET operations.
+filtering:
+  warning: >-
+    Collection endpoints only apply documented filter query parameters. Unsupported or
+    misspelled filter parameters are silently ignored, not rejected.
+versioning:
+  scheme: date-based
+  current: '2020-06-28'
+  request_header: 'Accept-Version: 2020-06-28'
+  docs: https://docs.syntage.com/developer-changelog
+  ref: lifecycle/syntage-lifecycle.yml
+rate_limiting:
+  signalled: true
+  headers:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  exceeded_status: 429
+  example_limit: 60
+  dashboard: https://app.syntage.com/settings/usage
+error_envelope:
+  format: hydra (application/ld+json)
+  note: >-
+    Validation errors return a Hydra ConstraintViolation document. Non-2xx responses use
+    standard HTTP status codes (401/403/404/400/422/429/409). See errors/syntage-problem-types.yml.
+  ref: errors/syntage-problem-types.yml
+webhooks:
+  supported: true
+  ref: asyncapi/syntage-webhooks.yml
+  signature_validation_docs: https://docs.syntage.com/guides/validating-webhook-requests

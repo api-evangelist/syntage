@@ -1,0 +1,37 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/syntage-openapi-original.yml + https://www.syntage.com/compania/seguridad
+standards:
+- id: rest
+  conforms: true
+  evidence: Resource-oriented URLs, standard HTTP verbs and status codes.
+- id: json-ld
+  conforms: true
+  evidence: Responses are JSON-LD (application/ld+json).
+- id: hydra
+  conforms: true
+  evidence: Collections use hydra:member / hydra:view / hydra:totalItems and Hydra ConstraintViolation errors.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use Hydra documents (application/ld+json), not application/problem+json.
+- id: api-key-auth
+  conforms: true
+  evidence: securityScheme type apiKey in header (X-API-Key).
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityScheme declared.
+- id: rate-limit-headers
+  conforms: true
+  evidence: X-RateLimit-Limit / X-RateLimit-Remaining / X-RateLimit-Reset with 429 on exceed.
+- id: cursor-pagination
+  conforms: true
+  evidence: Opt-in cursor pagination via X-Pagination-Style header on invoice collections.
+- id: rfc9727-api-catalog
+  conforms: true
+  evidence: /.well-known/api-catalog linkset published at docs.syntage.com.
+- id: webhooks
+  conforms: true
+  evidence: Webhook endpoints resource with signed delivery and an event-type catalog.
+- id: iso-27001
+  conforms: true
+  evidence: ISO/IEC 27001:2022 certification stated on the security page and trust center (trust.syntage.com).

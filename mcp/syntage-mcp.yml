@@ -1,0 +1,72 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/syntage-openapi-original.yml
+note: >-
+  No official hosted/remote Syntage MCP server was found (docs, npm @modelcontextprotocol,
+  MCP registries). This is a DERIVED candidate tool list mapping marquee Syntage API
+  operations to MCP tools, one tool per operationId. Not published by Syntage.
+server:
+  name: syntage
+  transport: http
+tools:
+- name: add_entity
+  description: Create an entity (business/taxpayer) to analyze.
+  source_operation: openapi/syntage-openapi-original.yml#AddEntity
+- name: list_entities
+  description: List all entities.
+  source_operation: openapi/syntage-openapi-original.yml#ListEntity
+- name: get_entity
+  description: Retrieve an entity.
+  source_operation: openapi/syntage-openapi-original.yml#GetEntity
+- name: create_credential
+  description: Create SAT taxpayer credentials for an entity.
+  source_operation: openapi/syntage-openapi-original.yml#CreateCredential
+- name: create_extraction
+  description: Start an extraction of fiscal data from the SAT.
+  source_operation: openapi/syntage-openapi-original.yml#CreateExtraction
+- name: get_extraction
+  description: Retrieve extraction status.
+  source_operation: openapi/syntage-openapi-original.yml#GetExtraction
+- name: list_entity_events
+  description: List an entity's events (extraction/invoice/etc lifecycle).
+  source_operation: openapi/syntage-openapi-original.yml#ListEntityEvents
+- name: list_taxpayer_invoices
+  description: List an entity's SAT invoices.
+  source_operation: openapi/syntage-openapi-original.yml#ListTaxpayerInvoice
+- name: get_invoice
+  description: Retrieve an invoice.
+  source_operation: openapi/syntage-openapi-original.yml#GetInvoice
+- name: calculate_syntage_score
+  description: Start a Syntage Score (credit-risk score) calculation for an entity.
+  source_operation: openapi/syntage-openapi-original.yml#CalculateSyntageScore
+- name: get_scores_insight
+  description: Get computed scores for an entity.
+  source_operation: openapi/syntage-openapi-original.yml#GetScoresInsight
+- name: get_summary_insight
+  description: Get an entity's summary insight.
+  source_operation: openapi/syntage-openapi-original.yml#GetSummaryInsight
+- name: get_financial_ratios_insight
+  description: Get an entity's financial ratios.
+  source_operation: openapi/syntage-openapi-original.yml#GetFinancialRatiosInsight
+- name: get_risks_insight
+  description: Get an entity's risk calculations.
+  source_operation: openapi/syntage-openapi-original.yml#GetRisksInsight
+- name: get_cash_flow_insight
+  description: Get an entity's cash flow.
+  source_operation: openapi/syntage-openapi-original.yml#GetCashFlowInsight
+- name: get_buro_de_credito_report
+  description: Retrieve a Buro de Credito credit report.
+  source_operation: openapi/syntage-openapi-original.yml#GetEntityMxBuroDeCreditoReport
+- name: get_background_check
+  description: Retrieve a background check.
+  source_operation: openapi/syntage-openapi-original.yml#GetBackgroundCheck
+- name: get_company_verification_report
+  description: Retrieve a company verification report.
+  source_operation: openapi/syntage-openapi-original.yml#GetCompanyVerificationReport
+- name: create_export
+  description: Export data.
+  source_operation: openapi/syntage-openapi-original.yml#CreateExport
+- name: create_webhook_endpoint
+  description: Subscribe a URL to Syntage events.
+  source_operation: openapi/syntage-openapi-original.yml#CreateWebhookEndpoint

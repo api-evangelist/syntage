@@ -1,0 +1,27 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.syntage.com/api-reference/introduction
+environments:
+- name: Sandbox
+  base_url: https://api.sandbox.syntage.com
+  api_keys: https://app.sandbox.syntage.com/settings/api-keys
+  description: >-
+    Dedicated to development and testing. No real taxpayer credentials required; all
+    interaction with the SAT is simulated, generating life-like data so you can pull
+    test data from every endpoint.
+- name: Production
+  base_url: https://api.syntage.com
+  api_keys: https://app.syntage.com/settings/api-keys
+  description: >-
+    Live applications with real connections to the SAT. Real taxpayer credentials
+    required; pulls real fiscal data directly from the SAT.
+test_vs_live:
+  separation: Each environment has a distinct API key; keys are not shared across environments.
+  key_header: X-API-Key
+simulation:
+  sat_interaction: Fully simulated in sandbox (no real SAT credentials needed).
+  data: Life-like synthetic fiscal data across all datasources and insights.
+note: >-
+  Syntage does not publish fixed magic test identifiers (test card numbers etc.) because
+  the sandbox synthesizes SAT/RPC/RUG data rather than accepting seeded fixtures. Only the
+  environment/key separation and simulated-data behaviour are published; no invented values here.

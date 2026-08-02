@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/syntage-openapi-original.yml
+skills:
+- file: syntage-onboard-and-extract.md
+  name: Onboard an entity and extract SAT fiscal data
+  api: openapi/syntage-openapi-original.yml
+  operations: [AddEntity, CreateCredential, CreateExtraction, GetExtraction, ListEntityEvents, ListTaxpayerInvoice]
+- file: syntage-credit-risk-insights.md
+  name: Assess credit risk with Syntage insights and score
+  api: openapi/syntage-openapi-original.yml
+  operations: [CalculateSyntageScore, GetScoresInsight, GetSummaryInsight, GetFinancialRatiosInsight, GetRisksInsight, GetCashFlowInsight, ExportInsight]
+- file: syntage-webhooks-subscribe.md
+  name: Subscribe to Syntage events with webhooks
+  api: openapi/syntage-openapi-original.yml
+  operations: [CreateWebhookEndpoint, ListWebhookEndpoint, GetWebhookEndpoint, UpdateWebhookEndpoint, ListWebhookRequest, GetWebhookRequest, ListEvent]

@@ -1,0 +1,17 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/syntage-openapi-original.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: ApiKey
+  type: apiKey
+  in: header
+  parameter: X-API-Key
+  description: Your API key is available in the [Production](https://app.syntage.com/settings/api-keys)
+    and [Sandbox](https://app.sandbox.syntage.com/settings/api-keys) dashboards.
+  sources:
+  - openapi/syntage-openapi-original.yml

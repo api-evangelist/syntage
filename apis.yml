@@ -1,8 +1,27 @@
 aid: syntage
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/syntage.png
 name: Syntage
-description: 'Syntage is a company surfaced as a portfolio company of qed-investors and added to the API
-  Evangelist network as a stub for enrichment. Sector: fintech. This profile is a lead awaiting the enrichment
-  pipeline.'
+description: >-
+  Syntage is a Mexican fintech data platform that aggregates business and fiscal data
+  from official Mexican sources (the SAT tax authority, RPC, RUG, credit bureaus /
+  Buro de Credito, and blacklists) into a single API and dashboard. Financial
+  institutions use it to analyze credit risk, verify CFDI invoices for factoring
+  operations, run KYB/KYC/PLD compliance checks, and monitor taxpayer data changes in
+  real time. Data is consumable via a REST API (JSON-LD / Hydra), an app dashboard, PDF
+  reports, and Excel exports. Reported scale includes 300+ financial-institution
+  clients and billions of transactions processed. ISO/IEC 27001:2022 certified.
 url: https://raw.githubusercontent.com/api-evangelist/syntage/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -12,16 +31,1535 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
 - Fintech
-apis: []
+- Mexico
+- Credit Risk
+- Financial Data
+- KYC
+- Compliance
+- Invoices
+- Factoring
+- SAT
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: syntage:syntage-accounts-payable-insight-api
+  name: Syntage Accounts Payable Insight API
+  description: >-
+    The Accounts Payable Insight API from Syntage — 1 operation(s) for accounts payable insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Accounts Payable Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-accounts-payable-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-accounts-receivable-insight-api
+  name: Syntage Accounts Receivable Insight API
+  description: >-
+    The Accounts Receivable Insight API from Syntage — 1 operation(s) for accounts receivable insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Accounts Receivable Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-accounts-receivable-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-background-checks-api
+  name: Syntage Background Checks API
+  description: >-
+    Background checks provide comprehensive verification and screening data for entities. These checks
+    gather information from various databases and sources to assess risk, verify identity, and provide
+    insights into an entity's background across multiple categories.
+
+
+    ### Check Categories
+
+    Background checks are organized into specific categories:
+
+    - **personal_identity**: Identity verification and personal information
+
+    - **criminal_record**: Criminal background and legal history
+
+    - **legal_background**: Legal proceedings and court records
+
+    - **business_background**: Business registration and commercial activity
+
+    - **professional_background**: Professional licenses and certifications
+
+    - **credit_history**: Credit and financial history
+
+    - **taxes_and_finances**: Tax compliance and financial records
+
+    - **affiliations_and_insurances**: Professional affiliations and insurance records
+
+    - **driving_licenses**: Driving licenses and vehicle permits
+
+    - **vehicle_information**: Vehicle ownership and registration
+
+    - **traffic_fines**: Traffic violations and fines
+
+    - **alert_in_media**: Media mentions and public records
+
+    - **behavior**: Behavioral patterns and risk indicators
+
+    - **international_background**: International records and verification
+
+    - **politically_exposed_person**: PEP (Politically Exposed Person) screening
+
+    - **document_validation**: Document authenticity verification
+
+
+    ### Check Status
+
+    - **pending**: Background check is being processed
+
+    - **completed**: Background check has been completed successfully
+
+    - **error**: Background check encountered an error during processing
+
+
+    ### Supported Countries
+
+    - **MX**: Mexico-specific background checks
+
+    - **ALL**: International background checks across multiple countries
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Background Checks
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-background-checks-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-balance-sheet-insight-api
+  name: Syntage Balance Sheet Insight API
+  description: The Balance Sheet Insight API from Syntage — 1 operation(s) for balance sheet insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Balance Sheet Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-balance-sheet-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-cash-flow-insight-api
+  name: Syntage Cash Flow Insight API
+  description: The Cash Flow Insight API from Syntage — 1 operation(s) for cash flow insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Cash Flow Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-cash-flow-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-company-verification-reports-api
+  name: Syntage Company Verification Reports API
+  description: >-
+    Company Verification Reports provide verification of company details and supporting files extracted
+    from trusted sources. Use these endpoints to retrieve reports for a specific entity, list all reports,
+    or download the generated PDF report.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Company Verification Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-company-verification-reports-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-corporate-structure-insight-api
+  name: Syntage Corporate Structure Insight API
+  description: >-
+    The Corporate Structure Insight API from Syntage — 1 operation(s) for corporate structure insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Corporate Structure Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-corporate-structure-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-customer-concentration-insight-api
+  name: Syntage Customer Concentration Insight API
+  description: >-
+    The Customer Concentration Insight API from Syntage — 1 operation(s) for customer concentration insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Customer Concentration Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-customer-concentration-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-customer-network-insight-api
+  name: Syntage Customer Network Insight API
+  description: >-
+    The Customer Network Insight API from Syntage — 1 operation(s) for customer network insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Customer Network Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-customer-network-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-bil-reports-api
+  name: Syntage DS MX BIL Reports API
+  description: The DS MX BIL Reports API from Syntage — 2 operation(s) for ds mx bil reports.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX BIL Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-bil-reports-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-bur-de-cr-dito-authorizations-api
+  name: Syntage DS MX Buró de Crédito Authorizations API
+  description: >-
+    Buró de Crédito authorizations store the consent, RFC, address, and identity data required before
+    Syntage can request Buró de Crédito reports for an entity.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX Buró de Crédito Authorizations
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-bur-de-cr-dito-authorizations-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-bur-de-cr-dito-reports-api
+  name: Syntage DS MX Buró de Crédito Reports API
+  description: >-
+    Buró de Crédito reports contain credit bureau data generated for an entity by the `buro_de_credito_report`
+    extractor. Reports include the selected product type, provider report ID, parsed provider response,
+    score when available, and generated files such as the report PDF.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX Buró de Crédito Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-bur-de-cr-dito-reports-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-rpc-actos-api
+  name: Syntage DS MX RPC Actos API
+  description: >-
+    RPC actos are commercial registry acts associated with an RPC entidade. They can include extracted
+    act data and file references for registry documents.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX RPC Actos
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-rpc-actos-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-rpc-entidades-api
+  name: Syntage DS MX RPC Entidades API
+  description: >-
+    RPC entidades are company records extracted from the Registro Publico de Comercio. They group registration
+    profile data, related registry acts, and shareholder records found for an entity.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX RPC Entidades
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-rpc-entidades-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-rpc-socios-api
+  name: Syntage DS MX RPC Socios API
+  description: RPC socios are shareholder or partner records found in RPC filings.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX RPC Socios
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-rpc-socios-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-rug-garantias-api
+  name: Syntage DS MX RUG Garantias API
+  description: >-
+    RUG guarantees are movable collateral guarantees registered in Mexico's Registro Unico de Garantias
+    Mobiliarias.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX RUG Garantias
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-rug-garantias-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-rug-operaciones-api
+  name: Syntage DS MX RUG Operaciones API
+  description: >-
+    RUG operations are registry acts associated with a movable collateral guarantee. They include operation
+    metadata, guarantee numbers, grantors, parsed boleta data, and file references when available.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX RUG Operaciones
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-rug-operaciones-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-certificates-api
+  name: Syntage DS MX SAT Certificates API
+  description: The DS MX SAT Certificates API from Syntage — 2 operation(s) for ds mx sat certificates.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Certificates
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-certificates-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-credentials-api
+  name: Syntage DS MX SAT Credentials API
+  description: The DS MX SAT Credentials API from Syntage — 3 operation(s) for ds mx sat credentials.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Credentials
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-credentials-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-credit-notes-api
+  name: Syntage DS MX SAT Credit Notes API
+  description: The DS MX SAT Credit Notes API from Syntage — 5 operation(s) for ds mx sat credit notes.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Credit Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-credit-notes-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-electronic-accounting-api
+  name: Syntage DS MX SAT Electronic Accounting API
+  description: >-
+    The DS MX SAT Electronic Accounting API from Syntage — 2 operation(s) for ds mx sat electronic accounting.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Electronic Accounting
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-electronic-accounting-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-invoice-batch-payments-api
+  name: Syntage DS MX SAT Invoice Batch Payments API
+  description: >-
+    Batch payments are derived from payment receipt CFDIs, also known as type `P` invoices. A batch payment
+    groups one or more invoice payments into the payment transaction reported by SAT.
+
+
+    Use batch payments when you need payment-method, currency, bank, operation-number, or transaction-level
+    information. Use invoice payments when you need the amount applied to a specific deferred invoice.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Invoice Batch Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-invoice-batch-payments-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-invoice-line-items-api
+  name: Syntage DS MX SAT Invoice Line Items API
+  description: >-
+    The DS MX SAT Invoice Line Items API from Syntage — 3 operation(s) for ds mx sat invoice line items.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Invoice Line Items
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-invoice-line-items-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-invoice-payments-api
+  name: Syntage DS MX SAT Invoice Payments API
+  description: >-
+    Invoice payments are derived from payment receipt CFDIs, also known as type `P` invoices. A payment
+    receipt records payment activity for a previously issued deferred invoice.
+
+
+    Each payment belongs to a batch payment and the invoice it was applied to. Syntage updates the related
+    invoice's `paidAmount`, `dueAmount`, and `fullyPaidAt` fields based on the received payments.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Invoice Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-invoice-payments-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-invoice-relations-api
+  name: Syntage DS MX SAT Invoice Relations API
+  description: >-
+    Invoice relations represent CFDI relationships between invoices, such as substitutions, credit notes,
+    or other SAT-defined relation types. Each relation includes the source invoice, related invoice when
+    Syntage has it, related invoice UUID, and the SAT relation type code.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Invoice Relations
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-invoice-relations-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-invoices-api
+  name: Syntage DS MX SAT Invoices API
+  description: >-
+    Invoices represent CFDI documents issued or received by an entity. Invoice records include SAT identifiers,
+    issuer and receiver data, monetary totals, payment status, cancellation status, invoice relationships,
+    file availability, and tags.
+
+
+    Use the entity invoice list when you need all invoices extracted for one entity. Retrieve an invoice
+    by ID when you need the full invoice resource, including tags and related invoice metadata. Use the
+    CFDI endpoint when you need the XML or PDF content for a specific invoice.
+
+
+    ### Blacklist status
+
+
+    The field `issuer.blacklistStatus` or `receiver.blacklistStatus` is set when the invoice issuer or
+    receiver
+
+    RFC is found in the [SAT 69-B list](https://omawww.sat.gob.mx/cifras_sat/Paginas/datos/vinculo.html?page=ListCompleta69B.html):
+
+
+    | Status      | Description |
+
+    |-------------|-----------------------------------------------------------------------------------------------------------|
+
+    | presumed    | SAT has identified possible irregularities and started an investigation |
+
+    | dismissed   | SAT dismissed the investigation after reviewing evidence |
+
+    | definitive  | SAT determined that the RFC has confirmed irregularities |
+
+    | favorable   | SAT reversed a definitive status after reviewing additional evidence |
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-invoices-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-tax-compliance-checks-api
+  name: Syntage DS MX SAT Tax Compliance Checks API
+  description: >-
+    A tax compliance check maps the content of Opinion de Cumplimiento de Obligaciones Fiscales, an official
+    SAT document that states whether an RFC is complying with its tax obligations. Each tax compliance
+    check is a snapshot of the compliance result at a specific check date.
+
+
+    | Result | Meaning |
+
+    |---|---|
+
+    | `positive` | The RFC is complying with its tax obligations |
+
+    | `negative` | SAT reported one or more compliance issues |
+
+    | `no_obligations` | SAT reported no active tax obligations |
+
+    | `activity_suspended` | SAT reported suspended business activity |
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Tax Compliance Checks
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-tax-compliance-checks-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-tax-retentions-api
+  name: Syntage DS MX SAT Tax Retentions API
+  description: >-
+    The DS MX SAT Tax Retentions API from Syntage — 3 operation(s) for ds mx sat tax retentions.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Tax Retentions
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-tax-retentions-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-tax-returns-api
+  name: Syntage DS MX SAT Tax Returns API
+  description: The DS MX SAT Tax Returns API from Syntage — 4 operation(s) for ds mx sat tax returns.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Tax Returns
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-tax-returns-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-mx-sat-tax-status-api
+  name: Syntage DS MX SAT Tax Status API
+  description: The DS MX SAT Tax Status API from Syntage — 3 operation(s) for ds mx sat tax status.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS MX SAT Tax Status
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-mx-sat-tax-status-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-ds-syntage-score-api
+  name: Syntage DS Syntage Score API
+  description: >-
+    Syntage Score calculates an internal score for a company entity from SAT annual tax return data and
+    tax compliance data.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - DS Syntage Score
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-ds-syntage-score-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-employees-insight-api
+  name: Syntage Employees Insight API
+  description: The Employees Insight API from Syntage — 1 operation(s) for employees insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Employees Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-employees-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-entities-api
+  name: Syntage Entities API
+  description: >-
+    An Entity is a resource that represents a person or company. Entities can be added via Add Entity,
+    or automatically when a credential is validated (when the status becomes "valid"). This resource controls
+    your access to data and allows you to create new extractions. When an Entity is deleted, all data
+    related to the entity is deleted as well.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Entities
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-entities-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-events-api
+  name: Syntage Events API
+  description: >-
+    Events record meaningful changes to resources in your organization.
+
+
+    When something changes, Syntage creates an Event resource. For example, submitting an entity's SAT
+    credential can create credential and entity events, and a completed extraction can create an `extraction.updated`
+    event.
+
+
+    Many requests can create more than one event. For example, submitting valid SAT credentials for an
+    entity can create `credential.created`, `credential.updated`, and `link.created` events.
+
+
+    Events occur when the state of another resource changes. The state of that resource at the time of
+    the change is embedded in the event's `data` field. For example, a `credential.updated` event contains
+    a Credential, and an `invoice.updated` event contains an Invoice.
+
+
+    Use the Events endpoints to retrieve recent events directly. Use [webhooks](/api-reference/webhooks/overview)
+    when you want Syntage to deliver events to your server automatically.
+
+
+    Access to events is only guaranteed for 7 days.
+
+
+    Entity lifecycle events still use the `link.*` event type names for backwards compatibility.
+
+
+    The suffix describes the kind of change:
+
+
+    | Suffix | Meaning |
+
+    | --- | --- |
+
+    | `.created` | A new resource was created. |
+
+    | `.updated` | An existing resource changed. |
+
+    | `.deleted` | A resource was deleted or is no longer available. |
+
+
+    | Resource | Event types |
+
+    | --- | --- |
+
+    | Credentials | `credential.created`, `credential.updated`, `credential.deleted` |
+
+    | Entities | `link.created`, `link.updated`, `link.deleted` |
+
+    | Files | `file.created` |
+
+    | Extractions | `extraction.created`, `extraction.updated` |
+
+    | Exports | `export.created`, `export.updated` |
+
+    | Invoices | `invoice.created`, `invoice.updated`, `invoice.deleted` |
+
+    | Invoice payments | `invoice_payment.created`, `invoice_payment.updated` |
+
+    | Invoice line items | `invoice_line_item.created`, `invoice_line_item.updated` |
+
+    | Tax returns | `tax_return.created`, `tax_return.updated`, `tax_return.deleted` |
+
+    | Tax status | `tax_status.created`, `tax_status.updated`, `tax_status.deleted` |
+
+    | Tax compliance checks | `tax_compliance_check.created`, `tax_compliance_check.updated`, `tax_compliance_check.deleted`
+    |
+
+    | Tax retentions | `tax_retention.created`, `tax_retention.updated`, `tax_retention.deleted` |
+
+    | Electronic accounting records | `electronic_accounting_record.created`, `electronic_accounting_record.updated`
+    |
+
+    | RPC entidades | `rpc_entidades.created`, `rpc_entidades.updated` |
+
+    | RPC socios | `rpc_socios.created`, `rpc_socios.updated` |
+
+    | RPC actos | `rpc_acto.created`, `rpc_acto.updated` |
+
+    | Shareholder relations | `shareholder_relation.created`, `shareholder_relation.updated` |
+
+    | Shareholder relation sources | `shareholder_relation_source.created` |
+
+    | RUG garantias | `rug_garantia.created`, `rug_garantia.updated` |
+
+    | Buró de Crédito reports | `buro_de_credito_report.created`, `buro_de_credito_report.updated` |
+
+    | Background checks | `background_check.created` |
+
+    | SAT certificates | `sat_certificate.created`, `sat_certificate.updated` |
+
+    | Company verification reports | `company_verification_report.created`, `company_verification_report.updated`
+    |
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-events-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-expenditures-insight-api
+  name: Syntage Expenditures Insight API
+  description: The Expenditures Insight API from Syntage — 1 operation(s) for expenditures insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Expenditures Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-expenditures-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-exports-api
+  name: Syntage Exports API
+  description: >-
+    Export invoices data in csv or xlsx format. Once you requested an export you will receive an email
+    with a link to download the generated file
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Exports
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-exports-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-extractions-api
+  name: Syntage Extractions API
+  description: >-
+    Extractions are tasks that retrieve data for an entity from a datasource. They are used to collect
+    invoices, tax returns, tax status, tax compliance checks, RPC records, RUG guarantees, Buró de Crédito
+    reports, BIL reports, and other datasource-backed records.
+
+
+    An extraction runs asynchronously. Creating one starts or queues the work, and the returned Extraction
+    resource tracks its status, options, timing, errors, and the number of resources created or updated.
+
+
+    ## How Extractions Work
+
+
+    1. Create or retrieve the entity you want to extract data for.
+
+    2. Create an extraction with the entity IRI, extractor name, and extractor options.
+
+    3. Store the returned extraction ID.
+
+    4. Retrieve the extraction until its `status` is `finished` or `failed`.
+
+    5. Read the extracted data from the related resource endpoints, such as invoices or tax returns.
+
+
+    If the same extraction is already pending or running for the same entity, extractor, and options,
+    Syntage returns a duplicate extraction response instead of starting the same work again.
+
+
+    ## Options
+
+
+    Options containing a period (`.`) in the name like `period.from` are a way to denote object paths.
+    For example, `period.from` should actually be sent as:
+
+
+    ```json
+
+    {
+        "options": {
+          "period": {
+            "from": "2020-01-01",
+            "to": "2020-12-31"
+          }
+        }
+    }
+
+    ```
+
+
+    Extractor names and options are specific to the data you are extracting. For extraction-backed resources,
+    use the resource overview page for the extractor name, required credentials, supported options, and
+    the endpoint where the extracted records can be read.
+
+
+    # Extraction status
+
+
+    | Status | Description |
+
+    | ------ | ----------- |
+
+    | pending | The initial extraction status. The extraction is enqueued and waiting to be processed.
+    |
+
+    | waiting | The extraction does not meet the requirements to begin. |
+
+    | running | The extraction process started and is currently running. The running time varies depending
+    on the extractor type and the entity's transactional volume. You may find partial data available in
+    our API endpoints during this time. |
+
+    | finished | The extraction finished successfully. All data is available to be retrieved from our
+    API endpoints. |
+
+    | failed | The extraction couldn't start or failed during the process. Our internal retry policies
+    weren't able to finish the extraction successfully. We may have partial data available in our API
+    endpoints, but new extractions should be created to ensure all the entity's data is available. You
+    can check the [extraction error code](#section/Extraction-error-codes) to understand why it failed
+    and determine whether it can be retried or not. |
+
+    | stopping | The extraction was requested to be stopped by the user. It is in the process of being
+    stopped. |
+
+    | stopped | The extraction was stopped by the user after it started running. This extraction is included
+    in billing. |
+
+    | cancelled | The extraction was stopped by the user before it started running. This extraction is
+    not included in billing. |
+
+    # Extraction error codes
+
+
+    | Code | Description | Retryable |
+
+    | ---- | ----------- | --------- |
+
+    | invalid_credentials | The SAT [Credential](#tag/Credentials) is no longer valid. | No |
+
+    | login_failed | We couldn't log in with the SAT credential. | Yes |
+
+    | unrecoverable | The extraction process failed many times, and we reached a maximum number of retries.
+    | Yes |
+
+    | sat_unavailable | We detected that SAT itself is down or unresponsive. | Yes |
+
+    | internal_error | We detected an internal error in our own infrastructure. | Yes |
+
+    | undefined | We couldn't determine the error cause and our internal team will investigate it. | Yes
+    |
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Extractions
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-extractions-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-files-api
+  name: Syntage Files API
+  description: Files associated to resources
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-files-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-financial-institutions-insight-api
+  name: Syntage Financial Institutions Insight API
+  description: >-
+    The Financial Institutions Insight API from Syntage — 1 operation(s) for financial institutions insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Financial Institutions Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-financial-institutions-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-financial-ratios-insight-api
+  name: Syntage Financial Ratios Insight API
+  description: >-
+    The Financial Ratios Insight API from Syntage — 1 operation(s) for financial ratios insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Financial Ratios Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-financial-ratios-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-government-customers-insight-api
+  name: Syntage Government Customers Insight API
+  description: >-
+    The Government Customers Insight API from Syntage — 1 operation(s) for government customers insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Government Customers Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-government-customers-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-income-statement-insight-api
+  name: Syntage Income Statement Insight API
+  description: >-
+    The Income Statement Insight API from Syntage — 1 operation(s) for income statement insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Income Statement Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-income-statement-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-insight-exports-api
+  name: Syntage Insight Exports API
+  description: Insight exports return supported entity insights as CSV or XLSX files.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Insight Exports
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-insight-exports-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-invoicing-annual-comparison-insight-api
+  name: Syntage Invoicing Annual Comparison Insight API
+  description: >-
+    The Invoicing Annual Comparison Insight API from Syntage — 1 operation(s) for invoicing annual comparison
+    insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Invoicing Annual Comparison Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-invoicing-annual-comparison-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-invoicing-blacklist-insight-api
+  name: Syntage Invoicing Blacklist Insight API
+  description: >-
+    The Invoicing Blacklist Insight API from Syntage — 1 operation(s) for invoicing blacklist insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Invoicing Blacklist Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-invoicing-blacklist-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-invoicing-concentration-insight-api
+  name: Syntage Invoicing Concentration Insight API
+  description: >-
+    The Invoicing Concentration Insight API from Syntage — 1 operation(s) for invoicing concentration
+    insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Invoicing Concentration Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-invoicing-concentration-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-mexico-addresses-api
+  name: Syntage Mexico Addresses API
+  description: The Mexico Addresses API from Syntage — 1 operation(s) for mexico addresses.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Mexico Addresses
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-mexico-addresses-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-moratory-interest-insight-api
+  name: Syntage Moratory Interest Insight API
+  description: >-
+    The Moratory Interest Insight API from Syntage — 1 operation(s) for moratory interest insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Moratory Interest Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-moratory-interest-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-products-and-services-insight-api
+  name: Syntage Products and Services Insight API
+  description: >-
+    The Products and Services Insight API from Syntage — 2 operation(s) for products and services insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Products and Services Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-products-and-services-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-reports-api
+  name: Syntage Reports API
+  description: >-
+    Reports group entity insights into a configurable layout. A report is rendered in the dashboard's
+    Reports section and can be downloaded as a PDF document with the [Exports API](/api-reference/exports/export-data).
+
+
+    Built-in reports are created and kept up to date by Syntage and cannot be modified or deleted. Custom
+    reports are personal by default; organizational reports are shared with every user in the organization.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-reports-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-risks-insight-api
+  name: Syntage Risks Insight API
+  description: The Risks Insight API from Syntage — 1 operation(s) for risks insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Risks Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-risks-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-rpc-shareholders-insight-api
+  name: Syntage RPC Shareholders Insight API
+  description: >-
+    The RPC Shareholders Insight API from Syntage — 1 operation(s) for rpc shareholders insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - RPC Shareholders Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-rpc-shareholders-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-sales-revenue-insight-api
+  name: Syntage Sales Revenue Insight API
+  description: The Sales Revenue Insight API from Syntage — 1 operation(s) for sales revenue insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Sales Revenue Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-sales-revenue-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-scheduler-rules-api
+  name: Syntage Scheduler Rules API
+  description: The Scheduler Rules API from Syntage — 2 operation(s) for scheduler rules.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Scheduler Rules
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-scheduler-rules-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-schedulers-api
+  name: Syntage Schedulers API
+  description: The Schedulers API from Syntage — 2 operation(s) for schedulers.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Schedulers
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-schedulers-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-scores-insight-api
+  name: Syntage Scores Insight API
+  description: The Scores Insight API from Syntage — 4 operation(s) for scores insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Scores Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-scores-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-shareholders-api
+  name: Syntage Shareholders API
+  description: >-
+    Shareholders represent individuals or entities that own shares in a company. This resource provides
+    information about shareholders, their relationships with entities, and the sources of shareholder
+    information.
+
+
+    ### Shareholder Types
+
+    - **physical**: Individual person shareholders
+
+    - **legal**: Corporate entity shareholders
+
+    - **unknown**: When the shareholder type cannot be determined
+
+
+    ### Relation Types
+
+    - **shareholders**: Indicates the entity's shareholders
+
+    - **shareholder_of**: Indicates entities that this shareholder owns shares in
+
+
+    ### Source Types
+
+    - **manual**: Manually entered shareholder information
+
+    - **rpc_socio**: Information sourced from RPC (Registro Público de Comercio)
+
+    - **company_verification**: Cap-table shareholders synced from a company verification report
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Shareholders
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-shareholders-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-shareholders-insight-api
+  name: Syntage Shareholders Insight API
+  description: The Shareholders Insight API from Syntage — 1 operation(s) for shareholders insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Shareholders Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-shareholders-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-summary-insight-api
+  name: Syntage Summary Insight API
+  description: The Summary Insight API from Syntage — 1 operation(s) for summary insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Summary Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-summary-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-tags-api
+  name: Syntage Tags API
+  description: The Tags API from Syntage — 2 operation(s) for tags.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-tags-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-trial-balance-insight-api
+  name: Syntage Trial Balance Insight API
+  description: The Trial Balance Insight API from Syntage — 1 operation(s) for trial balance insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Trial Balance Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-trial-balance-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-vendor-concentration-insight-api
+  name: Syntage Vendor Concentration Insight API
+  description: >-
+    The Vendor Concentration Insight API from Syntage — 1 operation(s) for vendor concentration insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Vendor Concentration Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-vendor-concentration-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-vendor-network-insight-api
+  name: Syntage Vendor Network Insight API
+  description: The Vendor Network Insight API from Syntage — 1 operation(s) for vendor network insight.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Vendor Network Insight
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-vendor-network-insight-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-webhook-endpoints-api
+  name: Syntage Webhook Endpoints API
+  description: >-
+    Webhook endpoints tell Syntage where to deliver events for your organization. Each endpoint includes
+    the HTTPS delivery URL, subscribed event types, enabled state, payload content type, and signing secret.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Webhook Endpoints
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-webhook-endpoints-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- aid: syntage:syntage-webhook-requests-api
+  name: Syntage Webhook Requests API
+  description: >-
+    Webhook requests are delivery attempts from Syntage to a webhook endpoint. Use them to monitor delivery
+    status, inspect failed deliveries, and connect an event to the endpoint that received it.
+  humanURL: https://docs.syntage.com/
+  baseURL: https://api.syntage.com
+  tags:
+  - Webhook Requests
+  properties:
+  - type: OpenAPI
+    url: openapi/syntage-webhook-requests-api-openapi.yml
+  - type: APIReference
+    url: https://docs.syntage.com/api-reference/introduction
+  - type: Documentation
+    url: https://docs.syntage.com/
+  - type: GettingStarted
+    url: https://docs.syntage.com/using-syntage/get-started/quick-start
 common:
+- type: DeveloperPortal
+  url: https://docs.syntage.com/
+- type: Documentation
+  url: https://docs.syntage.com/
+- type: APIReference
+  url: https://docs.syntage.com/api-reference/introduction
+- type: GettingStarted
+  url: https://docs.syntage.com/using-syntage/get-started/quick-start
+- type: OpenAPI
+  url: openapi/syntage-openapi-original.yml
+- type: Authentication
+  url: authentication/syntage-authentication.yml
+- type: Conventions
+  url: conventions/syntage-conventions.yml
+- type: RateLimits
+  url: conventions/syntage-conventions.yml
+- type: ErrorCatalog
+  url: errors/syntage-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/syntage-lifecycle.yml
+- type: StatusPage
+  url: https://status.syntage.com/
+- type: ChangeLog
+  url: changelog/syntage-changelog.yml
+- type: Conformance
+  url: conformance/syntage-conformance.yml
+- type: Compliance
+  url: https://www.syntage.com/compania/seguridad
+- type: TrustCenter
+  url: https://trust.syntage.com
+- type: DomainSecurity
+  url: security/syntage-domain-security.yml
+- type: Sandbox
+  url: sandbox/syntage-sandbox.yml
+- type: DataModel
+  url: data-model/syntage-data-model.yml
+- type: Webhooks
+  url: asyncapi/syntage-webhooks.yml
+- type: WellKnown
+  url: well-known/syntage-well-known.yml
+- type: APICatalog
+  url: well-known/syntage-api-catalog.json
+- type: MCPServer
+  url: mcp/syntage-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/syntage-agentic-access.yml
+- type: Overlay
+  url: overlays/syntage-openapi-overlay.yaml
+- type: LLMsTxt
+  url: llms/syntage-llms.txt
+- type: GitHubOrganization
+  url: https://github.com/syntage
+- type: Support
+  url: https://support.syntage.com/hc/es
+- type: Blog
+  url: https://www.syntage.com/articulos-y-reportes
+- type: SignUp
+  url: https://app.syntage.com/register
+- type: Login
+  url: https://app.syntage.com/login
+- type: TermsOfService
+  url: https://www.syntage.com/terminos-y-condiciones
+- type: PrivacyPolicy
+  url: https://www.syntage.com/aviso-de-privacidad
 - type: Website
-  url: http://www.syntage.com
+  url: https://www.syntage.com
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 18
+  pass: local-v1

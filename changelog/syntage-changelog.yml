@@ -1,0 +1,29 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.syntage.com/developer-changelog
+scheme: date-based (Accept-Version header; API version 2020-06-28)
+current_version: '2020-06-28'
+note: >-
+  Syntage publishes both a product changelog and a developer (API) changelog. Recent
+  developer-changelog entries captured below; the live page is the source of truth.
+entries:
+- date: '2026-07-20'
+  additions: true
+  breaking: false
+  highlights: Extraction error responses now specify which plan limit was exceeded instead of a combined message.
+- date: '2026-07-14'
+  additions: true
+  breaking: false
+  highlights: Batch tagging extended to entities (up to 100 entities per request).
+- date: '2026-07-10'
+  additions: false
+  breaking: true
+  highlights: Extraction conflicts now return 409 Conflict instead of 429 Too Many Requests.
+- date: '2026-07-09'
+  additions: true
+  breaking: false
+  highlights: Batch invoice tagging introduced (up to 100 invoices per request).
+- date: '2026-07-06'
+  additions: true
+  breaking: false
+  highlights: Tags support optional hex display colors; Summary insight adds structured fiscal address components.

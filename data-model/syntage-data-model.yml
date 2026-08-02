@@ -1,0 +1,92 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/syntage-openapi-original.yml
+summary: >-
+  Entity-relationship graph derived from the Syntage OpenAPI path structure and resource
+  nesting. The Entity (business/taxpayer) is the central aggregate; datasource records
+  (SAT invoices, tax returns, RPC, RUG, Buro de Credito) and insights hang off it.
+entities:
+- name: Entity
+  description: A Mexican business/taxpayer being analyzed (formerly "Link").
+  root_path: /entities
+  relationships:
+  - has_many: Credential
+    via: entityId
+  - has_many: Extraction
+    via: entityId
+  - has_many: Invoice
+    via: entityId
+  - has_many: TaxReturn
+    via: entityId
+  - has_many: TaxStatus
+    via: entityId
+  - has_many: TaxComplianceCheck
+    via: entityId
+  - has_many: TaxRetention
+    via: entityId
+  - has_many: ElectronicAccountingRecord
+    via: entityId
+  - has_many: Event
+    via: entityId
+  - has_many: Shareholder
+    via: entityId
+  - has_many: EntityTag
+    via: entityId
+  - has_many: EntityIdentifier
+    via: entityId
+  - has_many: Insight
+    via: entityId
+- name: Credential
+  description: SAT taxpayer credentials used to authorize extraction for an entity.
+  root_path: /credentials
+  relationships:
+  - belongs_to: Entity
+- name: Extraction
+  description: A job that pulls fiscal data from the SAT for an entity.
+  root_path: /extractions
+  relationships:
+  - belongs_to: Entity
+  - produces: Invoice, TaxReturn, TaxStatus, TaxComplianceCheck (asynchronously)
+- name: Invoice
+  description: A SAT CFDI invoice.
+  root_path: /invoices
+  relationships:
+  - belongs_to: Entity
+  - has_many: InvoiceLineItem
+    via: invoiceId
+  - has_many: InvoicePayment
+    via: invoiceId
+  - has_many: InvoiceRelation
+    via: invoiceId
+  - has_many: InvoiceCreditNote
+    via: invoiceId
+  - has_one: InvoiceCFDI
+- name: Event
+  description: A lifecycle event (extraction/invoice/tax_return/... created/updated/deleted). Drives webhooks.
+  root_path: /events
+  relationships:
+  - belongs_to: Entity
+- name: WebhookEndpoint
+  description: A subscriber URL receiving events.
+  root_path: /webhook-endpoints
+  relationships:
+  - has_many: WebhookRequest
+- name: Shareholder
+  description: An entity's shareholder, with relations and sources.
+  root_path: /shareholders
+  relationships:
+  - belongs_to: Entity
+  - has_many: ShareholderRelation
+    via: shareholderId
+- name: Scheduler
+  description: Scheduled recurring extractions governed by SchedulerRule.
+  root_path: /schedulers
+  relationships:
+  - has_many: SchedulerRule
+datasources:
+- SAT (invoices, CFDI, tax returns, tax status, tax compliance, tax retentions, electronic accounting, certificates)
+- RPC (entidades, actos, socios)
+- RUG (operaciones, garantias)
+- Buro de Credito (reports, authorizations)
+- BIL (reports)
+- Company Verification, Background Checks, Syntage Score

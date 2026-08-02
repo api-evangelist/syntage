@@ -1,0 +1,33 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Syntage API
+  version: 1.0.0
+extends: openapi/syntage-openapi-original.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-21'
+    x-apievangelist-provider: syntage
+    x-apievangelist-artifacts:
+    - authentication/syntage-authentication.yml
+    - conventions/syntage-conventions.yml
+    - errors/syntage-problem-types.yml
+    - lifecycle/syntage-lifecycle.yml
+    - changelog/syntage-changelog.yml
+    - conformance/syntage-conformance.yml
+    - sandbox/syntage-sandbox.yml
+    - data-model/syntage-data-model.yml
+    - asyncapi/syntage-webhooks.yml
+    - well-known/syntage-well-known.yml
+    - security/syntage-trust-center.yml
+    - security/syntage-domain-security.yml
+- target: $.info
+  update:
+    x-apievangelist-conventions:
+      auth: X-API-Key header (distinct sandbox/production keys)
+      media_type: application/ld+json (JSON-LD / Hydra)
+      pagination: offset by default; opt-in cursor via X-Pagination-Style header
+      versioning: date-based via Accept-Version header (current 2020-06-28)
+      rate_limit_headers: [X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset]
+      request_tracing: X-Request-ID response header
+      idempotency: not supported

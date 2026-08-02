@@ -1,0 +1,2056 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/syntage-openapi-original.yml
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 176
+  by_action_class:
+    connected: 131
+    acting: 45
+  by_consequence:
+    read: 131
+    write: 40
+    safety-critical: 1
+    physical: 4
+  human_in_the_loop_required: 1
+operations:
+- path: /entities/{entityId}/datasources/mx/buro-de-credito/reports
+  method: get
+  operationId: GetEntityMxBuroDeCreditoReports
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/buro-de-credito/reports/{id}
+  method: get
+  operationId: GetEntityMxBuroDeCreditoReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/bil/reports
+  method: get
+  operationId: ListEntityBilReports
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/bil/reports/{id}
+  method: get
+  operationId: GetBilReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/buro-de-credito/authorizations
+  method: get
+  operationId: GetMxBuroDeCreditoAuthorizations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/mx/buro-de-credito/authorizations
+  method: get
+  operationId: GetEntityMxBuroDeCreditoAuthorization
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/mx/buro-de-credito/authorizations
+  method: post
+  operationId: CreateMxBuroDeCreditoAuthorization
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /datasources/mx/buro-de-credito/authorizations/{id}
+  method: get
+  operationId: GetMxBuroDeCreditoAuthorization
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/buro-de-credito/authorizations/{id}
+  method: delete
+  operationId: DeleteMxBuroDeCreditoAuthorization
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/{entityId}/datasources/mx/sat/certificados
+  method: get
+  operationId: GetEntityMxSatCertificates
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/sat/certificados/{id}
+  method: get
+  operationId: GetMxSatCertificate
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/metrics/invoicing-annual-comparison
+  method: get
+  operationId: GetInvoicingAnnualComparison
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/metrics/vendor-network
+  method: get
+  operationId: GetVendorNetwork
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/metrics/customer-network
+  method: get
+  operationId: GetCustomerNetwork
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /files/{id}
+  method: get
+  operationId: GetFile
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /files/{id}/download
+  method: get
+  operationId: DownloadFile
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /exports
+  method: post
+  operationId: CreateExport
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /exports/{id}
+  method: get
+  operationId: GetExport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /reports
+  method: get
+  operationId: ListReports
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /reports
+  method: post
+  operationId: CreateReport
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /reports/{id}
+  method: get
+  operationId: GetReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /reports/{id}
+  method: put
+  operationId: UpdateReport
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /reports/{id}
+  method: delete
+  operationId: DeleteReport
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /credentials
+  method: post
+  operationId: CreateCredential
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /credentials
+  method: get
+  operationId: ListCredential
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /credentials/{id}
+  method: get
+  operationId: GetCredential
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /credentials/{id}
+  method: delete
+  operationId: DeleteCredential
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /credentials/{id}/revalidate
+  method: post
+  operationId: RevalidateCredential
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /events
+  method: get
+  operationId: ListEvent
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}
+  method: get
+  operationId: GetEvent
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /events/{id}
+  method: delete
+  operationId: DeleteEvent
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/{entityId}/events
+  method: get
+  operationId: ListEntityEvents
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /extractions
+  method: post
+  operationId: CreateExtraction
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /extractions
+  method: get
+  operationId: ListExtraction
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /extractions/{id}
+  method: get
+  operationId: GetExtraction
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /extractions/{id}/stop
+  method: delete
+  operationId: StopExtraction
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /invoices/{id}
+  method: get
+  operationId: GetInvoice
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/{id}/tags
+  method: post
+  operationId: TagInvoice
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices/{invoiceId}/tags/{tagId}
+  method: delete
+  operationId: UntagInvoice
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices/batch/tags
+  method: post
+  operationId: TagInvoicesBatch
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices/batch/tags/remove
+  method: post
+  operationId: UntagInvoicesBatch
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices/{id}/cfdi
+  method: get
+  operationId: GetInvoiceCFDI
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/sat/cfdis/{uuid}
+  method: get
+  operationId: GetMxSatCfdi
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/payments
+  method: get
+  operationId: ListPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /schedulers/rules
+  method: post
+  operationId: CreateSchedulerRule
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /schedulers/rules/{id}
+  method: get
+  operationId: GetTSchedulerRule
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /schedulers/rules/{id}
+  method: put
+  operationId: UpdateSchedulerRule
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /schedulers/rules/{id}
+  method: delete
+  operationId: DeleteSchedulerRule
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /schedulers
+  method: post
+  operationId: CreateScheduler
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /schedulers
+  method: get
+  operationId: ListSchedulers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /schedulers/{id}
+  method: get
+  operationId: GetTScheduler
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /schedulers/{id}
+  method: put
+  operationId: UpdateScheduler
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /schedulers/{id}
+  method: delete
+  operationId: DeleteScheduler
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices/credit-notes
+  method: get
+  operationId: ListInvoiceCreditNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/invoices/credit-notes
+  method: get
+  operationId: ListEntityInvoiceCreditNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/credit-notes/{id}
+  method: get
+  operationId: GetInvoiceCreditNote
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/{invoiceId}/issued-credit-notes
+  method: get
+  operationId: ListInvoiceIssuedCreditNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/{invoiceId}/applied-credit-notes
+  method: get
+  operationId: ListInvoiceAppliedCreditNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/payments/{id}
+  method: get
+  operationId: GetInvoicePayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/batch-payments
+  method: get
+  operationId: ListBatchPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/batch-payments/{id}
+  method: get
+  operationId: GetInvoiceBatchPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tax-retentions/{id}
+  method: get
+  operationId: GetTaxRetention
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tax-retentions/{id}/cfdi
+  method: get
+  operationId: GetTaxRetentionCFDI
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/tax-retentions
+  method: get
+  operationId: ListTaxpayerTaxRetention
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities
+  method: get
+  operationId: ListEntity
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities
+  method: post
+  operationId: AddEntity
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/{entityId}
+  method: get
+  operationId: GetEntity
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}
+  method: patch
+  operationId: UpdateEntity
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/{entityId}
+  method: delete
+  operationId: DeleteEntity
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/batch/tags
+  method: post
+  operationId: TagEntitiesBatch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/batch/tags/remove
+  method: post
+  operationId: UntagEntitiesBatch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entities/{entityId}/tags
+  method: get
+  operationId: ListEntityTags
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/identifiers
+  method: get
+  operationId: ListEntityIdentifiers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/identifiers
+  method: post
+  operationId: AddEntityIdentifier
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entity-tags
+  method: get
+  operationId: ListAllEntityTags
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entity-tags
+  method: post
+  operationId: CreateEntityTag
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entity-tags/{id}
+  method: get
+  operationId: GetEntityTag
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entity-tags/{id}
+  method: patch
+  operationId: UpdateEntityTag
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /entity-tags/{id}
+  method: delete
+  operationId: DeleteEntityTag
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /tags
+  method: get
+  operationId: ListTags
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tags
+  method: post
+  operationId: CreateTag
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /tags/{id}
+  method: patch
+  operationId: UpdateTag
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /tags/{id}
+  method: delete
+  operationId: DeleteTag
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /invoices/{id}/payments
+  method: get
+  operationId: ListInvoicePayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/{id}/batch-payments
+  method: get
+  operationId: ListInvoiceBatchPayments
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/line-items/{id}
+  method: get
+  operationId: GetInvoiceLineItem
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/relations/{id}
+  method: get
+  operationId: GetInvoiceRelation
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/{invoiceId}/relations
+  method: get
+  operationId: ListInvoiceRelations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/invoices/{invoiceId}/relations
+  method: get
+  operationId: ListEntityInvoiceRelations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /invoices/{invoiceId}/line-items
+  method: get
+  operationId: ListInvoiceLineItems
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/invoices/line-items
+  method: get
+  operationId: ListEntityInvoiceLineItems
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/rpc/entidades/{id}
+  method: get
+  operationId: GetRpcEntidades
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rpc/actos/{id}
+  method: get
+  operationId: GetRpcActo
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/rpc/socios/{id}
+  method: get
+  operationId: GetRpcSocio
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/addresses/{postalCode}
+  method: get
+  operationId: GetMxAddressesByPostalCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/syntage/score/calculate
+  method: post
+  operationId: CalculateSyntageScore
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /datasources/rug/operaciones/{id}
+  method: get
+  operationId: GetRugOperacion
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/rug/garantias/{id}
+  method: get
+  operationId: GetRugGarantia
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tax-returns/{id}
+  method: get
+  operationId: GetTaxReturn
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tax-returns/{id}/pdf
+  method: get
+  operationId: DownloadTaxReturnPdf
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tax-compliance-checks/{id}
+  method: get
+  operationId: GetTaxComplianceCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tax-returns/{id}/data
+  method: get
+  operationId: GetTaxReturnData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tax-status
+  method: get
+  operationId: ListTaxStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /tax-status/{id}
+  method: get
+  operationId: GetTaxStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /electronic-accounting-records/{id}
+  method: get
+  operationId: GetElectronicAccountingRecord
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/invoices
+  method: get
+  operationId: ListTaxpayerInvoice
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/tax-returns
+  method: get
+  operationId: ListTaxpayerTaxReturn
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/tax-compliance-checks
+  method: get
+  operationId: ListTaxpayerTaxComplianceCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/tax-status
+  method: get
+  operationId: ListTaxpayerTaxStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/electronic-accounting-records
+  method: get
+  operationId: ListElectronicAccountingRecords
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/mx/rpc/entidades
+  method: get
+  operationId: ListRpcEntidades
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/mx/rpc/actos
+  method: get
+  operationId: ListEntityRpcActos
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/rug/operaciones
+  method: get
+  operationId: ListRugOperaciones
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/rug/garantias
+  method: get
+  operationId: ListRugGarantias
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/invoices/payments
+  method: get
+  operationId: ListTaxpayerPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/accounts-payable
+  method: get
+  operationId: GetAccountsPayableInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/accounts-receivable
+  method: get
+  operationId: GetAccountsReceivableInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/cash-flow-stats
+  method: get
+  operationId: GetCashFlowInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/rpc-shareholders
+  method: get
+  operationId: GetRpcShareholdersInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/shareholders
+  method: get
+  operationId: GetShareholdersInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/corporate-structure/current-powers
+  method: get
+  operationId: GetCorporateStructureCurrentPowersInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/metrics/balance-sheet
+  method: get
+  operationId: GetMetricsBalanceSheet
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/metrics/income-statement
+  method: get
+  operationId: GetMetricsIncomeStatementInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/invoicing-concentration
+  method: get
+  operationId: GetInvoicingConcentrationInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/trial-balance
+  method: get
+  operationId: GetTrialBalanceInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/metrics/scores
+  method: get
+  operationId: GetScoresInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /insights/metrics/scores/syntage/distribution
+  method: get
+  operationId: GetSyntageScoreDistribution
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/metrics/buro-de-credito/summary
+  method: get
+  operationId: GetBuroDeCreditoSummaryInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/metrics/buro-de-credito/summary/export
+  method: get
+  operationId: ExportBuroDeCreditoSummaryInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/{insight}/export
+  method: get
+  operationId: ExportInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /webhook-endpoints
+  method: post
+  operationId: CreateWebhookEndpoint
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /webhook-endpoints
+  method: get
+  operationId: ListWebhookEndpoint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /webhook-endpoints/{id}
+  method: get
+  operationId: GetWebhookEndpoint
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /webhook-endpoints/{id}
+  method: put
+  operationId: UpdateWebhookEndpoint
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /webhook-endpoints/{id}
+  method: delete
+  operationId: DeleteWebhookEndpoint
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /webhook-requests
+  method: get
+  operationId: ListWebhookRequest
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /webhook-requests/{id}
+  method: get
+  operationId: GetWebhookRequest
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/customer-concentration
+  method: get
+  operationId: GetCustomerConcentrationInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/supplier-concentration
+  method: get
+  operationId: GetVendorConcentrationInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/moratory-interest
+  method: get
+  operationId: GetMoratoryInterestInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/employees
+  method: get
+  operationId: GetEmployeesInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/expenditures
+  method: get
+  operationId: GetExpendituresInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/financial-institutions
+  method: get
+  operationId: GetFinancialInstitutionsInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/financial-ratios
+  method: get
+  operationId: GetFinancialRatiosInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/government-customers
+  method: get
+  operationId: GetGovernmentCustomersInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/invoicing-blacklist
+  method: get
+  operationId: GetInvoicingBlacklistInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/risks
+  method: get
+  operationId: GetRisksInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/products-and-services-bought
+  method: get
+  operationId: GetProductsAndServicesBoughtInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/products-and-services-sold
+  method: get
+  operationId: GetProductsAndServicesSoldInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/sales-revenue
+  method: get
+  operationId: GetSalesRevenueInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/insights/summary
+  method: get
+  operationId: GetSummaryInsight
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /background-checks
+  method: get
+  operationId: GetBackgroundChecks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /background-checks/{id}
+  method: get
+  operationId: GetBackgroundCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /background-checks/{id}/pdf
+  method: get
+  operationId: GetBackgroundCheckPdf
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/background-checks
+  method: get
+  operationId: GetEntityBackgroundChecks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /background-checks/{backgroundCheckId}/records
+  method: get
+  operationId: GetBackgroundCheckRecords
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/company-verification/reports
+  method: get
+  operationId: GetCompanyVerificationReports
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/company-verification/reports/{id}
+  method: get
+  operationId: GetCompanyVerificationReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/company-verification/reports/{id}/pdf
+  method: get
+  operationId: GetCompanyVerificationReportPdf
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/datasources/mx/company-verification/reports
+  method: get
+  operationId: GetEntityCompanyVerificationReports
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/company-verification/reports/{reportId}/found-entities
+  method: get
+  operationId: GetCompanyVerificationReportFoundEntities
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datasources/mx/company-verification/reports/{reportId}/found-entities/{id}
+  method: get
+  operationId: GetCompanyVerificationReportFoundEntity
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/shareholders
+  method: get
+  operationId: GetEntityShareholders
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /entities/{entityId}/shareholders
+  method: post
+  operationId: CreateEntityShareholder
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /shareholders
+  method: get
+  operationId: GetShareholders
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /shareholders/{id}
+  method: get
+  operationId: GetShareholder
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /shareholders/{id}
+  method: patch
+  operationId: UpdateShareholder
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /shareholders/{id}
+  method: delete
+  operationId: DeleteShareholder
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /shareholders/{shareholderId}/relations
+  method: get
+  operationId: GetShareholderRelations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /shareholders/{shareholderId}/relations/{relationId}
+  method: get
+  operationId: GetShareholderRelation
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /shareholders/{shareholderId}/relations/{relationId}
+  method: patch
+  operationId: UpdateShareholderRelation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /shareholders/{shareholderId}/relations/{relationId}
+  method: delete
+  operationId: DeleteShareholderRelation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /shareholders/{shareholderId}/relations/{relationId}/promote
+  method: post
+  operationId: PromoteShareholderRelation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /shareholders/{shareholderId}/relations/{relationId}/sources
+  method: get
+  operationId: GetShareholderRelationSources
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /shareholders/{shareholderId}/relations/{relationId}/sources/{sourceId}
+  method: get
+  operationId: GetShareholderRelationSource
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /shareholders/{shareholderId}/relations/{relationId}/sources/{sourceId}
+  method: delete
+  operationId: DeleteShareholderRelationSource
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required

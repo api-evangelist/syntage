@@ -1,0 +1,74 @@
+generated: '2026-07-21'
+method: searched
+type: Webhooks
+source: openapi/syntage-openapi-original.yml + https://docs.syntage.com/guides/validating-webhook-requests
+summary: >-
+  Syntage delivers events to subscriber-configured webhook endpoints. No standalone
+  AsyncAPI document is published; the event surface is captured here from the OpenAPI
+  Webhook Endpoints / Events resources. Delivery payloads are JSON-LD or JSON.
+management:
+  create_endpoint: CreateWebhookEndpoint (POST /webhook-endpoints)
+  list_endpoints: ListWebhookEndpoint (GET /webhook-endpoints)
+  get_endpoint: GetWebhookEndpoint (GET /webhook-endpoints/{id})
+  update_endpoint: UpdateWebhookEndpoint (PUT /webhook-endpoints/{id})
+  delete_endpoint: DeleteWebhookEndpoint (DELETE /webhook-endpoints/{id})
+  list_deliveries: ListWebhookRequest (GET /webhook-requests)
+  get_delivery: GetWebhookRequest (GET /webhook-requests/{id})
+  poll_events: ListEvent (GET /events), ListEntityEvents (GET /entities/{entityId}/events)
+delivery:
+  content_types:
+  - application/ld+json
+  - application/json
+  signature_validation: https://docs.syntage.com/guides/validating-webhook-requests
+event_types:
+- credential.created
+- credential.updated
+- credential.deleted
+- link.created
+- link.updated
+- link.deleted
+- file.created
+- extraction.created
+- extraction.updated
+- invoice.created
+- invoice.updated
+- invoice.deleted
+- invoice_payment.created
+- invoice_payment.updated
+- invoice_line_item.created
+- invoice_line_item.updated
+- tax_return.created
+- tax_return.updated
+- tax_return.deleted
+- export.created
+- export.updated
+- tax_status.created
+- tax_status.updated
+- tax_status.deleted
+- tax_compliance_check.created
+- tax_compliance_check.updated
+- tax_compliance_check.deleted
+- tax_retention.created
+- tax_retention.updated
+- tax_retention.deleted
+- electronic_accounting_record.created
+- electronic_accounting_record.updated
+- electronic_accounting_record.deleted
+- rpc_entidades.created
+- rpc_entidades.updated
+- rpc_acto.created
+- rpc_acto.updated
+- rpc_socios.created
+- rpc_socios.updated
+- shareholder_relation.created
+- shareholder_relation.updated
+- shareholder_relation_source.created
+- rug_garantia.created
+- rug_garantia.updated
+- buro_de_credito_report.created
+- buro_de_credito_report.updated
+- sat_certificate.created
+- sat_certificate.updated
+- background_check.created
+- company_verification_report.created
+- company_verification_report.updated

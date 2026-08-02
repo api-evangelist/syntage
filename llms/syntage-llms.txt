@@ -1,0 +1,260 @@
+# Syntage
+
+## Docs
+
+- [Accounts Payable Insight](https://docs.syntage.com/api-reference/accounts-payable-insight/get-accounts-payable.md): Returns accounts payable data showing amounts due and paid over time, including cumulative totals.
+- [Accounts Receivable Insight](https://docs.syntage.com/api-reference/accounts-receivable-insight/get-accounts-receivable.md): Returns accounts receivable data showing amounts due and paid over time, including cumulative totals.
+- [Retrieve a background check](https://docs.syntage.com/api-reference/background-checks/get-a-specific-background-check.md): Retrieves one background check, including its score, processing status, country scope, associated files, and links to related records.
+- [List background checks](https://docs.syntage.com/api-reference/background-checks/get-all-background-checks.md): Lists background checks available to the organization. Use filters to narrow the list by processing status, country scope, or score.
+- [List an entity's background checks](https://docs.syntage.com/api-reference/background-checks/get-an-entitys-background-checks.md): Lists background checks associated with an entity. Use this endpoint when your integration is working from a known entity ID.
+- [Download background check PDF](https://docs.syntage.com/api-reference/background-checks/get-background-check-pdf-report.md): Downloads the generated PDF report for a background check. The response body is the PDF file itself.
+- [List background check records](https://docs.syntage.com/api-reference/background-checks/get-background-check-records.md): Lists the records found during a background check. Records contain the detailed source data behind the check and are organized by category and database.
+- [Balance Sheet Insight](https://docs.syntage.com/api-reference/balance-sheet-insight/get-balance-sheet-metric.md): Returns the entity's balance sheet organized in a tree of categories.
+- [Buró de Crédito Summary Export](https://docs.syntage.com/api-reference/buro-de-credito-summary-insight/export-buro-de-credito-summary.md): Export Buró de Crédito report score summaries for an entity as CSV or XLSX.
+- [Buró de Crédito Summary Insight](https://docs.syntage.com/api-reference/buro-de-credito-summary-insight/get-buro-de-credito-summary.md): List Buró de Crédito report score summaries for an entity.
+- [Cash Flow Insight](https://docs.syntage.com/api-reference/cash-flow-insight/get-cash-flow.md): Inflows and outflows over time, derived from issued and received invoices.
+- [Get a report's found entities](https://docs.syntage.com/api-reference/company-verification-reports/get-a-reports-found-entities.md): List every person or company identified in the source documents of a Mexican Company Verification report, with their cap-table holdings and powers of attorney expanded inline.
+- [Retrieve a company verification report](https://docs.syntage.com/api-reference/company-verification-reports/get-a-specific-company-verification-report.md): Retrieves one company verification report, including its verification details, metadata, and supporting file references.
+- [Get a specific found entity](https://docs.syntage.com/api-reference/company-verification-reports/get-a-specific-found-entity.md): Retrieve a single found entity, with its cap-table holdings and powers expanded inline.
+- [List company verification reports](https://docs.syntage.com/api-reference/company-verification-reports/get-all-company-verification-reports.md): Lists company verification reports available to the organization. Use this endpoint when you need to page through reports across entities.
+- [List an entity's company verification reports](https://docs.syntage.com/api-reference/company-verification-reports/get-an-entitys-company-verification-reports.md): Lists company verification reports associated with an entity. Use this endpoint when your integration is working from a known entity ID.
+- [Current Powers Insight](https://docs.syntage.com/api-reference/corporate-structure-current-powers-insight/get-current-powers.md): List the people and companies that hold at least one currently effective power of attorney, drawn from the most recent Company Verification report registered for the entity.
+- [Customer Concentration Insight](https://docs.syntage.com/api-reference/customer-concentration-insight/get-customer-invoice-concentration.md): Returns the concentration of issued or received invoices by customers.
+- [Customer Network Insight](https://docs.syntage.com/api-reference/customer-network-insight/get-customer-network-insight.md): Customers the entity has sold to, with invoiced totals and cancellation rates per counterparty.
+- [List an entity's BIL reports](https://docs.syntage.com/api-reference/ds-mx-bil-reports/list-an-entitys-bil-reports.md): List Buró de Investigaciones Legales reports generated for an entity.
+- [Retrieve a BIL report](https://docs.syntage.com/api-reference/ds-mx-bil-reports/retrieve-a-bil-report.md): Retrieve a single Buró de Investigaciones Legales report by ID.
+- [Create a Buró de Crédito authorization](https://docs.syntage.com/api-reference/ds-mx-buro-de-credito-authorizations/create-a-buro-de-credito-authorization.md): Create a Buró de Crédito authorization for an entity so report extractions can use it
+- [Delete a Buró de Crédito authorization](https://docs.syntage.com/api-reference/ds-mx-buro-de-credito-authorizations/delete-a-buro-de-credito-authorization.md): Delete a Buró de Crédito authorization by authorization ID
+- [Get a Buró de Crédito authorization](https://docs.syntage.com/api-reference/ds-mx-buro-de-credito-authorizations/get-a-buro-de-credito-authorization.md): Get a single Buró de Crédito authorization by authorization ID
+- [Get Buró de Crédito authorizations](https://docs.syntage.com/api-reference/ds-mx-buro-de-credito-authorizations/get-all-buro-de-credito-authorizations.md): List Buró de Crédito authorizations for the organization
+- [Get an entity's Buró de Crédito authorizations](https://docs.syntage.com/api-reference/ds-mx-buro-de-credito-authorizations/get-an-entitys-buro-de-credito-authorizations.md): List Buró de Crédito authorizations associated with an entity
+- [Get a Buró de Crédito report](https://docs.syntage.com/api-reference/ds-mx-buro-de-credito-reports/get-a-buro-de-credito-report.md): Get a single Buró de Crédito report by report ID
+- [Get an entity's Buró de Crédito reports](https://docs.syntage.com/api-reference/ds-mx-buro-de-credito-reports/get-an-entitys-buro-de-credito-reports.md): List Buró de Crédito reports generated for an entity
+- [List an entity's RPC actos](https://docs.syntage.com/api-reference/ds-mx-rpc-actos/list-an-entitys-rpc-actos.md): List RPC actos extracted for an entity. Use this endpoint when your integration needs individual registry acts rather than the complete RPC entidade response.
+- [Retrieve RPC acto](https://docs.syntage.com/api-reference/ds-mx-rpc-actos/retrieve-an-rpc-acto.md): Retrieve one RPC acto by ID, including registry act metadata, parsed act data, and file reference when a registry document is available.
+- [List an entity's RPC entidades](https://docs.syntage.com/api-reference/ds-mx-rpc-entidades/list-all-entities-rpc-entidades-data-beta.md): List RPC entidades extracted for an entity. Use this endpoint after an `rpc` extraction finishes to review the RPC company records found for the entity.
+- [Retrieve RPC entidade](https://docs.syntage.com/api-reference/ds-mx-rpc-entidades/retrieve-rpc-entidades-data-beta.md): Retrieve one RPC entidade by ID, including the company profile, related actos, and related socios extracted from Registro Publico de Comercio.
+- [Retrieve RPC socio](https://docs.syntage.com/api-reference/ds-mx-rpc-socios/retrieve-an-rpc-socio.md): Retrieve one RPC socio by ID, including shareholder details and the RPC entidade profile it belongs to.
+- [List an entity's RUG guarantees](https://docs.syntage.com/api-reference/ds-mx-rug-garantias/list-all-entities-rug-garantias-data-beta.md): List RUG guarantees extracted for an entity. Use this endpoint after a `rug` extraction finishes to review movable collateral guarantees found for the entity.
+- [Retrieve RUG guarantee](https://docs.syntage.com/api-reference/ds-mx-rug-garantias/retrieve-rug-garantia-data.md): Retrieve one RUG guarantee by ID, including collateral details, creditor, grantors, contract dates, and related operations.
+- [List an entity's RUG operations](https://docs.syntage.com/api-reference/ds-mx-rug-operaciones/list-all-entities-rug-operaciones-data.md): List RUG operations extracted for an entity. Use this endpoint after a `rug` extraction finishes to review registry acts related to the entity's guarantees.
+- [Retrieve RUG operation](https://docs.syntage.com/api-reference/ds-mx-rug-operaciones/retrieve-rug-operacion-data.md): Retrieve one RUG operation by ID, including operation type, seat number, guarantee number, grantors, parsed boleta data, and file reference when available.
+- [List an entity's SAT certificates](https://docs.syntage.com/api-reference/ds-mx-sat-certificates/list-an-entitys-sat-certificates.md): List SAT certificates associated with an entity. These digital certificates are used for electronic signatures and digital sealing in Mexico's tax system.
+- [Retrieve a SAT certificate](https://docs.syntage.com/api-reference/ds-mx-sat-certificates/retrieve-a-sat-certificate.md): Retrieve a SAT certificate by ID. The `file` property references the certificate file. Use the file download endpoint to retrieve the certificate content.
+- [Create a credential](https://docs.syntage.com/api-reference/ds-mx-sat-credentials/create-a-credential.md): Create a SAT credential for an RFC. If the RFC is not already associated with your organization, Syntage creates the related entity association as part of credential creation.
+- [Delete a credential](https://docs.syntage.com/api-reference/ds-mx-sat-credentials/delete-a-credential.md): Delete a SAT credential so it can no longer be used for new extraction work.
+- [List all credentials](https://docs.syntage.com/api-reference/ds-mx-sat-credentials/list-all-credentials.md): List SAT credentials available to your organization.
+- [Retrieve a credential](https://docs.syntage.com/api-reference/ds-mx-sat-credentials/retrieve-a-credential.md): Retrieve a SAT credential by ID, including its credential type, RFC, and validation status.
+- [Revalidate a credential](https://docs.syntage.com/api-reference/ds-mx-sat-credentials/revalidate-a-credential.md): Request validation for a SAT credential that is not already valid.
+- [List an invoice's applied credit notes](https://docs.syntage.com/api-reference/ds-mx-sat-credit-notes/list-all-applied-credit-notes-related-to-the-requested-invoice.md): List credit notes applied to the requested invoice.
+- [List an invoice's issued credit notes](https://docs.syntage.com/api-reference/ds-mx-sat-credit-notes/list-all-issued-credit-notes-related-to-the-requested-invoice.md): List credit notes issued by the requested invoice.
+- [List an entity's credit notes](https://docs.syntage.com/api-reference/ds-mx-sat-credit-notes/list-an-entitys-credit-notes.md): List credit notes extracted for an entity.
+- [List credit notes](https://docs.syntage.com/api-reference/ds-mx-sat-credit-notes/list-credit-notes.md): List credit notes related to invoices.
+- [Retrieve an invoice credit note](https://docs.syntage.com/api-reference/ds-mx-sat-credit-notes/retrieve-an-invoice-credit-note.md): Retrieve a credit note by ID, including the issued invoice, applied invoice, amount, and cancellation status.
+- [List an entity's electronic accounting records](https://docs.syntage.com/api-reference/ds-mx-sat-electronic-accounting/list-all-entities-electronic-accounting-records.md): List electronic accounting records extracted for an entity.
+- [Retrieve an electronic accounting record](https://docs.syntage.com/api-reference/ds-mx-sat-electronic-accounting/retrieve-an-electronic-accounting-record.md): Retrieve an electronic accounting record by ID, including fiscal period, accounting file type, status, and related files.
+- [List all invoice batch payments](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-batch-payments/list-all-invoice-batch-payments.md): List batch payments derived from invoice payment receipts.
+- [List an invoice's batch payments](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-batch-payments/list-an-invoices-batch-payments.md): List all batch payments related to the requested invoice.
+- [Retrieve an invoice batch payment](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-batch-payments/retrieve-an-invoice-batch-payment.md): Retrieve an invoice batch payment by ID, including transaction-level payment details and related invoice payments.
+- [List an entity's invoice line items](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-line-items/list-all-entity-line-items.md): List invoice line items extracted for an entity.
+- [List an invoice's line items](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-line-items/list-an-invoices-line-items.md): List line items from the requested invoice.
+- [Retrieve an invoice line item](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-line-items/retrieve-an-invoice-line-item.md): Retrieve an invoice line item by ID, including product, quantity, amount, and tax details.
+- [List all invoice payments](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-payments/list-all-invoice-payments.md): List invoice payments applied to deferred invoices.
+- [List an invoice's payments](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-payments/list-an-invoices-payments.md): List payments applied to the requested invoice.
+- [List an entity's invoice payments](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-payments/list-entities-invoice-payments.md): List invoice payments extracted for an entity.
+- [Retrieve an invoice payment](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-payments/retrieve-an-invoice-payment.md): Retrieve an invoice payment by ID, including the deferred invoice, batch payment, amount, balance, and cancellation status.
+- [List an entity's invoice relations](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-relations/list-an-entitys-invoice-relations.md): List invoice relations for an invoice within an entity.
+- [List an invoice's relations](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-relations/list-an-invoices-relations.md): List invoice relations for the requested invoice.
+- [Retrieve an invoice relation](https://docs.syntage.com/api-reference/ds-mx-sat-invoice-relations/retrieve-an-invoice-relation.md): Retrieve an invoice relation by ID, including the source invoice, related invoice, related invoice UUID, and SAT relation type.
+- [List an entity's invoices](https://docs.syntage.com/api-reference/ds-mx-sat-invoices/list-all-entities-invoices.md): List invoices extracted for an entity.
+- [Retrieve a SAT CFDI](https://docs.syntage.com/api-reference/ds-mx-sat-invoices/retrieve-a-sat-cfdi.md): Retrieve parsed SAT CFDI data by invoice UUID. When `X-Async-Process` is set to `1`, the endpoint can return `202 Accepted` while CFDI parsing continues asynchronously.
+- [Retrieve an invoice](https://docs.syntage.com/api-reference/ds-mx-sat-invoices/retrieve-an-invoice.md): Retrieve an invoice by ID, including SAT identifiers, issuer and receiver details, totals, payment status, file availability, and invoice relationships.
+- [Retrieve an invoice's CFDI](https://docs.syntage.com/api-reference/ds-mx-sat-invoices/retrieve-an-invoices-cfdi.md): Retrieve the invoice CFDI in the requested format.
+- [Tag an invoice](https://docs.syntage.com/api-reference/ds-mx-sat-invoices/tag-an-invoice.md): Add a tag to an invoice.
+- [Tag multiple invoices](https://docs.syntage.com/api-reference/ds-mx-sat-invoices/tag-multiple-invoices.md): Add one or more tags to up to 100 invoices in a single request.
+- [Untag an invoice](https://docs.syntage.com/api-reference/ds-mx-sat-invoices/untag-an-invoice.md): Remove a tag from an invoice.
+- [Untag multiple invoices](https://docs.syntage.com/api-reference/ds-mx-sat-invoices/untag-multiple-invoices.md): Remove one or more tags from up to 100 invoices in a single request.
+- [List an entity's tax compliance checks](https://docs.syntage.com/api-reference/ds-mx-sat-tax-compliance-checks/list-all-entities-tax-compliance-checks.md): List tax compliance checks extracted for an entity.
+- [Retrieve a tax compliance check](https://docs.syntage.com/api-reference/ds-mx-sat-tax-compliance-checks/retrieve-a-tax-compliance-check.md): Retrieve a tax compliance check by ID, including the SAT compliance result and source PDF file.
+- [List an entity's tax retentions](https://docs.syntage.com/api-reference/ds-mx-sat-tax-retentions/list-all-entities-tax-retentions.md): List tax retentions extracted for an entity.
+- [Retrieve a tax retention](https://docs.syntage.com/api-reference/ds-mx-sat-tax-retentions/retrieve-a-tax-retention.md): Retrieve a tax retention by ID, including issuer, receiver, retained taxes, fiscal period, totals, and file availability.
+- [Retrieve a tax retention CFDI](https://docs.syntage.com/api-reference/ds-mx-sat-tax-retentions/retrieve-a-tax-retention-cfdi.md): Retrieve the tax retention CFDI in the requested format.
+- [Download a tax return PDF](https://docs.syntage.com/api-reference/ds-mx-sat-tax-returns/download-a-tax-return-pdf.md): Download the SAT transcript PDF for a tax return.
+- [List an entity's tax returns](https://docs.syntage.com/api-reference/ds-mx-sat-tax-returns/list-all-entities-tax-returns.md): List tax returns extracted for an entity.
+- [Retrieve a tax return](https://docs.syntage.com/api-reference/ds-mx-sat-tax-returns/retrieve-a-tax-return.md): Retrieve a tax return by ID, including filing metadata, payment information, file references, and ISSIF availability.
+- [Retrieve tax return data](https://docs.syntage.com/api-reference/ds-mx-sat-tax-returns/retrieve-a-tax-return-data.md): Retrieve extracted data from a tax return.
+- [List an entity's tax status records](https://docs.syntage.com/api-reference/ds-mx-sat-tax-status/list-all-entities-tax-status.md): List tax status records extracted for an entity.
+- [List tax status records](https://docs.syntage.com/api-reference/ds-mx-sat-tax-status/list-tax-status-records.md): List tax status records available to your organization.
+- [Retrieve a tax status](https://docs.syntage.com/api-reference/ds-mx-sat-tax-status/retrieve-a-tax-status.md): Retrieve a tax status record by ID, including identity, address, activities, regimes, obligations, and the source PDF file.
+- [Start Syntage Score calculation](https://docs.syntage.com/api-reference/ds-syntage-score/calculate-syntage-score.md): Start an asynchronous Syntage Score calculation for a company entity.
+- [Employees Insight](https://docs.syntage.com/api-reference/employees-insight/get-employees.md): Number of employees per period, derived from distinct payroll (CFDI Nómina) recipients.
+- [Add an Entity](https://docs.syntage.com/api-reference/entities/add-an-entity.md): Add an entity to your organization.
+- [Add an entity identifier](https://docs.syntage.com/api-reference/entities/add-an-entity-identifier.md): Add a country-specific identifier to an entity.
+- [Create an entity tag](https://docs.syntage.com/api-reference/entities/create-an-entity-tag.md): Create a tag that can be assigned to entities. The created tag is returned with an `/entity-tags/{id}` IRI.
+- [Delete an Entity](https://docs.syntage.com/api-reference/entities/delete-an-entity.md): Delete an entity and the data associated with that entity.
+- [Delete an entity tag](https://docs.syntage.com/api-reference/entities/delete-an-entity-tag.md): Delete an entity tag.
+- [List all entities](https://docs.syntage.com/api-reference/entities/list-all-entities.md): List entities in your organization and filter by RFC, name, person type, or dates.
+- [List all entity tags](https://docs.syntage.com/api-reference/entities/list-all-entity-tags.md): List entity tags that can be assigned to entities.
+- [List an entity's events](https://docs.syntage.com/api-reference/entities/list-an-entitys-events.md): List recent events for a specific entity.
+- [List an entity's identifiers](https://docs.syntage.com/api-reference/entities/list-an-entitys-identifiers.md): List country-specific identifiers for an entity, such as RFC or CURP for Mexico.
+- [List an entity's tags](https://docs.syntage.com/api-reference/entities/list-an-entitys-tags.md): List the tags assigned to a specific entity.
+- [Retrieve an Entity](https://docs.syntage.com/api-reference/entities/retrieve-an-entity.md): Retrieve a single entity by ID, including taxpayer, credential, and tag information when available.
+- [Retrieve an entity tag](https://docs.syntage.com/api-reference/entities/retrieve-an-entity-tag.md): Retrieve a single entity tag by ID.
+- [Tag multiple entities](https://docs.syntage.com/api-reference/entities/tag-multiple-entities.md): Add one or more tags to up to 100 entities in a single request. Tag IRIs are accepted in both the `/entity-tags/{id}` and `/link-tags/{id}` forms.
+- [Untag multiple entities](https://docs.syntage.com/api-reference/entities/untag-multiple-entities.md): Remove one or more tags from up to 100 entities in a single request. Tag IRIs are accepted in both the `/entity-tags/{id}` and `/link-tags/{id}` forms.
+- [Update an Entity](https://docs.syntage.com/api-reference/entities/update-an-entity.md): Update an entity. Sending `tags` replaces the entity's existing tag assignments with the provided collection.
+- [Update an entity tag](https://docs.syntage.com/api-reference/entities/update-an-entity-tag.md): Update the display name for an entity tag.
+- [Delete an event](https://docs.syntage.com/api-reference/events/delete-an-event.md): Delete an event resource.
+- [List all events](https://docs.syntage.com/api-reference/events/list-all-events.md): List recent events for resources in your organization. Events are ordered and paginated with cursor pagination.
+- [Retrieve an event](https://docs.syntage.com/api-reference/events/retrieve-an-event.md): Retrieve a single event by ID, including the event type and resource data captured when the event was created.
+- [Expenditures Insight](https://docs.syntage.com/api-reference/expenditures-insight/get-expenditures.md): Money the entity has spent over time, aggregated from received income invoices.
+- [Export data](https://docs.syntage.com/api-reference/exports/export-data.md): Create an export from a supported collection URI. The export runs asynchronously and returns an Export resource that can be polled until the generated file is ready.
+- [Retrieve an export](https://docs.syntage.com/api-reference/exports/retrieve-an-export.md): Retrieve an export and its current processing status. When the export is finished, the response includes the generated file metadata.
+- [Create an extraction](https://docs.syntage.com/api-reference/extractions/create-an-extraction.md): Create an extraction for a specific entity, extractor, and options.
+- [List all extractions](https://docs.syntage.com/api-reference/extractions/list-all-extractions.md): List extraction tasks and filter them by entity, extractor, status, dates, or SAT rate limit state.
+- [Request the extraction to be stopped](https://docs.syntage.com/api-reference/extractions/request-the-extraction-to-be-stopped.md): Request cancellation for a pending or running extraction.
+- [Retrieve an extraction](https://docs.syntage.com/api-reference/extractions/retrieve-an-extraction.md): Retrieve a single extraction, including its extractor, options, status, timing, error code, and data point counts.
+- [Download content](https://docs.syntage.com/api-reference/files/download-the-file-content.md): The response includes the `Location` header with the URL to download the file (make sure to follow the redirection).
+- [Retrieve a file](https://docs.syntage.com/api-reference/files/retrieve-a-file.md): Retrieve file metadata, including type, filename, media type, size, and the resource associated with the file.
+- [Financial Institutions Insight](https://docs.syntage.com/api-reference/financial-institutions-insight/get-financial-institutions.md): Banks and other financial institutions the entity has transacted with, derived from CFDI payments and third-party accounts on invoices.
+- [Financial Ratios Insight](https://docs.syntage.com/api-reference/financial-ratios-insight/get-financial-ratios.md): Liquidity, leverage, profitability, and efficiency ratios computed per fiscal year from the entity's annual tax filings.
+- [Government Customers Insight](https://docs.syntage.com/api-reference/government-customers-insight/get-government-customers.md): The entity's customers that are Mexican federal, state, or municipal government bodies, with each one's share of total revenue.
+- [Income Statement Insight](https://docs.syntage.com/api-reference/income-statement-insight/get-metrics-income-statement.md): Returns the entity's income statement organized in a tree of categories.
+- [Insight Export](https://docs.syntage.com/api-reference/insights/export-an-insight.md): Export a supported insight for an entity as CSV or XLSX.
+- [API Reference](https://docs.syntage.com/api-reference/introduction.md)
+- [Invoicing Annual Comparison Insight](https://docs.syntage.com/api-reference/invoicing-annual-comparison-insight/get-invoicing-annual-comparison-insight.md): Year-over-year totals of issued and received invoicing activity, one row per fiscal year.
+- [Invoicing Blacklist Insight](https://docs.syntage.com/api-reference/invoicing-blacklist-insight/get-invoicing-blacklist.md): Counterparties on the SAT's Artículo 69-B blacklist (EFOS/EDOS) that the entity has transacted with, split between issuers and receivers.
+- [Invoicing Concentration Insight](https://docs.syntage.com/api-reference/invoicing-concentration-insight/get-invoicing-concentration.md): **Deprecated:** Use [Get Customer Invoice Concentration](/api-reference/customer-concentration-insight/get-customer-invoice-concentration) or [Get Vendor Invoice Concentration](/api-reference/vendor-concentration-insight/get-vendor-invoice-concentration) instead.
+- [Retrieve addresses by postal code](https://docs.syntage.com/api-reference/mexico-addresses/retrieve-addresses-by-postal-code.md): Retrieve Mexico address options for a postal code. Buró de Crédito and Buró Empresas require submitted addresses to match the postal-code address catalog, and a postal code can return multiple neighborhoods.
+- [Moratory Interest Insight](https://docs.syntage.com/api-reference/moratory-interest-insight/get-moratory-interest.md): Returns moratory-interest charges for the entity, aggregated from received financial-institution invoices. The response includes summary KPIs, monthly totals, monthly totals by financial institution, and institution-level totals.
+- [Products and Services Bought Insight](https://docs.syntage.com/api-reference/products-and-services-bought-insight/get-products-and-services-bought.md): Returns a paginated list of products and services bought by the entity, including transaction details and share percentages.
+- [Products and Services Sold Insight](https://docs.syntage.com/api-reference/products-and-services-sold-insight/get-products-and-services-sold.md): Returns a paginated list of products and services sold by the entity, including transaction details and share percentages.
+- [Create a report](https://docs.syntage.com/api-reference/reports/create-a-report.md): Create a custom report with your own selection of insight entries. Set `organizational` to `true` to share the report with every user in your organization instead of keeping it personal.
+- [Delete a report](https://docs.syntage.com/api-reference/reports/delete-a-report.md): Delete a custom report.
+- [List all reports](https://docs.syntage.com/api-reference/reports/list-reports.md): List the reports available to the authenticated user: built-in reports, the user's personal reports, and organizational reports.
+- [Retrieve a report](https://docs.syntage.com/api-reference/reports/retrieve-a-report.md): Retrieve a report by ID. Use the report ID as the `uri` path segment when requesting a PDF download with the [Exports API](/api-reference/exports/export-data).
+- [Update a report](https://docs.syntage.com/api-reference/reports/update-a-report.md): Update a custom report's name, insight layout, or organizational visibility.
+- [Risks Insight](https://docs.syntage.com/api-reference/risks-insight/get-risk-calculations.md): Risk indicators (concentration, foreign-currency exposure, cash-transaction share, insolvency, tax compliance, etc.) computed from the entity's invoicing, payments, and tax-filing data.
+- [RPC Shareholders Insight](https://docs.syntage.com/api-reference/rpc-shareholders-insight/get-rpc-shareholders-beta.md): **Deprecated:** Use [Get Shareholders](/api-reference/shareholders-insight/get-shareholders) instead.
+- [Sales Revenue Insight](https://docs.syntage.com/api-reference/sales-revenue-insight/get-sales-revenue.md): Money the entity has earned over time, aggregated from issued income invoices.
+- [Create a scheduler rule](https://docs.syntage.com/api-reference/scheduler-rules/create-an-scheduler-rule.md): Create a rule that runs an extractor on a scheduler.
+- [Delete a scheduler rule](https://docs.syntage.com/api-reference/scheduler-rules/delete-an-scheduler-rule.md): Delete a scheduler rule.
+- [Retrieve a scheduler rule](https://docs.syntage.com/api-reference/scheduler-rules/retrieve-an-scheduler-rule.md): Retrieve a scheduler rule by ID.
+- [Update a scheduler rule](https://docs.syntage.com/api-reference/scheduler-rules/update-an-scheduler-rule.md): Update the extractor, options, or cron expression for a scheduler rule.
+- [Create a scheduler](https://docs.syntage.com/api-reference/schedulers/create-an-scheduler.md): Create a scheduler that can run one or more extraction rules.
+- [Delete a scheduler](https://docs.syntage.com/api-reference/schedulers/delete-an-scheduler.md): Delete a scheduler.
+- [List schedulers](https://docs.syntage.com/api-reference/schedulers/list-schedulers.md): List all schedulers.
+- [Retrieve a scheduler](https://docs.syntage.com/api-reference/schedulers/retrieve-an-scheduler.md): Retrieve a scheduler by ID, including its rules and tags.
+- [Update a scheduler](https://docs.syntage.com/api-reference/schedulers/update-an-scheduler.md): Update a scheduler's name or enabled state.
+- [Scores Insight](https://docs.syntage.com/api-reference/scores-insight/get-scores.md): Entity scores aggregated from every configured score source (Syntage Score and any third-party rating providers enabled for the organization).
+- [Syntage Score Distribution](https://docs.syntage.com/api-reference/scores-insight/get-syntage-score-distribution.md): Get the distribution of current Syntage Score values across score buckets.
+- [Shareholders Insight](https://docs.syntage.com/api-reference/shareholders-insight/get-shareholders.md): Returns a paginated shareholder insight for an entity.
+- [Create a new shareholder for an entity](https://docs.syntage.com/api-reference/shareholders/create-a-new-shareholder-for-an-entity.md): Adds manually collected shareholder information to an entity. The request creates a shareholder and the relation between that shareholder and the entity.
+- [Delete a shareholder](https://docs.syntage.com/api-reference/shareholders/delete-a-shareholder.md): Deletes a shareholder resource.
+- [Delete a shareholder relation](https://docs.syntage.com/api-reference/shareholders/delete-a-shareholder-relation.md): Deletes the relationship between a shareholder and an entity.
+- [Delete a shareholder relation source](https://docs.syntage.com/api-reference/shareholders/delete-a-shareholder-relation-source.md): Deletes one source from a shareholder relation.
+- [Retrieve a shareholder](https://docs.syntage.com/api-reference/shareholders/get-a-specific-shareholder.md): Retrieves one shareholder by ID.
+- [Retrieve a shareholder relation](https://docs.syntage.com/api-reference/shareholders/get-a-specific-shareholder-relation.md): Retrieves one shareholder relation by ID.
+- [Retrieve a shareholder relation source](https://docs.syntage.com/api-reference/shareholders/get-a-specific-shareholder-relation-source.md): Retrieves one source for a shareholder relation.
+- [List shareholders](https://docs.syntage.com/api-reference/shareholders/get-all-shareholders.md): Lists shareholders available to the organization. Use this endpoint when you need to search shareholders across entities.
+- [List an entity's shareholders](https://docs.syntage.com/api-reference/shareholders/get-an-entitys-shareholders.md): Lists shareholders connected to an entity. Use filters to narrow the list by shareholder type, name, or RFC.
+- [List shareholder relation sources](https://docs.syntage.com/api-reference/shareholders/get-shareholder-relation-sources.md): Lists the sources that support a shareholder relation, such as manually entered data or information sourced from RPC.
+- [List shareholder relations](https://docs.syntage.com/api-reference/shareholders/get-shareholder-relations.md): Lists the entity relationships for a shareholder, including ownership direction and available ownership details.
+- [Promote a shareholder relation](https://docs.syntage.com/api-reference/shareholders/promote-a-shareholder-relation.md): Promotes a shareholder relation by creating an entity for the shareholder. Use this when the shareholder should be managed as its own person or company in your integration.
+- [Update a shareholder](https://docs.syntage.com/api-reference/shareholders/update-a-shareholder.md): Updates manually editable shareholder details such as the shareholder's name or RFC.
+- [Update a shareholder relation](https://docs.syntage.com/api-reference/shareholders/update-a-shareholder-relation.md): Updates manually editable details for a shareholder relation, such as the number of shares.
+- [Summary Insight](https://docs.syntage.com/api-reference/summary-insight/get-summary.md): Aggregated profile of the entity combining identity, economic activity, tax regimes, and headline figures from the latest annual tax return.
+- [Create a tag](https://docs.syntage.com/api-reference/tags/create-a-tag.md): Create a tag for a supported resource type.
+- [Delete a tag](https://docs.syntage.com/api-reference/tags/delete-a-tag.md): Delete a tag.
+- [List all tags](https://docs.syntage.com/api-reference/tags/list-all-tags.md): List tags that can be assigned to supported resources.
+- [Update a tag](https://docs.syntage.com/api-reference/tags/update-a-tag.md): Update a tag's display name or color.
+- [Trial Balance Insight](https://docs.syntage.com/api-reference/trial-balance-insight/get-trial-balance.md): Returns all trial balances accounts matching on the account catalogs. If not present it will be tagged/grouped as '000 - Undefined'.
+- [Vendor Concentration Insight](https://docs.syntage.com/api-reference/vendor-concentration-insight/get-vendor-invoice-concentration.md): Returns the concentration of issued or received invoices by vendors.
+- [Vendor Network Insight](https://docs.syntage.com/api-reference/vendor-network-insight/get-vendor-network-insight.md): Vendors the entity has purchased from, with invoiced totals and cancellation rates per counterparty.
+- [Create webhook endpoint](https://docs.syntage.com/api-reference/webhook-endpoints/create-a-webhook-endpoint.md): Create a webhook endpoint for your organization. Syntage delivers matching events to the endpoint URL using HTTPS `POST` requests.
+- [Delete webhook endpoint](https://docs.syntage.com/api-reference/webhook-endpoints/delete-a-webhook-endpoint.md): Delete a webhook endpoint so Syntage stops sending matching events to it.
+- [List webhook endpoints](https://docs.syntage.com/api-reference/webhook-endpoints/list-all-webhook-endpoints.md): List webhook endpoints configured for your organization.
+- [Retrieve webhook endpoint](https://docs.syntage.com/api-reference/webhook-endpoints/retrieve-a-webhook-endpoint.md): Get a webhook endpoint by ID.
+- [Update webhook endpoint](https://docs.syntage.com/api-reference/webhook-endpoints/update-an-webhook-endpoint.md): Replace a webhook endpoint's URL, event subscriptions, enabled state, and content type.
+- [List webhook requests](https://docs.syntage.com/api-reference/webhook-requests/list-all-webhook-requests.md): List webhook delivery attempts for your organization.
+- [Retrieve webhook request](https://docs.syntage.com/api-reference/webhook-requests/retrieve-a-webhook-request.md): Get a webhook delivery attempt by ID. Use the response status code, response time, related event, and endpoint details to investigate delivery behavior.
+- [Changelog](https://docs.syntage.com/changelog.md): Product and API updates for Syntage.
+- [API Changelog](https://docs.syntage.com/developer-changelog.md): API updates, documentation changes, and integration-impacting changes
+- [Event examples](https://docs.syntage.com/developers/event-examples.md): Example event payloads for created, updated, and deleted resource events.
+- [Extraction request examples](https://docs.syntage.com/developers/extraction-request-examples.md): Example extraction request bodies for common Syntage resources.
+- [Developer overview](https://docs.syntage.com/developers/overview.md): Start here when building an integration with the Syntage API.
+- [Entity URLs](https://docs.syntage.com/guides/api/entity-urls.md)
+- [Environments](https://docs.syntage.com/guides/api/environments.md)
+- [Pagination](https://docs.syntage.com/guides/api/pagination.md)
+- [Property Filtering](https://docs.syntage.com/guides/api/property-filtering.md)
+- [Rate Limiting](https://docs.syntage.com/guides/api/rate-limiting.md)
+- [Request IDs](https://docs.syntage.com/guides/api/request-ids.md)
+- [SAT Catalogs](https://docs.syntage.com/guides/catalogs.md)
+- [Embedding Entity Onboarding](https://docs.syntage.com/guides/embedding-entity-onboarding.md)
+- [Integration Flow](https://docs.syntage.com/guides/integration-flow.md)
+- [Validating Webhook Requests](https://docs.syntage.com/guides/validating-webhook-requests.md): How to validate webhook calls by using the `signingSecret` value.
+- [Widget (Deprecated)](https://docs.syntage.com/guides/widget.md)
+- [Overview](https://docs.syntage.com/index.md): Start here for Syntage product documentation, developer guides, API reference, and changelogs.
+- [Product updates](https://docs.syntage.com/product-changelog.md): Product updates, new datasources, dashboard improvements, and customer-facing workflow changes
+- [Entities](https://docs.syntage.com/resources/core/entities.md)
+- [Events](https://docs.syntage.com/resources/core/events.md)
+- [Exports](https://docs.syntage.com/resources/core/exports.md)
+- [Extractions](https://docs.syntage.com/resources/core/extractions.md)
+- [Files](https://docs.syntage.com/resources/core/files.md)
+- [Tags](https://docs.syntage.com/resources/core/tags.md)
+- [BIL reports](https://docs.syntage.com/resources/datasources/bil/reports.md)
+- [Authorizations](https://docs.syntage.com/resources/datasources/buro-de-credito/authorizations.md): Buró de Crédito authorizations store the consent and identity data required before creating Buró de Crédito report extractions.
+- [Buró de Crédito datasource](https://docs.syntage.com/resources/datasources/buro-de-credito/overview.md): Buró de Crédito resources contain credit bureau authorizations and reports for people and companies in Mexico.
+- [Use your own Buró de Crédito or Buró Empresas account](https://docs.syntage.com/resources/datasources/buro-de-credito/own-account-integration.md): Configure your organization's Buró de Crédito or Buró Empresas account in Syntage and request reports through the dashboard.
+- [Reports](https://docs.syntage.com/resources/datasources/buro-de-credito/reports.md): Buró de Crédito reports contain credit bureau data generated from the `buro_de_credito_report` extractor.
+- [RPC actos](https://docs.syntage.com/resources/datasources/rpc/actos.md)
+- [RPC entidades](https://docs.syntage.com/resources/datasources/rpc/entidades.md)
+- [RPC datasource](https://docs.syntage.com/resources/datasources/rpc/overview.md)
+- [RPC socios](https://docs.syntage.com/resources/datasources/rpc/socios.md)
+- [RUG garantías](https://docs.syntage.com/resources/datasources/rug/garantias.md)
+- [RUG operaciones](https://docs.syntage.com/resources/datasources/rug/operaciones.md)
+- [RUG datasource](https://docs.syntage.com/resources/datasources/rug/overview.md)
+- [Certificates](https://docs.syntage.com/resources/datasources/sat/certificates.md)
+- [Credentials](https://docs.syntage.com/resources/datasources/sat/credentials.md)
+- [Credit notes](https://docs.syntage.com/resources/datasources/sat/credit-notes.md)
+- [Electronic accounting](https://docs.syntage.com/resources/datasources/sat/electronic-accounting.md)
+- [Invoice batch payments](https://docs.syntage.com/resources/datasources/sat/invoice-batch-payments.md)
+- [Invoice line items](https://docs.syntage.com/resources/datasources/sat/invoice-line-items.md)
+- [Invoice payments](https://docs.syntage.com/resources/datasources/sat/invoice-payments.md)
+- [Invoice relations](https://docs.syntage.com/resources/datasources/sat/invoice-relations.md)
+- [Invoices](https://docs.syntage.com/resources/datasources/sat/invoices.md)
+- [SAT datasource](https://docs.syntage.com/resources/datasources/sat/overview.md): Tax, identity, invoice, and compliance data from Mexico's Servicio de Administracion Tributaria.
+- [Tax compliance checks](https://docs.syntage.com/resources/datasources/sat/tax-compliance-checks.md)
+- [Tax retentions](https://docs.syntage.com/resources/datasources/sat/tax-retentions.md)
+- [Tax returns](https://docs.syntage.com/resources/datasources/sat/tax-returns.md)
+- [Tax status](https://docs.syntage.com/resources/datasources/sat/tax-status.md)
+- [Overview](https://docs.syntage.com/resources/datasources/syntage/score.md): Syntage Score calculates an internal score for a company entity from SAT tax return and tax compliance data.
+- [Overview](https://docs.syntage.com/resources/insights/overview.md): Insights aggregate entity data into metrics, summaries, and exports that can be used in dashboards and workflows.
+- [Reports](https://docs.syntage.com/resources/insights/reports.md): Reports group entity insights into a configurable layout that can be viewed in the dashboard and downloaded as a PDF.
+- [Background checks](https://docs.syntage.com/resources/other/background-checks.md)
+- [Company verification reports](https://docs.syntage.com/resources/other/company-verification-reports.md)
+- [Shareholders](https://docs.syntage.com/resources/other/shareholders.md)
+- [Webhooks](https://docs.syntage.com/resources/webhooks.md)
+- [Command palette](https://docs.syntage.com/using-syntage/dashboard/command-palette.md): Search for pages, entities, RFCs, and entity-specific sections without leaving the keyboard.
+- [Data](https://docs.syntage.com/using-syntage/dashboard/data.md): Understand the raw records and files available for an entity in Syntage.
+- [Entities and onboarding](https://docs.syntage.com/using-syntage/dashboard/entities-and-onboarding.md): Create entities, understand credential and authorization requirements, and troubleshoot onboarding.
+- [Extraction schedulers](https://docs.syntage.com/using-syntage/dashboard/extraction-scheduler.md): Configure first-time and recurring extractions for the entities your organization monitors.
+- [Reports](https://docs.syntage.com/using-syntage/dashboard/reports.md): Understand the processed report sections available from an entity in the dashboard.
+- [Request data without credentials](https://docs.syntage.com/using-syntage/dashboard/request-data-without-credentials.md): Add an entity and request data without asking for CIEC, e.firma, or authorization.
+- [Users and permissions](https://docs.syntage.com/using-syntage/dashboard/users-and-permissions.md): Manage users, administrators, and extraction permissions.
+- [Datasources](https://docs.syntage.com/using-syntage/datasources.md): Understand the datasources and verification providers that Syntage connects to.
+- [Entities](https://docs.syntage.com/using-syntage/entities.md): Understand entities and how Syntage connects data to people and companies.
+- [Extractions](https://docs.syntage.com/using-syntage/extractions.md): Understand how Syntage retrieves and refreshes data for an entity.
+- [Bureaus and compliance](https://docs.syntage.com/using-syntage/faq/bureaus-and-compliance.md): Answers for Buró de Crédito, BIL, RUG, blacklists, background checks, and shareholder data.
+- [Entity onboarding](https://docs.syntage.com/using-syntage/faq/entities-and-onboarding.md): Answers for creating entities, onboarding links, SAT credentials, and entity visibility.
+- [Extractions and refreshes](https://docs.syntage.com/using-syntage/faq/extractions-and-refreshes.md): Answers for manual extractions, recurring updates, extraction timing, SAT limits, and usage.
+- [Organization, billing, and support](https://docs.syntage.com/using-syntage/faq/organization-billing-and-support.md): Answers for organization settings, plan usage, billing, API keys, and support channels.
+- [Reports, data, and insights](https://docs.syntage.com/using-syntage/faq/reports-data-and-insights.md): Answers for reports, files, exports, Syntage Score, financial statements, and report logic.
+- [Quick start](https://docs.syntage.com/using-syntage/get-started/quick-start.md): Create your first entity, invite your team, and review the first data and reports in Syntage.
+- [Trial best practices](https://docs.syntage.com/using-syntage/get-started/trial-best-practices.md): Prepare a trial or pilot so your team can evaluate Syntage with realistic workflows.
+- [Notifications](https://docs.syntage.com/using-syntage/notifications.md): Manage dashboard and email notifications for product and workflow updates.
+- [Onboarding](https://docs.syntage.com/using-syntage/onboarding.md): Understand the ways entities can be connected to Syntage datasources.
+
+## OpenAPI Specs
+
+- [openapi](https://docs.syntage.com/openapi/openapi.yaml)

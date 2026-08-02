@@ -1,0 +1,26 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.syntage.com/api-reference/introduction
+versioning:
+  scheme: date-based
+  current: '2020-06-28'
+  request_header: 'Accept-Version'
+  docs: https://docs.syntage.com/developer-changelog
+  note: >-
+    Clients pin a version via the Accept-Version header (e.g. Accept-Version: 2020-06-28).
+    The OpenAPI info.version is 2020-06-28. Breaking changes between versions (e.g. the
+    2020-01-01 -> 2020-06-28 migration removing invoice.amount in favour of invoice.total)
+    are documented in the API Versioning Guide.
+deprecation:
+  policy_url: https://docs.syntage.com/developer-changelog
+  sunset_header: false
+  note: >-
+    Removed/changed properties are documented per-version in the API Versioning Guide inside
+    the API reference; no RFC 8594 Sunset/Deprecation response headers are advertised.
+sla:
+  url: https://status.syntage.com/
+status_page: https://status.syntage.com/
+status_page_provider: Atlassian Statuspage (syntage.statuspage.io)
+changelog: https://docs.syntage.com/developer-changelog
+ref_changelog: changelog/syntage-changelog.yml
+deprecated_operations: []

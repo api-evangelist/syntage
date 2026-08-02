@@ -1,0 +1,63 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/syntage-openapi-original.yml
+format: hydra
+notes: >-
+  Syntage returns Hydra (application/ld+json) error documents, not RFC 9457
+  application/problem+json. Validation errors surface as a Hydra ConstraintViolation.
+  Counts below are derived from 4xx/5xx responses declared across the OpenAPI operations.
+envelope:
+  media_type: application/ld+json
+  validation_shape: ConstraintViolation (hydra)
+problems:
+- status: 401
+  name: Unauthorized
+  occurrences: 175
+  media_type: application/json
+  remediation: Provide a valid X-API-Key header for the target environment (sandbox vs production keys differ).
+- status: 404
+  name: Not found
+  occurrences: 143
+  media_type: application/json
+  remediation: Verify the resource id / entity URL; a resource may not yet be extracted.
+- status: 400
+  name: Bad Request
+  occurrences: 13
+  media_type: application/json
+  remediation: Correct malformed request parameters or body.
+- status: 422
+  name: Unprocessable Entity
+  occurrences: 9
+  media_type: application/ld+json
+  remediation: Fix constraint violations reported in the Hydra ConstraintViolation body.
+- status: 403
+  name: Forbidden
+  occurrences: 2
+  media_type: application/ld+json
+  remediation: The API key lacks access to this resource or datasource.
+- status: 429
+  name: Too Many Requests
+  occurrences: 1
+  media_type: application/json
+  remediation: Back off using X-RateLimit-Reset; request a higher limit via support.
+- status: 409
+  name: Conflict
+  occurrences: 1
+  media_type: application/json
+  remediation: An extraction conflict (e.g. duplicate/concurrent extraction) occurred; retry after the in-flight one completes.
+extraction_error_codes:
+  source: openapi ExtractionErrorCode enum
+  field: error / options
+  codes:
+  - code: invalid_credentials
+    meaning: The supplied taxpayer credentials were rejected by the SAT.
+  - code: login_failed
+    meaning: Login to the data source failed.
+  - code: unrecoverable
+    meaning: The extraction failed in a way that cannot be retried.
+  - code: sat_unavailable
+    meaning: The SAT service was unavailable.
+  - code: internal_error
+    meaning: An internal error occurred during extraction.
+  - code: undefined
+    meaning: No specific error code available.
