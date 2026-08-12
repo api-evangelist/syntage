@@ -1499,7 +1499,7 @@ common:
 - type: GettingStarted
   url: https://docs.syntage.com/using-syntage/get-started/quick-start
 - type: OpenAPI
-  url: openapi/syntage-openapi-original.yml
+  url: openapi/_original/syntage-openapi-original.yml
 - type: Authentication
   url: authentication/syntage-authentication.yml
 - type: Conventions
