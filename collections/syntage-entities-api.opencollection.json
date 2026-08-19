@@ -1,0 +1,442 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Entities API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Entities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all entities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities",
+            "params": [
+              {
+                "name": "taxpayer.id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by RFC (Registro Federal de Contribuyentes, partial match)"
+              },
+              {
+                "name": "taxpayer.name",
+                "value": "Pedro Infante",
+                "type": "query",
+                "description": "Filter by taxpayer name (partial match)"
+              },
+              {
+                "name": "taxpayer.personType",
+                "value": "",
+                "type": "query",
+                "description": "Filter by taxpayer type (exact match)"
+              },
+              {
+                "name": "taxpayer.registrationDate[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by taxpayer registration date (less than or equal `<=`)"
+              },
+              {
+                "name": "taxpayer.registrationDate[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by taxpayer registration date (less than `<`)"
+              },
+              {
+                "name": "taxpayer.registrationDate[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by taxpayer registration date (greater than or equal `>=`)"
+              },
+              {
+                "name": "taxpayer.registrationDate[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by taxpayer registration date (greater than `>`)"
+              },
+              {
+                "name": "createdAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than `<`)"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than `>`)"
+              },
+              {
+                "name": "updatedAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (less than or equal `<=`)"
+              },
+              {
+                "name": "updatedAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (less than `<`)"
+              },
+              {
+                "name": "updatedAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (greater than or equal `>=`)"
+              },
+              {
+                "name": "updatedAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (greater than `>`)"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List entities in your organization and filter by RFC, name, person type, or dates."
+        },
+        {
+          "info": {
+            "name": "Add an Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/entities",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add an entity to your organization.\n\nIf `datasources` contains one or more datasources, Syntage creates first-time extractions for the selected datasources. When a selected datasource has first-time scheduler rules, those rules determine which extractors and options are used. For selected datasources not covered by first-time scheduler rules, Syntage creates first-time extractions for the datasource's available extractors using the options from the request, or the extractor defaults.\n\nOmit `data"
+        },
+        {
+          "info": {
+            "name": "Retrieve an Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single entity by ID, including taxpayer, credential, and tag information when available."
+        },
+        {
+          "info": {
+            "name": "Update an Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.syntage.com/entities/:entityId",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an entity. Sending `tags` replaces the entity's existing tag assignments with the provided collection."
+        },
+        {
+          "info": {
+            "name": "Delete an Entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/entities/:entityId",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an entity and the data associated with that entity."
+        },
+        {
+          "info": {
+            "name": "Tag multiple entities",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/entities/batch/tags",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add one or more tags to up to 100 entities in a single request. Tag IRIs are accepted in both the `/entity-tags/{id}` and `/link-tags/{id}` forms.\n\nThe operation is atomic: if any entity or tag in the request cannot be found, no entity is modified. Tags an entity already has are kept as-is, so retrying the same request is safe.\n"
+        },
+        {
+          "info": {
+            "name": "Untag multiple entities",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/entities/batch/tags/remove",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Remove one or more tags from up to 100 entities in a single request. Tag IRIs are accepted in both the `/entity-tags/{id}` and `/link-tags/{id}` forms.\n\nThe operation is atomic: if any entity or tag in the request cannot be found, no entity is modified. Tags an entity does not have are ignored, so retrying the same request is safe.\n"
+        },
+        {
+          "info": {
+            "name": "List an entity's tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/tags",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List the tags assigned to a specific entity."
+        },
+        {
+          "info": {
+            "name": "List an entity's identifiers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/identifiers",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List country-specific identifiers for an entity, such as RFC or CURP for Mexico."
+        },
+        {
+          "info": {
+            "name": "Add an entity identifier",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/entities/:entityId/identifiers",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a country-specific identifier to an entity."
+        },
+        {
+          "info": {
+            "name": "List all entity tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entity-tags",
+            "params": [
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List entity tags that can be assigned to entities."
+        },
+        {
+          "info": {
+            "name": "Create an entity tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/entity-tags",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a tag that can be assigned to entities. The created tag is returned with an `/entity-tags/{id}` IRI.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve an entity tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entity-tags/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single entity tag by ID."
+        },
+        {
+          "info": {
+            "name": "Update an entity tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.syntage.com/entity-tags/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the display name for an entity tag."
+        },
+        {
+          "info": {
+            "name": "Delete an entity tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/entity-tags/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an entity tag."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

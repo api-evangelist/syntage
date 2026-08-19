@@ -1,0 +1,99 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Scheduler Rules API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Scheduler Rules",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a scheduler rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/schedulers/rules",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a rule that runs an extractor on a scheduler."
+        },
+        {
+          "info": {
+            "name": "Retrieve a scheduler rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/schedulers/rules/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a scheduler rule by ID."
+        },
+        {
+          "info": {
+            "name": "Update a scheduler rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.syntage.com/schedulers/rules/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the extractor, options, or cron expression for a scheduler rule."
+        },
+        {
+          "info": {
+            "name": "Delete a scheduler rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/schedulers/rules/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a scheduler rule."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

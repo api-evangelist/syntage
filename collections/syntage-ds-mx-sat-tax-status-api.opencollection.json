@@ -1,0 +1,111 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX SAT Tax Status API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX SAT Tax Status",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List tax status records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/tax-status",
+            "params": [
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List tax status records available to your organization.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a tax status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/tax-status/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a tax status record by ID, including identity, address, activities, regimes, obligations, and the source PDF file.\n"
+        },
+        {
+          "info": {
+            "name": "List an entity's tax status records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/tax-status",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List tax status records extracted for an entity.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

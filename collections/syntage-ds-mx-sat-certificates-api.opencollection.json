@@ -1,0 +1,152 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX SAT Certificates API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX SAT Certificates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List an entity's SAT certificates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/datasources/mx/sat/certificados",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "validFrom[before]",
+                "value": "2025-01-01T00:00:00+00:00",
+                "type": "query",
+                "description": "Filter certificates by validity start date (less than or equal `<=`)"
+              },
+              {
+                "name": "validFrom[strictly_before]",
+                "value": "2025-01-01T00:00:00+00:00",
+                "type": "query",
+                "description": "Filter certificates by validity start date (less than `<`)"
+              },
+              {
+                "name": "validFrom[after]",
+                "value": "2020-01-01T00:00:00+00:00",
+                "type": "query",
+                "description": "Filter certificates by validity start date (greater than or equal `>=`)"
+              },
+              {
+                "name": "validFrom[strictly_after]",
+                "value": "2020-01-01T00:00:00+00:00",
+                "type": "query",
+                "description": "Filter certificates by validity start date (greater than `>`)"
+              },
+              {
+                "name": "validTo[before]",
+                "value": "2030-01-01T00:00:00+00:00",
+                "type": "query",
+                "description": "Filter certificates by validity end date (less than or equal `<=`)"
+              },
+              {
+                "name": "validTo[strictly_before]",
+                "value": "2030-01-01T00:00:00+00:00",
+                "type": "query",
+                "description": "Filter certificates by validity end date (less than `<`)"
+              },
+              {
+                "name": "validTo[after]",
+                "value": "2025-01-01T00:00:00+00:00",
+                "type": "query",
+                "description": "Filter certificates by validity end date (greater than or equal `>=`)"
+              },
+              {
+                "name": "validTo[strictly_after]",
+                "value": "2025-01-01T00:00:00+00:00",
+                "type": "query",
+                "description": "Filter certificates by validity end date (greater than `>`)"
+              },
+              {
+                "name": "order[validFrom]",
+                "value": "",
+                "type": "query",
+                "description": "Order certificates by validity start date"
+              },
+              {
+                "name": "order[validTo]",
+                "value": "",
+                "type": "query",
+                "description": "Order certificates by validity end date"
+              },
+              {
+                "name": "serialNumber",
+                "value": "1000000516152485",
+                "type": "query",
+                "description": "Filter certificates by serial number (supports partial matching)"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter certificates by type"
+              }
+            ]
+          },
+          "docs": "List SAT certificates associated with an entity.\nThese digital certificates are used for electronic signatures and digital sealing in Mexico's tax system.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a SAT certificate",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/mx/sat/certificados/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a SAT certificate by ID.\nThe `file` property references the certificate file. Use the file download endpoint to retrieve the certificate content.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

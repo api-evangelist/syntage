@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Summary Insight API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Summary Insight",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get entity summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/insights/summary",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Aggregated profile of the entity combining identity, economic activity, tax regimes, and headline figures from the latest annual tax return."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

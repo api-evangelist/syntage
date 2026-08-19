@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Employees Insight API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Employees Insight",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get employees",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/insights/employees",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "options[from]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by invoice issuing date (greater than)"
+              },
+              {
+                "name": "options[to]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by invoice issuing date (less than)"
+              },
+              {
+                "name": "options[periodicity]",
+                "value": "",
+                "type": "query",
+                "description": "The data set is grouped by this field"
+              }
+            ]
+          },
+          "docs": "Number of employees per period, derived from distinct payroll (CFDI Nómina) recipients."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

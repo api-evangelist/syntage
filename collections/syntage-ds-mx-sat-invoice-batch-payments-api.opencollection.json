@@ -1,0 +1,111 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX SAT Invoice Batch Payments API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX SAT Invoice Batch Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all invoice batch payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/invoices/batch-payments",
+            "params": [
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List batch payments derived from invoice payment receipts.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve an invoice batch payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/invoices/batch-payments/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an invoice batch payment by ID, including transaction-level payment details and related invoice payments.\n"
+        },
+        {
+          "info": {
+            "name": "List an invoice's batch payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/invoices/:id/batch-payments",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List all batch payments related to the requested invoice.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

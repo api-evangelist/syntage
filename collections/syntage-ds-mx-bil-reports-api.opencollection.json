@@ -1,0 +1,80 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX BIL Reports API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX BIL Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List an entity's BIL reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/datasources/bil/reports",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List Buró de Investigaciones Legales reports generated for an entity."
+        },
+        {
+          "info": {
+            "name": "Retrieve a BIL report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/bil/reports/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single Buró de Investigaciones Legales report by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Invoicing Concentration Insight API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Invoicing Concentration Insight",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get invoicing concentration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/insights/invoicing-concentration",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "options[from]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by invoice issuing date (greater than)"
+              },
+              {
+                "name": "options[to]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by invoice issuing date (less than)"
+              },
+              {
+                "name": "options[type]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issued or received invoices"
+              }
+            ]
+          },
+          "docs": "**Deprecated:** Use [Get Customer Invoice Concentration](/api-reference/customer-concentration-insight/get-customer-invoice-concentration) or [Get Vendor Invoice Concentration](/api-reference/vendor-concentration-insight/get-vendor-invoice-concentration) instead.\n\nReturns the concentration (top 10) of issued or received invoices.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS Syntage Score API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS Syntage Score",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Start Syntage Score calculation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/entities/:entityId/datasources/syntage/score/calculate",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Start an asynchronous Syntage Score calculation for a company entity.\n\nThe entity must have the annual tax return and tax compliance data required by the score model. If a required extraction is still running, wait for it to finish before starting the calculation.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

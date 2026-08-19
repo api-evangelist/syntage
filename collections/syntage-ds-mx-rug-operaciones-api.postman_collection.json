@@ -1,0 +1,826 @@
+{
+  "item": [
+    {
+      "id": "7bf73ad2-3806-47fe-8062-c9830cbb23af",
+      "name": "DS MX RUG Operaciones",
+      "description": {
+        "content": "RUG operations are registry acts associated with a movable collateral guarantee. They include operation metadata, guarantee numbers, grantors, parsed boleta data, and file references when available.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c7f56935-5b1c-402c-8d90-d48271328c22",
+          "name": "Retrieve RUG operation",
+          "request": {
+            "name": "Retrieve RUG operation",
+            "description": {
+              "content": "Retrieve one RUG operation by ID, including operation type, seat number, guarantee number, grantors, parsed boleta data, and file reference when available.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "datasources",
+                "rug",
+                "operaciones",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "abc309df-ac1d-4855-9aa3-563e2a1a37d8",
+              "name": "RUG operación resource response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "datasources",
+                    "rug",
+                    "operaciones",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"@context\": \"/contexts/RugOperacion\",\n  \"@id\": \"/datasources/rug/operaciones/99c13810-868f-482e-a6f1-878254248d27\",\n  \"@type\": \"RugOperacion\",\n  \"id\": \"99c13810-868f-482e-a6f1-878254248d27\",\n  \"numeroDeAsiento\": 12345678,\n  \"tipo\": \"inscripcion\",\n  \"fecha\": \"2021-10-12 00:00:00+00:00\",\n  \"file\": \"/files/99c13810-868f-482e-a6f1-878254248d27\",\n  \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n  \"updatedAt\": \"2020-01-01T12:15:00.000Z\",\n  \"numeroDeGarantia\": 123456,\n  \"otorgantes\": [\n    {\n      \"nombre\": \"El Otorgante de Garantías Mobiliarias, S.A. de C.V.\",\n      \"folio_electronico\": \"34011*7\"\n    },\n    {\n      \"nombre\": \"El Otorgante de Garantías Mobiliarias, S.A. de C.V.\",\n      \"folio_electronico\": \"34011*7\"\n    }\n  ],\n  \"boleta\": {\n    \"datos_del_asiento\": {\n      \"numero_de_asiento_cadena_unica_de_datos\": \"string\",\n      \"numero_de_garantia_mobiliaria\": \"string\",\n      \"fecha_y_hora\": \"11/03/2022 - 00:18:32 * ZULU GMT / UTC\",\n      \"vigencia\": \"12 meses\",\n      \"inscrito_en_el_folio_mercantil_no\": \"34011*7\"\n    },\n    \"datos_del_otorgante\": [\n      {\n        \"nombre_denominacion_o_razon_social\": \"El Otorgante de Garantías Mobiliarias, S.A. de C.V.\",\n        \"folio_electronico\": \"34011*7\",\n        \"el_otorgante_de_la_garantia_mobiliaria_es_deudor\": \"Si\"\n      },\n      {\n        \"nombre_denominacion_o_razon_social\": \"El Otorgante de Garantías Mobiliarias, S.A. de C.V.\",\n        \"folio_electronico\": \"34011*7\",\n        \"el_otorgante_de_la_garantia_mobiliaria_es_deudor\": \"Si\"\n      }\n    ],\n    \"datos_del_acreedor\": {\n      \"nombre_denominacion_o_razon_social\": \"Grupo Financiero Acreedor, S.A.P.I. de C.V., SOFOM E.N.R.\",\n      \"telefono\": \"string\",\n      \"extension\": \"N/A\",\n      \"correo_electronico\": \"persona.a@acreedor.com.mx,persona.b@acreedor.com.mx\",\n      \"domicilio_para_efectos_del_rug\": \"Av. Paseo de la Reforma 296, Juárez, Cuauhtémoc, 06600 Ciudad de México, CDMX\"\n    },\n    \"datos_de_los_acreedores_adicionales\": [\n      {\n        \"nombre_denominacion_o_razon_social\": \"Grupo Financiero Acreedor Adicional, S.A.P.I. de C.V., SOFOM E.N.R.\",\n        \"telefono\": \"string\",\n        \"extension\": \"string\",\n        \"correo_electronico\": \"persona@acredoor2.com.mx\",\n        \"domicilio_para_efectos_del_rug\": \"Av. Luis Barragan 505, Santa Fe, Contadero, Cuajimalpa de Morelos, 05348 Ciudad de México, CDMX\",\n        \"folio_electronico\": \"12345*6\"\n      },\n      {\n        \"nombre_denominacion_o_razon_social\": \"Grupo Financiero Acreedor Adicional, S.A.P.I. de C.V., SOFOM E.N.R.\",\n        \"telefono\": \"string\",\n        \"extension\": \"string\",\n        \"correo_electronico\": \"persona@acredoor2.com.mx\",\n        \"domicilio_para_efectos_del_rug\": \"Av. Luis Barragan 505, Santa Fe, Contadero, Cuajimalpa de Morelos, 05348 Ciudad de México, CDMX\",\n        \"folio_electronico\": \"12345*6\"\n      }\n    ],\n    \"datos_de_los_deudores\": [\n      {\n        \"nombre_denominacion_o_razon_social\": \"El Otorgante de Garantías Mobiliarias, S.A. de C.V.\"\n      },\n      {\n        \"nombre_denominacion_o_razon_social\": \"El Otorgante de Garantías Mobiliarias, S.A. de C.V.\"\n      }\n    ],\n    \"datos_de_la_garantia_mobiliaria\": {\n      \"tipo_de_garantia_mobiliaria\": \"Factoraje Financiero\",\n      \"fecha_de_celebracion_del_acto_o_contrato_o_del_surgimiento_de_los_derechos_de_retencion_o_privilegios_especiales\": \"08/03/2021\",\n      \"monto_maximo_garantizado_y_moneda\": \"$ 12345.67 Peso Mexicano\",\n      \"tipo_de_bienes_muebles_objeto_de_la_garantia_mobiliaria\": \"Derechos, incluyendo derechos de cobro.\",\n      \"descripcion_de_los_bienes_muebles_objeto_de_la_garantia_mobiliaria\": \"Factura con el folio fiscal 99c13810-868f-482e-a6f1-878254248d27\",\n      \"el_acto_o_contrato_preve_incrementos_reducciones_o_sustituciones_de_los_bienes_muebles_o_del_monto_garantizado\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula blandit feugiat. Nullam ligula nunc, vehicula non porta quis, eleifend id leo. Nulla et nisl vulputate, commodo urna sit amet, pharetra leo. Aliquam erat volutpat.\",\n      \"datos_del_instrumento_publico_mediante_el_cual_se_formalizo_el_acto_o_contrato\": \"Proin laoreet posuere velit eget interdum. Donec interdum risus quam, porta laoreet dui consectetur nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.\",\n      \"terminos_y_condiciones_del_acto_o_contrato_de_la_garantia_mobiliaria\": \"Integer molestie urna vitae dolor consectetur, ut molestie libero pulvinar.\"\n    },\n    \"datos_del_acto_o_contrato_que_creo_la_obligacion_garantizada\": {\n      \"declaro_bajo_protesta_de_decir_verdad_que_se_solicito_al_otorgante_de_la_garantia_manifestacion_respecto_de_la_no_existencia_de_garantias_otorgadas_previamente_referente_a_los_bienes_objeto_de_esta_garantia\": \"Si\",\n      \"acto_o_contrato_que_creo_la_obligacion_garantizada\": \"Vivamus nisi leo, dapibus a tellus eu, dictum convallis neque. Suspendisse ut diam sollicitudin, congue tortor in, mollis felis. Vestibulum id ornare lacus.\",\n      \"fecha_de_celebracion_del_acto_o_contrato\": \"08/03/2021\",\n      \"fecha_de_terminacion_del_acto_o_contrato\": \"08/03/2022\",\n      \"terminos_y_condiciones_del_acto_o_contrato_que_creo_la_obligacion_garantizada\": \"Donec euismod bibendum porttitor. Suspendisse cursus venenatis fringilla. Nulla ornare elementum gravida. Nam lectus mi, tincidunt sed vehicula nec, interdum ut lacus. Vestibulum nec nibh elit.\"\n    },\n    \"persona_que_firmo_el_asiento\": {\n      \"nombre\": \"Juan Robles Hernández\",\n      \"en_su_caracter_de\": \"ACREEDOR\"\n    },\n    \"persona_que_solicita_o_autoridad_que_instruye_el_asiento\": {\n      \"nombre_y_cargo\": \"N/A\"\n    },\n    \"firma_electronica\": {\n      \"cadena_original_solicitante\": \"MkdQYUeOZGNIU3AXa080V05jQkNGMzNDSitZPXwzMzczLzA5NA==\",\n      \"sello_solicitante\": \"pBFfNh/Ox2+GiivFcx8xjMamo+njQpo/AtJlMCA/3TYByMnhPBP0kJjYhmAu7YhmCGg6K2AKrPIpVlOgS53nZH/kRBp0a0WdDCuhL7sZYdTuuGYa7IqvdkuGqCxppF6/JphYto7pgsKpozW5WleP+wE6Y37ZWSD9SvgfDIliL3faL3EBOQhNb3R3t+GcpzIyvhAtlONfsp0aHPo+1Ngr/7jwwXPaFQuKtVonWB7e0R4E4QmaEPAdkmFg0wfCCOuYufRCtqqgAVVHvV5DpBabp83w470qDVrmDyYTnbpFeg5pdN0k4vtESaSkVwGaxNnnVKNQ4j9sVG+KO0a2aej8xw==\",\n      \"certificado_solicitante\": \"SERIALNUMBER=ROSR561225HDFJNC00, OID.2.5.4.45=ROSR561225HD0, EMAILADDRESS=juan.roblesh@gmail.com, C=MX, O=JUAN ROBLES HERNÁNDEZ, OID.2.5.4.41=JUAN ROBLES HERNÁNDEZ, CN=JUAN ROBLES HERNÁNDEZ\",\n      \"sello_de_tiempo\": \"Certificado AC:O=Secretaria de Economia, OU=nCipher DSE ESN:48D7-2DFC-BF7B, CN=TS A1.economia.gob.mx, C=MX, ST=Ciudad de Mexico, L=Alvaro Obregon|Fecha: 202203110 01832.21Z|Numero de secuencia:107221737826163|Digestion: PUS8fSphg13dOKjPYoMVN82 DCLg=\",\n      \"cadena_original_rug\": \"MkdQYUdOZGNIx3RXa080V05jQkNGMzNDSitZPXrzMzczNzA2NA==|k|d\",\n      \"sello_rug\": \"B7auogaFXWzNO7EBganQX6Bm/XmU12bYsP8ahtNagGNEuLJ0EekYmjdNvBvzd5/x9Mr6ypXCcLue+2ZNEjf4BWzElZdmsI69/GWTOp6ULozM2eFZMzLSL/He6WGtkoceWulElNDApb0PUkfaDOovlkVSZYkG0HTmZ/C9fJLYMvzA2LrazeEDibqp/M9l9HTgwCa+7NcLi+eAKYDGXCfbhnfsdFpkk338hQoc4TPyoB0sy5bUFCwwM7kCD/6ZSTy8QAXm9nvdt8vX/UktryZwUB72shedXWqQx3QtWJWpWHgi1cl0gQSial00a1pQspFVXvcX5rC5mEdzeezhsECVfg==\",\n      \"numero_serie_rug\": \"string\",\n      \"certificado_rug\": \"EMAILADDRESS=contacto_rug@economia.gob.mx, O=Secretaria de Economia, OU=Direccion General de Normatividad Mercantil, CN=RUG. Ernesto del Castillo Hernandez, T=Di rector de Coordinacion del Registro Publico de Comercio, STREET=\\\"Insurgentes Sur 1940, Piso 1\\\", OID.2.5.4.17=01030, C=MX, ST=Ciudad de Mexico, L=Alvaro Obregon, OID.2.5.4.45=#030E0043414845363731313037535638, SERIALNUMBER=CAHE671107HDFSRR03 , OID.2.5.4.20=(55)5229 6100 Ext. 33529\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "10a07e6d-c364-45ac-9585-52bf111cbc5c",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "datasources",
+                    "rug",
+                    "operaciones",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5660cf3d-5fd0-4b7b-b8c4-8d7044537abd",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "datasources",
+                    "rug",
+                    "operaciones",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fb2f04b0-af1e-4a99-9dca-3074dda46ae5",
+          "name": "List an entity's RUG operations",
+          "request": {
+            "name": "List an entity's RUG operations",
+            "description": {
+              "content": "List RUG operations extracted for an entity. Use this endpoint after a `rug` extraction finishes to review registry acts related to the entity's guarantees.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":entityId",
+                "datasources",
+                "rug",
+                "operaciones"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "id[lt]",
+                  "value": "<string>",
+                  "description": "Collection cursor pointer to the next page"
+                },
+                {
+                  "disabled": false,
+                  "key": "id[gt]",
+                  "value": "<string>",
+                  "description": "Collection cursor pointer to the previous page"
+                },
+                {
+                  "disabled": false,
+                  "key": "itemsPerPage",
+                  "value": "20",
+                  "description": "Number of items per page"
+                },
+                {
+                  "disabled": false,
+                  "key": "numeroDeAsiento",
+                  "value": "<number>"
+                },
+                {
+                  "disabled": false,
+                  "key": "tipo",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "numeroDeGarantia",
+                  "value": "<number>"
+                },
+                {
+                  "disabled": false,
+                  "key": "fecha[before]",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "fecha[strictly_before]",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "fecha[after]",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "fecha[strictly_after]",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "updatedAt[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by the date the resource was last updated (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "updatedAt[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by the date the resource was last updated (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "updatedAt[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by the date the resource was last updated (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "updatedAt[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by the date the resource was last updated (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "order[createdAt]",
+                  "value": "<string>",
+                  "description": "Order by resource creation date"
+                },
+                {
+                  "disabled": false,
+                  "key": "order[updatedAt]",
+                  "value": "<string>",
+                  "description": "Order by resource update date"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "entityId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dc24e757-4806-4ed7-9655-63e121b6ac27",
+              "name": "RUG operación collection response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "datasources",
+                    "rug",
+                    "operaciones"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    },
+                    {
+                      "key": "numeroDeAsiento",
+                      "value": "12345678"
+                    },
+                    {
+                      "key": "tipo",
+                      "value": "inscripcion"
+                    },
+                    {
+                      "key": "numeroDeGarantia",
+                      "value": "123456"
+                    },
+                    {
+                      "key": "fecha[before]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[strictly_before]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[after]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[strictly_after]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "order[createdAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[updatedAt]",
+                      "value": "asc"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6d694c57-0619-4aa1-b180-52876afb292a",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "datasources",
+                    "rug",
+                    "operaciones"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    },
+                    {
+                      "key": "numeroDeAsiento",
+                      "value": "12345678"
+                    },
+                    {
+                      "key": "tipo",
+                      "value": "inscripcion"
+                    },
+                    {
+                      "key": "numeroDeGarantia",
+                      "value": "123456"
+                    },
+                    {
+                      "key": "fecha[before]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[strictly_before]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[after]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[strictly_after]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "order[createdAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[updatedAt]",
+                      "value": "asc"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1cd7cba6-34b0-4a39-9aa3-d0ec74713aa5",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "datasources",
+                    "rug",
+                    "operaciones"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    },
+                    {
+                      "key": "numeroDeAsiento",
+                      "value": "12345678"
+                    },
+                    {
+                      "key": "tipo",
+                      "value": "inscripcion"
+                    },
+                    {
+                      "key": "numeroDeGarantia",
+                      "value": "123456"
+                    },
+                    {
+                      "key": "fecha[before]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[strictly_before]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[after]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "fecha[strictly_after]",
+                      "value": "2021-10-12 00:00:00+00:00"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "updatedAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "order[createdAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[updatedAt]",
+                      "value": "asc"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.syntage.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "8b1ce548-13e6-4378-86d4-79b163e18c9a",
+    "name": "Syntage Accounts Payable Insight DS MX RUG Operaciones API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Introduction\n\nThe Syntage API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer).\nOur API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns [JSON-LD](https://json-ld.org) responses, and uses standard HTTP response codes, authentication, and verbs.\n\n# Environments\n\n| Name | Description | Base URL |\n|------|-------------|----------|\n| **Sandbox** | The Sandbox environment is dedicated to development and testing. In this environment, no real taxpayer credentials are required and all interaction with the SAT is simulated generating life-like data, allowing you to pull test data from all endpoints. | https://api.sandbox.syntage.com |\n| **Production** | The Production environment is dedicated to live applications with real connections to the SAT. In this environment, real taxpayer credentials are required, and you will pull real fiscal data directly from the SAT. | https://api.syntage.com |\n\nEach environment has a different API Key for [authentication](#section/Authentication).\n\n# Request IDs\n\nEach API request has an associated request identifier.\nYou can find this value in the response headers, under `X-Request-ID`:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-Request-ID: Root=1-6532dcae-169bf139354cd48959f55c55\n```\n\nIf you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution.\n\n# Rate Limiting\n\nOur API employs a number of safeguards against bursts of incoming traffic to help maximize its stability.\nThe returned HTTP headers of any API request show your current rate limit status:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 56\nX-RateLimit-Reset: 1606678044\n```\n\n| Header Name           | Description |\n|-----------------------|------------------------------------------------------------------------------|\n| X-RateLimit-Limit     | The maximum number of requests you're permitted to make.                     |\n| X-RateLimit-Remaining | The number of requests remaining in the current rate limit window.           |\n| X-RateLimit-Reset     | The time at which the current rate limit window resets in UTC epoch seconds. |\n\nIf you exceed the rate limit, a [429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) response is returned:\n\n```http\nHTTP/1.1 429 Too Many Requests\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1606678044\n```\n\nWe may reduce limits to prevent abuse, or increase limits to enable high-traffic operations.\nYou can check your current limits in the [dashboard](https://app.syntage.com/settings/usage).\nTo request an increased rate limit, please [contact support](https://support.syntage.com/).\n# Pagination\nWhen issuing a GET request on a collection containing more than 1 page (e.g. [/events](#operation/ListEvent)),  a collection is returned. Links to the first, the last, previous and the next page in the collection are displayed as well as the  number of total items in the collection.\nAll endpoints that support this operation have a query parameter defined by:\n  - `itemsPerPage` The number of items per page (default: 20, max: 1000)\n  - `page` The collection page number\n\n```bash\n  \"hydra:totalItems\": 1,\n  \"hydra:view\": {\n    \"@id\": \"/events?page=1\",\n    \"@type\": \"hydra:PartialCollectionView\",\n    \"hydra:first\": \"/events?page=1\",\n    \"hydra:next\": \"/events?page=2\",\n    \"hydra:last\": \"/events?page=3\"\n  },\n```\n## Cursor Pagination\nCursor pagination is a technique used for navigating through large datasets efficiently. It allows you to retrieve a specific subset of results from a collection by using a cursor value that represents the position within the collection. The cursor serves as a reference point for fetching the next or previous set of results.\n### Benefits of Cursor Pagination:\n1. **Efficient Navigation:** Cursor pagination eliminates the need to fetch the entire dataset at once, making it more scalable and faster. You can retrieve data in smaller, manageable chunks based on the cursor values.\n2. **Consistent Results:** Each page of results in cursor pagination is stable and doesn't change even if new items are added or removed from the collection. This ensures that you get consistent and reliable results.\n3. **Flexibility:** Cursors can be used to navigate forwards and backwards in the collection without impacting performance.\n\n### How to Use Cursor Pagination:\nTo use cursor pagination with our API, follow these instructions:\n1. Make a request to retrieve the initial page of results. The response will be a JSON-LD document that includes a `hydra:next` attribute with the URI for the next page. The URI already includes the cursor attribute.\n2. To retrieve the next page of results, make a GET request to the URI provided in the `hydra:next` attribute. This URI will automatically include the cursor value for the next page.\n3. If you want to navigate to the previous page, you can use the `hydra:previous` attribute in the JSON-LD response. It will contain the URI for the previous page, including the cursor value.\n4. You can continue making requests to the `hydra:next` and `hydra:previous` URIs to navigate through the paginated results, based on your requirements.\nMake sure to update your request headers to include the necessary headers for JSON-LD content negotiation, such as `Accept: application/ld+json` or `Content-Type: application/ld+json`.\nBy following these instructions, you can effectively navigate through the paginated results using the cursor values provided in the `hydra:next` and `hydra:previous` attributes, without the need to manually include the cursor in your requests. This simplifies the pagination process and enhances the usability of our API.\n\n### Considerations About Cursor Pagination:\n\n  - By default, the API uses offset-based pagination (except for a few endpoints that we will list below). If you want to switch to cursor pagination, you need to include an additional header in your request. Set the `X-Pagination-Style` header with the value `\"cursor\"` to enable cursor pagination. If not specified, the API will assume offset-based pagination.\n\n  - After enabling cursor pagination, the API response will no longer include the `hydra:totalItems` field by default. Retrieving the total count can be resource intensive and impact response times, especially for large datasets. However, if you need the `hydra:totalItems` information, you can include an additional header in your request. Set the `X-Pagination-Enable-Partial` header with the value `0` to indicate that the response should include extra information, including the `hydra:totalItems` count. Please be aware that enabling this feature may impact API response times, as the backend needs to perform a count operation on the dataset.\n\nIf you require the `hydra:totalItems` count, please consider the potential impact on API response times.\n### Example\n```bash\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices?itemsPerPage=10' \\\n    --header 'Accept: application/ld+json' \\\n    --header 'X-Api-Key: {apiKey}' \\\n    --header 'X-Pagination-Style: cursor' \\\n    --header 'X-Pagination-Enable-Partial: 0'\n```\n**Note:** We only support cursor pagination for the following endpoints:\n - `GET /entities/{entityId}/invoices`\n - `GET /entities/{entityId}/invoices/line-items`\n - `GET /entities/{entityId}/invoices/{invoiceId}/line-items`\n - `GET /invoices/{invoiceId}/line-items`\n - `GET /entities/{entityId}/invoices/payments`\n\nFeel free to reach out if you have any further questions or need additional assistance!\n\n# Property Filtering\nThe property filter adds the possibility to select the properties for GET operations.\nSyntax: `?properties[]=<property>&properties[<relation>][]=<property>`\nYou can add as many properties as you need. The following example shows how to select `paymentType` and  `issuer.rfc` when fetching a list of invoices.\n```curl\n  curl -i https://api.syntage.com/entities/{entityId}/invoices?properties[]=paymentType&properties[issuer]=rfc\n```\n# Filtering\n**Warning:** Collection endpoints only apply the filter query parameters documented for that endpoint. If you send an unsupported or misspelled filter query parameter, the API ignores it and processes the request as if that parameter was not sent.\n\n# API Versioning Guide\nGuidance on changes between versions.\n## Version: 2020-01-01 to 2020-06-28\n### **Invoice**\n_**Affected Endpoints:** `GET /invoices/{id}` and `GET /entities/{entityId}/invoices`_\n- The `amount` property has been removed from API responses. Use the `total` property instead.\n- Retrieval by invoice's `uuid` at `/invoices/{id}` is now removed. To retrieve an invoice, use the invoice's `id` at the specified endpoint. To find an invoice using its `uuid`, filter the invoice collection at `/entities/{entityId}/invoices?uuid[]={uuid}`.\n- Previously, the `@iri` property for an invoice pointed to the resource using `uuid`, like `/invoices/{uuid}`. Now, it points using its `id`, like `/invoices/{id}`.\n\n### **Entity (Formerly Link)**\n_**Affected Endpoint:** `GET /entities`_\n- Filtering entities by `status` is removed. Use `credential.status` instead. For example, utilize `GET /entities?credential.status[]=active` instead of `GET /entities?status[]=active`.\n\n### **Tax Return**\n_**Affected Endpoints:** `GET /tax-returns/{id}` and `GET /entities/{entityId}/tax-returns`_\n- Retrieval by tax return's `operationNumber` at `/tax-returns/{id}` is removed. To retrieve a tax return, use the tax return's `id` at the mentioned endpoint. To find a tax return using its `operationNumber`, filter the collection at `/entities/{entityId}/tax-returns?operationNumber[]={operationNumber}`.\n- Previously, the `@iri` property for a tax return pointed to the resource using `operationNumber`, like `/tax-returns/{operationNumber}`. Now, it directs to its `id`, like `/tax-returns/{id}`.\n\n### **Event**\n_**Affected Endpoints:** `GET /events` and `GET /events/{id}`_\n- For events associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}` instead of the previous `/tax-returns/{operationNumber}`.\n- For events associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}` instead of the previous `/invoices/{uuid}`.\n\n### **Extraction**\n_**Affected Endpoints:** `GET /extractions` and `GET /extractions/{id}`_\n- The `periodFrom` property has been removed. Use `options.period.from` instead.\n- The `periodTo` property has been removed. Use `options.period.to` instead.\n\n### **File**\n_**Affected Endpoint:** `GET /file/{id}`_\n- For files associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}`, instead of the previous `/tax-returns/{operationNumber}`.\n- For files associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}`, instead of the previous `/invoices/{uuid}`.\n\n### Trying Out This Version\nIf you want to test this version, you can do so by making any request with the `Accept-Version` header pointing to the latest version:\n```curl\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices' \\\n    --header 'Accept-Version: 2020-06-28' \\\n    --header 'X-Api-Key: {apiKey}'\n```\n\n\nContact Support:\n Name: Email\n Email: support@syntage.com",
+      "type": "text/plain"
+    }
+  }
+}

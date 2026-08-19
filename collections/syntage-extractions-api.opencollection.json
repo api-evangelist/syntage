@@ -1,0 +1,228 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Extractions API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Extractions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all extractions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/extractions",
+            "params": [
+              {
+                "name": "taxpayer.id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by RFC (Registro Federal de Contribuyentes, exact match)"
+              },
+              {
+                "name": "extractor",
+                "value": "invoice",
+                "type": "query",
+                "description": "Filter by extractor (partial match)"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status (exact match)"
+              },
+              {
+                "name": "startedAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by start date (less than or equal `<=`)"
+              },
+              {
+                "name": "startedAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by start date (less than `<`)"
+              },
+              {
+                "name": "startedAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by start date (greater than or equal `>=`)"
+              },
+              {
+                "name": "startedAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by start date (greater than `>`)"
+              },
+              {
+                "name": "finishedAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by finished date (less than or equal `<=`)"
+              },
+              {
+                "name": "finishedAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by finished date (less than `<`)"
+              },
+              {
+                "name": "finishedAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by finished date (greater than or equal `>=`)"
+              },
+              {
+                "name": "finishedAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by finished date (greater than `>`)"
+              },
+              {
+                "name": "exists[rateLimitedAt]",
+                "value": "1",
+                "type": "query",
+                "description": "Filter extractions that was rate limited by SAT"
+              },
+              {
+                "name": "createdAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than `<`)"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than `>`)"
+              },
+              {
+                "name": "order[startedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by start date"
+              },
+              {
+                "name": "order[finishedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by finished date"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List extraction tasks and filter them by entity, extractor, status, dates, or SAT rate limit state."
+        },
+        {
+          "info": {
+            "name": "Create an extraction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/extractions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an extraction for a specific entity, extractor, and options.\n\nIf an equivalent extraction is already `pending` or `running` for the same entity, extractor, and options, the API returns `409 Conflict` instead of starting a duplicate. Retrieve the in-progress extraction to track its status rather than retrying the request.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve an extraction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/extractions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single extraction, including its extractor, options, status, timing, error code, and data point counts."
+        },
+        {
+          "info": {
+            "name": "Request the extraction to be stopped",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/extractions/:id/stop",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Request cancellation for a pending or running extraction."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

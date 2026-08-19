@@ -1,0 +1,482 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX SAT Tax Retentions API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX SAT Tax Retentions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a tax retention",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/tax-retentions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a tax retention by ID, including issuer, receiver, retained taxes, fiscal period, totals, and file availability.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a tax retention CFDI",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/tax-retentions/:id/cfdi",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve the tax retention CFDI in the requested format.\n\nBy default, this endpoint returns the CFDI parsed from XML to JSON. Set `Accept: text/xml` to retrieve the original XML file, or `Accept: application/pdf` to retrieve the PDF representation when one is available.\n"
+        },
+        {
+          "info": {
+            "name": "List an entity's tax retentions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/tax-retentions",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "query",
+                "description": "Filter by UUID/Folio Fiscal (exact match)"
+              },
+              {
+                "name": "version",
+                "value": "1",
+                "type": "query",
+                "description": "Filter by CFDI version (exact match)"
+              },
+              {
+                "name": "internalIdentifier",
+                "value": "1495494",
+                "type": "query",
+                "description": "Internal identifier (exact match)"
+              },
+              {
+                "name": "pac",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certification provider (partial match)"
+              },
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "Filter by code (exact match)"
+              },
+              {
+                "name": "issuer.rfc",
+                "value": "AOM920820BEA",
+                "type": "query",
+                "description": "Filter by issuer RFC (partial match)"
+              },
+              {
+                "name": "issuer.name",
+                "value": "Apple",
+                "type": "query",
+                "description": "Filter by issuer name (partial match)"
+              },
+              {
+                "name": "issuer.curp",
+                "value": "APPL91021XXXXXXXXX",
+                "type": "query",
+                "description": "Filter by issuer CURP (partial match)"
+              },
+              {
+                "name": "receiver.rfc",
+                "value": "",
+                "type": "query",
+                "description": "Filter by receiver RFC (partial match)"
+              },
+              {
+                "name": "receiver.name",
+                "value": "Pedro",
+                "type": "query",
+                "description": "Filter by receiver name (partial match)"
+              },
+              {
+                "name": "receiver.curp",
+                "value": "PESL9127XXXXXXXXXX",
+                "type": "query",
+                "description": "Filter by receiver CURP (partial match)"
+              },
+              {
+                "name": "receiver.nationality",
+                "value": "foreign",
+                "type": "query",
+                "description": "Filter by receiver nationality (exact match)"
+              },
+              {
+                "name": "totalOperationAmount[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by total operation amount between two values"
+              },
+              {
+                "name": "totalOperationAmount[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total operation amount (greater than `>`)"
+              },
+              {
+                "name": "totalOperationAmount[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total operation amount (greater than or equal `>=`)"
+              },
+              {
+                "name": "totalOperationAmount[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total operation amount (less than `<`)"
+              },
+              {
+                "name": "totalOperationAmount[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total operation amount (less than or equal `<=`)"
+              },
+              {
+                "name": "totalTaxableAmount[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by total taxable amount between two values"
+              },
+              {
+                "name": "totalTaxableAmount[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total taxable amount (greater than `>`)"
+              },
+              {
+                "name": "totalTaxableAmount[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total taxable amount (greater than or equal `>=`)"
+              },
+              {
+                "name": "totalTaxableAmount[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total taxable amount (less than `<`)"
+              },
+              {
+                "name": "totalTaxableAmount[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total taxable amount (less than or equal `<=`)"
+              },
+              {
+                "name": "totalExemptAmount[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by total exempt amount between two values"
+              },
+              {
+                "name": "totalExemptAmount[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total exempt amount (greater than `>`)"
+              },
+              {
+                "name": "totalExemptAmount[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total exempt amount (greater than or equal `>=`)"
+              },
+              {
+                "name": "totalExemptAmount[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total exempt amount (less than `<`)"
+              },
+              {
+                "name": "totalExemptAmount[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total exempt amount (less than or equal `<=`)"
+              },
+              {
+                "name": "totalRetainedAmount[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by total retained amount between two values"
+              },
+              {
+                "name": "totalRetainedAmount[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total retained amount (greater than `>`)"
+              },
+              {
+                "name": "totalRetainedAmount[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total retained amount (greater than or equal `>=`)"
+              },
+              {
+                "name": "totalRetainedAmount[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total retained amount (less than `<`)"
+              },
+              {
+                "name": "totalRetainedAmount[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total retained amount (less than or equal `<=`)"
+              },
+              {
+                "name": "issuedAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue date (less than or equal `<=`)"
+              },
+              {
+                "name": "issuedAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue date (less than `<`)"
+              },
+              {
+                "name": "issuedAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue date (greater than or equal `>=`)"
+              },
+              {
+                "name": "issuedAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue date (greater than `>`)"
+              },
+              {
+                "name": "canceledAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation date (less than or equal `<=`)"
+              },
+              {
+                "name": "canceledAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation date (less than `<`)"
+              },
+              {
+                "name": "canceledAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "canceledAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation date (greater than `>`)"
+              },
+              {
+                "name": "certifiedAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certification date (less than or equal `<=`)"
+              },
+              {
+                "name": "certifiedAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certification date (less than `<`)"
+              },
+              {
+                "name": "certifiedAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certification date (greater than or equal `>=`)"
+              },
+              {
+                "name": "certifiedAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certification date (greater than `>`)"
+              },
+              {
+                "name": "periodFrom[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by \"period from\" date (less than or equal `<=`)"
+              },
+              {
+                "name": "periodFrom[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by \"period from\" date (less than `<`)"
+              },
+              {
+                "name": "periodFrom[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by \"period from\" date (greater than or equal `>=`)"
+              },
+              {
+                "name": "periodFrom[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by \"period from\" date (greater than `>`)"
+              },
+              {
+                "name": "periodTo[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by \"period to\" date (less than or equal `<=`)"
+              },
+              {
+                "name": "periodTo[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by \"period to\" date (less than `<`)"
+              },
+              {
+                "name": "periodTo[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by \"period to\" date (greater than or equal `>=`)"
+              },
+              {
+                "name": "periodTo[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by \"period to\" date (greater than `>`)"
+              },
+              {
+                "name": "hasXml",
+                "value": "true",
+                "type": "query",
+                "description": "Filter by tax retentions that have the CFDI available in XML format"
+              },
+              {
+                "name": "hasPdf",
+                "value": "true",
+                "type": "query",
+                "description": "Filter by tax retentions that have the CFDI available in PDF format"
+              },
+              {
+                "name": "order[issuedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by issue date"
+              },
+              {
+                "name": "order[canceledAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by cancellation date"
+              },
+              {
+                "name": "order[certifiedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by certification date"
+              },
+              {
+                "name": "order[periodFrom]",
+                "value": "",
+                "type": "query",
+                "description": "Order by \"period from\" date"
+              },
+              {
+                "name": "order[periodTo]",
+                "value": "",
+                "type": "query",
+                "description": "Order by \"period to\" date"
+              },
+              {
+                "name": "order[totalOperationAmount]",
+                "value": "",
+                "type": "query",
+                "description": "Order by total operation amount date"
+              },
+              {
+                "name": "order[totalTaxableAmount]",
+                "value": "",
+                "type": "query",
+                "description": "Order by total taxable amount date"
+              },
+              {
+                "name": "order[totalExemptAmount]",
+                "value": "",
+                "type": "query",
+                "description": "Order by total exempt amount date"
+              },
+              {
+                "name": "order[totalRetainedAmount]",
+                "value": "",
+                "type": "query",
+                "description": "Order by total retained amount date"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List tax retentions extracted for an entity.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,160 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX SAT Tax Compliance Checks API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX SAT Tax Compliance Checks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a tax compliance check",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/tax-compliance-checks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a tax compliance check by ID, including the SAT compliance result and source PDF file.\n"
+        },
+        {
+          "info": {
+            "name": "List an entity's tax compliance checks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/tax-compliance-checks",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "internalIdentifier",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "taxpayer.rfc",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "taxpayer.name",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "result",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "checkedAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by check date (less than or equal `<=`)"
+              },
+              {
+                "name": "checkedAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by check date (less than `<`)"
+              },
+              {
+                "name": "checkedAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by check date (greater than or equal `>=`)"
+              },
+              {
+                "name": "checkedAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by check date (greater than `>`)"
+              },
+              {
+                "name": "createdAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date (less than `<`)"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date (greater than `>`)"
+              },
+              {
+                "name": "order[checkedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by check date"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by creation date"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List tax compliance checks extracted for an entity.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

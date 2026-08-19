@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Balance Sheet Insight API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Balance Sheet Insight",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get balance sheet metric",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/insights/metrics/balance-sheet",
+            "headers": [
+              {
+                "name": "X-Insight-Format",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "options[from]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by fiscal year (greater than)"
+              },
+              {
+                "name": "options[to]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by fiscal year (less than)"
+              }
+            ]
+          },
+          "docs": "Returns the entity's balance sheet organized in a tree of categories.\n\nThe structure of the category tree changes according to:\n- The tax regime.\n- The year format (the year when SAT changes the structure, i.e., a breaking change)\n\nSupported tax regimes:\n- **601** (Personas Morales)\n- **612** (PFAE/Personas Físicas con Actividades Empresariales y Profesionales)\n\nAvailable formats:\n- **2014** - the data is extracted from annual [tax returns](#tag/TaxReturns) transcript **PDFs**.\n- **2022** - the "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

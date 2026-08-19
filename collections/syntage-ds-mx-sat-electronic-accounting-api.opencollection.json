@@ -1,0 +1,170 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX SAT Electronic Accounting API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX SAT Electronic Accounting",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve an electronic accounting record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/electronic-accounting-records/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an electronic accounting record by ID, including fiscal period, accounting file type, status, and related files.\n"
+        },
+        {
+          "info": {
+            "name": "List an entity's electronic accounting records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/electronic-accounting-records",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "year",
+                "value": "",
+                "type": "query",
+                "description": "Filter by year (exact match)"
+              },
+              {
+                "name": "month",
+                "value": "",
+                "type": "query",
+                "description": "Filter by month (exact match)"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by type (exact match)"
+              },
+              {
+                "name": "reason",
+                "value": "",
+                "type": "query",
+                "description": "Filter by reason (exact match)"
+              },
+              {
+                "name": "fileType",
+                "value": "",
+                "type": "query",
+                "description": "Filter by file type (exact match)"
+              },
+              {
+                "name": "filename",
+                "value": "",
+                "type": "query",
+                "description": "Filter by filename (partial match)"
+              },
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "Filter by code (exact match)"
+              },
+              {
+                "name": "receivedAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by date received (less than or equal `<=`)"
+              },
+              {
+                "name": "receivedAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by date received (less than `<`)"
+              },
+              {
+                "name": "receivedAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by date received (greater than or equal `>=`)"
+              },
+              {
+                "name": "receivedAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by date received (greater than `>`)"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status (exact match)"
+              },
+              {
+                "name": "order[year]",
+                "value": "",
+                "type": "query",
+                "description": "Order by year"
+              },
+              {
+                "name": "order[month]",
+                "value": "",
+                "type": "query",
+                "description": "Order by month"
+              },
+              {
+                "name": "order[receivedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by date received"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List electronic accounting records extracted for an entity.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

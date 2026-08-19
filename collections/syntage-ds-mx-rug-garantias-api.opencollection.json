@@ -1,0 +1,270 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX RUG Garantias API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX RUG Garantias",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve RUG guarantee",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/rug/garantias/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve one RUG guarantee by ID, including collateral details, creditor, grantors, contract dates, and related operations."
+        },
+        {
+          "info": {
+            "name": "List an entity's RUG guarantees",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/datasources/rug/garantias",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "numeroDeGarantia",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "acreedor",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "tipoDeGarantia",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "moneda",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "descripcionDeLosBienes",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeInscripcion[before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeInscripcion[strictly_before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeInscripcion[after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeInscripcion[strictly_after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeCancelacion[before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeCancelacion[strictly_before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeCancelacion[after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeCancelacion[strictly_after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeCelebracionDelActoOContrato[before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeCelebracionDelActoOContrato[strictly_before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeCelebracionDelActoOContrato[after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeCelebracionDelActoOContrato[strictly_after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeTerminacionDelActoOContrato[before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeTerminacionDelActoOContrato[strictly_before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeTerminacionDelActoOContrato[after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fechaDeTerminacionDelActoOContrato[strictly_after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "monto[between]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "monto[gt]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "monto[gte]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "monto[lt]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "monto[lte]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than `>`)"
+              },
+              {
+                "name": "createdAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than `<`)"
+              },
+              {
+                "name": "updatedAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (greater than or equal `>=`)"
+              },
+              {
+                "name": "updatedAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (greater than `>`)"
+              },
+              {
+                "name": "updatedAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (less than or equal `<=`)"
+              },
+              {
+                "name": "updatedAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (less than `<`)"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              }
+            ]
+          },
+          "docs": "List RUG guarantees extracted for an entity. Use this endpoint after a `rug` extraction finishes to review movable collateral guarantees found for the entity."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

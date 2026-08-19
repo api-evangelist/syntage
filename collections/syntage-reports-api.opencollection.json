@@ -1,0 +1,154 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Reports API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/reports",
+            "params": [
+              {
+                "name": "createdAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than `<`)"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than `>`)"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Collection page number"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List the reports available to the authenticated user: built-in reports, the user's personal reports, and organizational reports.\n\nInsight entries whose feature flags are not enabled for your organization are omitted from the `insights` layout.\n"
+        },
+        {
+          "info": {
+            "name": "Create a report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/reports",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a custom report with your own selection of insight entries. Set `organizational` to `true` to share the report with every user in your organization instead of keeping it personal.\n\nReports created through the API are always custom reports: the report-level `builtIn` flag is set only by Syntage and cannot be set through the API.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/reports/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a report by ID. Use the report ID as the `uri` path segment when requesting a PDF download with the [Exports API](/api-reference/exports/export-data).\n"
+        },
+        {
+          "info": {
+            "name": "Update a report",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.syntage.com/reports/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a custom report's name, insight layout, or organizational visibility.\n\nBuilt-in reports cannot be updated. Personal reports can only be updated by their owner; organizational reports can only be updated by an admin.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a report",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/reports/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a custom report.\n\nBuilt-in reports cannot be deleted. Personal reports can only be deleted by their owner; organizational reports can only be deleted by an admin.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,543 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Shareholders API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Shareholders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List an entity's shareholders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/shareholders",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter shareholders by type"
+              },
+              {
+                "name": "name",
+                "value": "JUAN PEREZ",
+                "type": "query",
+                "description": "Filter shareholders by name (supports partial matching)"
+              },
+              {
+                "name": "rfc",
+                "value": "PEGJ850101",
+                "type": "query",
+                "description": "Filter shareholders by RFC (supports partial matching)"
+              },
+              {
+                "name": "order[name]",
+                "value": "",
+                "type": "query",
+                "description": "Order by name"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              }
+            ]
+          },
+          "docs": "Lists shareholders connected to an entity. Use filters to narrow the list by shareholder type, name, or RFC.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new shareholder for an entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/entities/:entityId/shareholders",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds manually collected shareholder information to an entity. The request creates a shareholder and the relation between that shareholder and the entity.\n"
+        },
+        {
+          "info": {
+            "name": "List shareholders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/shareholders",
+            "params": [
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter shareholders by type"
+              },
+              {
+                "name": "name",
+                "value": "JUAN PEREZ",
+                "type": "query",
+                "description": "Filter shareholders by name (supports partial matching)"
+              },
+              {
+                "name": "rfc",
+                "value": "PEGJ850101",
+                "type": "query",
+                "description": "Filter shareholders by RFC (supports partial matching)"
+              },
+              {
+                "name": "order[name]",
+                "value": "",
+                "type": "query",
+                "description": "Order by name"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              }
+            ]
+          },
+          "docs": "Lists shareholders available to the organization. Use this endpoint when you need to search shareholders across entities.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a shareholder",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/shareholders/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves one shareholder by ID.\n"
+        },
+        {
+          "info": {
+            "name": "Update a shareholder",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.syntage.com/shareholders/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates manually editable shareholder details such as the shareholder's name or RFC.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a shareholder",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/shareholders/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes a shareholder resource.\n"
+        },
+        {
+          "info": {
+            "name": "List shareholder relations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/shareholders/:shareholderId/relations",
+            "params": [
+              {
+                "name": "shareholderId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "The shareholder ID"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "relationType",
+                "value": "",
+                "type": "query",
+                "description": "Filter relations by type"
+              },
+              {
+                "name": "order[shares]",
+                "value": "",
+                "type": "query",
+                "description": "Order by number of shares"
+              },
+              {
+                "name": "order[ownership]",
+                "value": "",
+                "type": "query",
+                "description": "Order by ownership percentage"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              }
+            ]
+          },
+          "docs": "Lists the entity relationships for a shareholder, including ownership direction and available ownership details.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a shareholder relation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/shareholders/:shareholderId/relations/:relationId",
+            "params": [
+              {
+                "name": "shareholderId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "The shareholder ID"
+              },
+              {
+                "name": "relationId",
+                "value": "82cd9012-3456-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "The relation ID"
+              }
+            ]
+          },
+          "docs": "Retrieves one shareholder relation by ID.\n"
+        },
+        {
+          "info": {
+            "name": "Update a shareholder relation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.syntage.com/shareholders/:shareholderId/relations/:relationId",
+            "params": [
+              {
+                "name": "shareholderId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "The shareholder ID"
+              },
+              {
+                "name": "relationId",
+                "value": "82cd9012-3456-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "The relation ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates manually editable details for a shareholder relation, such as the number of shares.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a shareholder relation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/shareholders/:shareholderId/relations/:relationId",
+            "params": [
+              {
+                "name": "shareholderId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "The shareholder ID"
+              },
+              {
+                "name": "relationId",
+                "value": "82cd9012-3456-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "The relation ID"
+              }
+            ]
+          },
+          "docs": "Deletes the relationship between a shareholder and an entity.\n"
+        },
+        {
+          "info": {
+            "name": "Promote a shareholder relation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/shareholders/:shareholderId/relations/:relationId/promote",
+            "params": [
+              {
+                "name": "shareholderId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "The shareholder ID"
+              },
+              {
+                "name": "relationId",
+                "value": "82cd9012-3456-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "The relation ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Promotes a shareholder relation by creating an entity for the shareholder. Use this when the shareholder should be managed as its own person or company in your integration.\n"
+        },
+        {
+          "info": {
+            "name": "List shareholder relation sources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/shareholders/:shareholderId/relations/:relationId/sources",
+            "params": [
+              {
+                "name": "shareholderId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "The shareholder ID"
+              },
+              {
+                "name": "relationId",
+                "value": "82cd9012-3456-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "The relation ID"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "sourceName",
+                "value": "",
+                "type": "query",
+                "description": "Filter sources by name"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              }
+            ]
+          },
+          "docs": "Lists the sources that support a shareholder relation, such as manually entered data or information sourced from RPC.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a shareholder relation source",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/shareholders/:shareholderId/relations/:relationId/sources/:sourceId",
+            "params": [
+              {
+                "name": "shareholderId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "The shareholder ID"
+              },
+              {
+                "name": "relationId",
+                "value": "82cd9012-3456-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "The relation ID"
+              },
+              {
+                "name": "sourceId",
+                "value": "73de0123-4567-8901-bcde-f23456789012",
+                "type": "path",
+                "description": "The source ID"
+              }
+            ]
+          },
+          "docs": "Retrieves one source for a shareholder relation.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a shareholder relation source",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/shareholders/:shareholderId/relations/:relationId/sources/:sourceId",
+            "params": [
+              {
+                "name": "shareholderId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "The shareholder ID"
+              },
+              {
+                "name": "relationId",
+                "value": "82cd9012-3456-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "The relation ID"
+              },
+              {
+                "name": "sourceId",
+                "value": "73de0123-4567-8901-bcde-f23456789012",
+                "type": "path",
+                "description": "The source ID"
+              }
+            ]
+          },
+          "docs": "Deletes one source from a shareholder relation.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

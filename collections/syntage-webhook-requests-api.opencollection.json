@@ -1,0 +1,111 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Webhook Requests API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhook Requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List webhook requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/webhook-requests",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "Filter by endpoint URL using exact match"
+              },
+              {
+                "name": "responseStatusCode",
+                "value": "",
+                "type": "query",
+                "description": "Filter by response status code"
+              },
+              {
+                "name": "event.id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by event ID"
+              },
+              {
+                "name": "event.type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by event type"
+              },
+              {
+                "name": "event.source",
+                "value": "",
+                "type": "query",
+                "description": "Filter by event source"
+              },
+              {
+                "name": "event.resource",
+                "value": "",
+                "type": "query",
+                "description": "Filter by event resource"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List webhook delivery attempts for your organization."
+        },
+        {
+          "info": {
+            "name": "Retrieve webhook request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/webhook-requests/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a webhook delivery attempt by ID. Use the response status code, response time, related event, and endpoint details to investigate delivery behavior.\n\n### How to validate webhook calls by using the `signingSecret` value.\nWhenever a webhook is called, a `X-Satws-Signature` header is sent to help verify it. Syntage generates a signature using a hash-based message authentication code (HMAC) with SHA-256 using the `signingSecret` as key. To verify the hash you can do the following steps:\n\n#### St"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

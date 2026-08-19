@@ -1,0 +1,194 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX SAT Tax Returns API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX SAT Tax Returns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a tax return",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/tax-returns/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a tax return by ID, including filing metadata, payment information, file references, and ISSIF availability.\n"
+        },
+        {
+          "info": {
+            "name": "Download a tax return PDF",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/tax-returns/:id/pdf",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Download the SAT transcript PDF for a tax return.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve tax return data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/tax-returns/:id/data",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve extracted data from a tax return.\n\nFor annual tax returns, there are two available formats:\n- Financial statements 2022 format - This is available for non-pfae tax returns. Data will only be returned if the SAT provides the XLSX financial statements document.\n- Financial statements 2014 format - This is available for pfae annual tax returns from 2014 to now, and all other annual tax returns from 2014-2021, as long as we are able to retrieve the PDF.\n\nFor provisional (monthly) tax return"
+        },
+        {
+          "info": {
+            "name": "List an entity's tax returns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/tax-returns",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "operationNumber",
+                "value": "",
+                "type": "query",
+                "description": "Filter by operation number (partial match)"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by type (exact match)"
+              },
+              {
+                "name": "intervalUnit",
+                "value": "",
+                "type": "query",
+                "description": "Filter by interval unit (exact match)"
+              },
+              {
+                "name": "complementary",
+                "value": "",
+                "type": "query",
+                "description": "Filter by interval unit (partial match)"
+              },
+              {
+                "name": "captureLine",
+                "value": "",
+                "type": "query",
+                "description": "Filter by payment code (partial match)"
+              },
+              {
+                "name": "period",
+                "value": "",
+                "type": "query",
+                "description": "Filter by period (exact match)"
+              },
+              {
+                "name": "presentedAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by filing date (less than or equal `<=`)"
+              },
+              {
+                "name": "presentedAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by filing date (less than `<`)"
+              },
+              {
+                "name": "presentedAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by filing date (greater than or equal `>=`)"
+              },
+              {
+                "name": "presentedAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by filing date (greater than `>`)"
+              },
+              {
+                "name": "fiscalYear",
+                "value": "",
+                "type": "query",
+                "description": "Filter by fiscal year (exact match)"
+              },
+              {
+                "name": "order[period]",
+                "value": "",
+                "type": "query",
+                "description": "Order by period"
+              },
+              {
+                "name": "order[presentedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by filing date"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List tax returns extracted for an entity.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

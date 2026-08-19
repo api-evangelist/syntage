@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Risks Insight API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Risks Insight",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get risk calculations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/insights/risks",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "options[from]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by invoice issuing date (greater than)"
+              }
+            ]
+          },
+          "docs": "Risk indicators (concentration, foreign-currency exposure, cash-transaction share, insolvency, tax compliance, etc.) computed from the entity's invoicing, payments, and tax-filing data."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

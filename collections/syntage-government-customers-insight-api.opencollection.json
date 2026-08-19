@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Government Customers Insight API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Government Customers Insight",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get government customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/insights/government-customers",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "options[from]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by invoice issuing date (greater than)"
+              },
+              {
+                "name": "options[to]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by invoice issuing date (less than)"
+              }
+            ]
+          },
+          "docs": "The entity's customers that are Mexican federal, state, or municipal government bodies, with each one's share of total revenue."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

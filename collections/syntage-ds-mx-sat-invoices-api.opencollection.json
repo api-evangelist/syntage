@@ -1,0 +1,714 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX SAT Invoices API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX SAT Invoices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve an invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/invoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an invoice by ID, including SAT identifiers, issuer and receiver details, totals, payment status, file availability, and invoice relationships.\n"
+        },
+        {
+          "info": {
+            "name": "Tag an invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/invoices/:id/tags",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a tag to an invoice.\n"
+        },
+        {
+          "info": {
+            "name": "Untag an invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/invoices/:invoiceId/tags/:tagId",
+            "params": [
+              {
+                "name": "invoiceId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "tagId",
+                "value": "018d9dd9-459f-768e-bc55-a8a72d0d3e9a",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Remove a tag from an invoice.\n"
+        },
+        {
+          "info": {
+            "name": "Tag multiple invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/invoices/batch/tags",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add one or more tags to up to 100 invoices in a single request.\n\nThe operation is atomic: if any invoice or tag in the request cannot be found, no invoice is modified. Tags the invoice already has are kept as-is, so retrying the same request is safe.\n"
+        },
+        {
+          "info": {
+            "name": "Untag multiple invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.syntage.com/invoices/batch/tags/remove",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Remove one or more tags from up to 100 invoices in a single request.\n\nThe operation is atomic: if any invoice or tag in the request cannot be found, no invoice is modified. Tags an invoice does not have are ignored, so retrying the same request is safe.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve an invoice's CFDI",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/invoices/:id/cfdi",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve the invoice CFDI in the requested format.\n\nBy default, this endpoint returns the CFDI parsed from XML to JSON. Set `Accept: text/xml` to retrieve the original XML file, or `Accept: application/pdf` to retrieve the PDF representation when one is available.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a SAT CFDI",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/mx/sat/cfdis/:uuid",
+            "headers": [
+              {
+                "name": "X-Async-Process",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "uuid",
+                "value": "def404af-5eef-4112-aa99-d1ec8493b89a",
+                "type": "path",
+                "description": "Invoice UUID"
+              }
+            ]
+          },
+          "docs": "Retrieve parsed SAT CFDI data by invoice UUID.\nWhen `X-Async-Process` is set to `1`, the endpoint can return `202 Accepted` while CFDI parsing continues asynchronously.\n"
+        },
+        {
+          "info": {
+            "name": "List an entity's invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/invoices",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "query",
+                "description": "Filter by UUID/Folio Fiscal (exact match)"
+              },
+              {
+                "name": "version",
+                "value": "3.2",
+                "type": "query",
+                "description": "Filter by CFDI version (exact match)"
+              },
+              {
+                "name": "type",
+                "value": "I",
+                "type": "query",
+                "description": "Filter by type (exact match)"
+              },
+              {
+                "name": "usage",
+                "value": "G03",
+                "type": "query",
+                "description": "Filter by usage (exact match)"
+              },
+              {
+                "name": "paymentType",
+                "value": "",
+                "type": "query",
+                "description": "Filter by payment type (exact match)"
+              },
+              {
+                "name": "paymentMethod",
+                "value": "",
+                "type": "query",
+                "description": "Filter by payment method (exact match)"
+              },
+              {
+                "name": "issuer.rfc",
+                "value": "AOM920820BEA",
+                "type": "query",
+                "description": "Filter by issuer RFC (partial match)"
+              },
+              {
+                "name": "issuer.name",
+                "value": "Apple",
+                "type": "query",
+                "description": "Filter by issuer name (partial match)"
+              },
+              {
+                "name": "issuer.taxRegime",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issuer tax regime (partial match)"
+              },
+              {
+                "name": "issuer.blacklistStatus",
+                "value": "presumed",
+                "type": "query",
+                "description": "Filter by issuer blacklist status"
+              },
+              {
+                "name": "isIssuer",
+                "value": "true",
+                "type": "query",
+                "description": "Filter by whether the invoice issuer is the entity's RFC"
+              },
+              {
+                "name": "receiver.rfc",
+                "value": "",
+                "type": "query",
+                "description": "Filter by receiver RFC (partial match)"
+              },
+              {
+                "name": "receiver.name",
+                "value": "Pedro",
+                "type": "query",
+                "description": "Filter by receiver name (partial match)"
+              },
+              {
+                "name": "receiver.blacklistStatus",
+                "value": "definitive",
+                "type": "query",
+                "description": "Filter by receiver blacklist status"
+              },
+              {
+                "name": "isReceiver",
+                "value": "false",
+                "type": "query",
+                "description": "Filter by whether the invoice receiver is the entity's RFC"
+              },
+              {
+                "name": "currency",
+                "value": "",
+                "type": "query",
+                "description": "Filter by currency code (exact match)"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status (exact match)"
+              },
+              {
+                "name": "pac",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certification provider (partial match)"
+              },
+              {
+                "name": "cancellationStatus",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation status (partial match)"
+              },
+              {
+                "name": "cancellationStatusProcess",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation process status (partial match)"
+              },
+              {
+                "name": "issuedAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue date (less than or equal `<=`)"
+              },
+              {
+                "name": "issuedAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue date (less than `<`)"
+              },
+              {
+                "name": "issuedAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue date (greater than or equal `>=`)"
+              },
+              {
+                "name": "issuedAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by issue date (greater than `>`)"
+              },
+              {
+                "name": "canceledAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation date (less than or equal `<=`)"
+              },
+              {
+                "name": "canceledAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation date (less than `<`)"
+              },
+              {
+                "name": "canceledAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "canceledAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by cancellation date (greater than `>`)"
+              },
+              {
+                "name": "createdAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date (less than `<`)"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by creation date (greater than `>`)"
+              },
+              {
+                "name": "updatedAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by update date (less than or equal `<=`)"
+              },
+              {
+                "name": "updatedAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by update date (less than `<`)"
+              },
+              {
+                "name": "updatedAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by update date (greater than or equal `>=`)"
+              },
+              {
+                "name": "updatedAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by update date (greater than `>`)"
+              },
+              {
+                "name": "certifiedAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certified date (less than or equal `<=`)"
+              },
+              {
+                "name": "certifiedAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certified date (less than `<`)"
+              },
+              {
+                "name": "certifiedAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certified date (greater than or equal `>=`)"
+              },
+              {
+                "name": "certifiedAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by certified date (greater than `>`)"
+              },
+              {
+                "name": "lastPaymentDate[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by last payment date (less than or equal `<=`)"
+              },
+              {
+                "name": "lastPaymentDate[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by last payment date (less than `<`)"
+              },
+              {
+                "name": "lastPaymentDate[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by last payment date (greater than or equal `>=`)"
+              },
+              {
+                "name": "lastPaymentDate[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by last payment date (greater than `>`)"
+              },
+              {
+                "name": "fullyPaidAt[before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by fully paid date (less than or equal `<=`)"
+              },
+              {
+                "name": "fullyPaidAt[strictly_before]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by fully paid date (less than `<`)"
+              },
+              {
+                "name": "fullyPaidAt[after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by fully paid date (greater than or equal `>=`)"
+              },
+              {
+                "name": "fullyPaidAt[strictly_after]",
+                "value": "",
+                "type": "query",
+                "description": "Filter by fully paid date (greater than `>`)"
+              },
+              {
+                "name": "tax[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by tax between two values"
+              },
+              {
+                "name": "tax[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by tax (greater than `>`)"
+              },
+              {
+                "name": "tax[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by tax (greater than or equal `>=`)"
+              },
+              {
+                "name": "tax[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by tax (less than `<`)"
+              },
+              {
+                "name": "tax[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by tax (less than or equal `<=`)"
+              },
+              {
+                "name": "discount[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by discount between two values"
+              },
+              {
+                "name": "discount[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by discount (greater than `>`)"
+              },
+              {
+                "name": "discount[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by discount (greater than or equal `>=`)"
+              },
+              {
+                "name": "discount[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by discount (less than `<`)"
+              },
+              {
+                "name": "discount[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by discount (less than or equal `<=`)"
+              },
+              {
+                "name": "subtotal[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by subtotal between two values"
+              },
+              {
+                "name": "subtotal[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by subtotal (greater than `>`)"
+              },
+              {
+                "name": "subtotal[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by subtotal (greater than or equal `>=`)"
+              },
+              {
+                "name": "subtotal[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by subtotal (less than `<`)"
+              },
+              {
+                "name": "subtotal[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by subtotal (less than or equal `<=`)"
+              },
+              {
+                "name": "total[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by total between two values"
+              },
+              {
+                "name": "total[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total (greater than `>`)"
+              },
+              {
+                "name": "total[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by total (greater than or equal `>=`)"
+              },
+              {
+                "name": "total[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total (less than `<`)"
+              },
+              {
+                "name": "total[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by total (less than or equal `<=`)"
+              },
+              {
+                "name": "paidAmount[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by paidAmount between two values"
+              },
+              {
+                "name": "paidAmount[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by paidAmount (greater than `>`)"
+              },
+              {
+                "name": "paidAmount[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by paidAmount (greater than or equal `>=`)"
+              },
+              {
+                "name": "paidAmount[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by paidAmount (less than `<`)"
+              },
+              {
+                "name": "paidAmount[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by paidAmount (less than or equal `<=`)"
+              },
+              {
+                "name": "dueAmount[between]",
+                "value": "12.99..15.99",
+                "type": "query",
+                "description": "Filter by dueAmount between two values"
+              },
+              {
+                "name": "dueAmount[gt]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by dueAmount (greater than `>`)"
+              },
+              {
+                "name": "dueAmount[gte]",
+                "value": "12.99",
+                "type": "query",
+                "description": "Filter by dueAmount (greater than or equal `>=`)"
+              },
+              {
+                "name": "dueAmount[lt]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by dueAmount (less than `<`)"
+              },
+              {
+                "name": "dueAmount[lte]",
+                "value": "15.99",
+                "type": "query",
+                "description": "Filter by dueAmount (less than or equal `<=`)"
+              },
+              {
+                "name": "hasXml",
+                "value": "true",
+                "type": "query",
+                "description": "Filter by invoices that have the CFDI available in XML format"
+              },
+              {
+                "name": "hasPdf",
+                "value": "true",
+                "type": "query",
+                "description": "Filter by invoices that have the CFDI available in PDF format"
+              },
+              {
+                "name": "order[issuedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by issue date"
+              },
+              {
+                "name": "order[canceledAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by cancellation date"
+              },
+              {
+                "name": "order[certifiedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by certification date"
+              },
+              {
+                "name": "order[amount]",
+                "value": "",
+                "type": "query",
+                "description": "Order by amount"
+              },
+              {
+                "name": "exists[paymentMethod]",
+                "value": "",
+                "type": "query",
+                "description": "Filter invoices that contains or not paymentMethod"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List invoices extracted for an entity.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

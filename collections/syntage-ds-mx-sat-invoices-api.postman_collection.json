@@ -1,0 +1,3344 @@
+{
+  "item": [
+    {
+      "id": "9de82541-0478-4f18-be10-8a77837c4a1a",
+      "name": "DS MX SAT Invoices",
+      "description": {
+        "content": "Invoices represent CFDI documents issued or received by an entity. Invoice records include SAT identifiers, issuer and receiver data, monetary totals, payment status, cancellation status, invoice relationships, file availability, and tags.\n\nUse the entity invoice list when you need all invoices extracted for one entity. Retrieve an invoice by ID when you need the full invoice resource, including tags and related invoice metadata. Use the CFDI endpoint when you need the XML or PDF content for a specific invoice.\n\n### Blacklist status\n\nThe field `issuer.blacklistStatus` or `receiver.blacklistStatus` is set when the invoice issuer or receiver\nRFC is found in the [SAT 69-B list](https://omawww.sat.gob.mx/cifras_sat/Paginas/datos/vinculo.html?page=ListCompleta69B.html):\n\n| Status      | Description |\n|-------------|-----------------------------------------------------------------------------------------------------------|\n| presumed    | SAT has identified possible irregularities and started an investigation |\n| dismissed   | SAT dismissed the investigation after reviewing evidence |\n| definitive  | SAT determined that the RFC has confirmed irregularities |\n| favorable   | SAT reversed a definitive status after reviewing additional evidence |\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "db647301-6f4f-4b1f-891e-f890b1545f26",
+          "name": "Retrieve an invoice",
+          "request": {
+            "name": "Retrieve an invoice",
+            "description": {
+              "content": "Retrieve an invoice by ID, including SAT identifiers, issuer and receiver details, totals, payment status, file availability, and invoice relationships.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "invoices",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "27f97f03-dd5a-45fe-a5d9-6c79ccd45eae",
+              "name": "Invoice resource response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"@context\": \"/contexts/Invoice\",\n  \"@id\": \"/invoices/91106968-1abd-4d64-85c1-4e73d96fb997\",\n  \"@type\": \"Invoice\",\n  \"id\": \"91106968-1abd-4d64-85c1-4e73d96fb997\",\n  \"uuid\": \"def404af-5eef-4112-aa99-d1ec8493b89a\",\n  \"version\": 3.3,\n  \"reference\": \"Branch-A\",\n  \"internalIdentifier\": \"00001\",\n  \"type\": \"T\",\n  \"usage\": \"G03\",\n  \"paymentType\": \"PUE\",\n  \"paymentMethod\": \"04\",\n  \"paymentTerms\": \"immediate_payment\",\n  \"placeOfIssue\": \"01210\",\n  \"issuer\": {\n    \"rfc\": \"PEIC211118IS0\",\n    \"name\": \"Pedro Infante Cruz\",\n    \"taxRegime\": 601,\n    \"blacklistStatus\": \"presumed\"\n  },\n  \"isIssuer\": true,\n  \"receiver\": {\n    \"rfc\": \"PEIC211118IS0\",\n    \"name\": \"Pedro Infante Cruz\",\n    \"blacklistStatus\": \"presumed\"\n  },\n  \"isReceiver\": false,\n  \"currency\": \"MXN\",\n  \"discount\": 3324,\n  \"tax\": 5224,\n  \"subtotal\": 51349.8,\n  \"creditedAmount\": 31.32,\n  \"subtotalCreditedAmount\": 27,\n  \"total\": 53249.8,\n  \"exchangeRate\": 19.8,\n  \"paidAmount\": 53249.8,\n  \"dueAmount\": 0,\n  \"lastPaymentDate\": \"1960-01-18T11:11:02.875Z\",\n  \"fullyPaidAt\": \"1995-03-11T02:21:42.968Z\",\n  \"paymentTermsRaw\": \"Tarjeta de crédito\",\n  \"status\": \"VIGENTE\",\n  \"pac\": \"SAT970701NN3\",\n  \"issuedAt\": \"2019-01-03T21:10:40.000Z\",\n  \"certifiedAt\": \"2019-01-03T21:10:41.000Z\",\n  \"cancellationStatus\": \"Cancelable con aceptación\",\n  \"cancellationProcessStatus\": \"En proceso\",\n  \"canceledAt\": \"2016-01-30T13:37:08.347Z\",\n  \"relations\": [\n    {\n      \"@id\": \"/invoices/relations/93a197e7-6baa-5dc5-bf8d-fb1645a770c1\",\n      \"@type\": \"InvoiceRelation\",\n      \"id\": \"91106968-1abd-4d64-85c1-4e73d96fb997\",\n      \"type\": 7,\n      \"invoice\": \"/invoices/92106967-2abd-5d64-95c2-4e73d96fb998\",\n      \"relatedInvoice\": \"/invoices/92106967-2abd-5d64-95c2-4e73d96fb998\",\n      \"relatedInvoiceUuid\": \"def404af-5eef-4112-aa99-d1ec8493b89a\",\n      \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n      \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n    },\n    {\n      \"@id\": \"/invoices/relations/93a197e7-6baa-5dc5-bf8d-fb1645a770c1\",\n      \"@type\": \"InvoiceRelation\",\n      \"id\": \"91106968-1abd-4d64-85c1-4e73d96fb997\",\n      \"type\": 7,\n      \"invoice\": \"/invoices/92106967-2abd-5d64-95c2-4e73d96fb998\",\n      \"relatedInvoice\": \"/invoices/92106967-2abd-5d64-95c2-4e73d96fb998\",\n      \"relatedInvoiceUuid\": \"def404af-5eef-4112-aa99-d1ec8493b89a\",\n      \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n      \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n    }\n  ],\n  \"xml\": true,\n  \"pdf\": false,\n  \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n  \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5fdbb30a-3a12-454a-9613-7b441fbe0036",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "46be17db-f431-4c42-bfde-9747762b652c",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "199c6a5b-9d95-45e7-be3f-7e1149a22b7c",
+          "name": "Tag an invoice",
+          "request": {
+            "name": "Tag an invoice",
+            "description": {
+              "content": "Add a tag to an invoice.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "invoices",
+                ":id",
+                "tags"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tags\": [\n    \"<iri-reference>\",\n    \"<iri-reference>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f281ff2d-6d32-405e-b694-f56fecb18eb5",
+              "name": "Invoice resource response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"@context\": \"/contexts/Invoice\",\n  \"tags\": [\n    {\n      \"@id\": \"/tags/91106968-1abd-4d64-85c1-4e73d96fb997\",\n      \"@type\": \"Tag\",\n      \"id\": \"e0a24894-7fbf-48ae-bfb0-efaae30a6319\",\n      \"name\": \"To be reviewed\",\n      \"resourceType\": \"invoice\",\n      \"color\": \"#22c558\",\n      \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n      \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n    },\n    {\n      \"@id\": \"/tags/91106968-1abd-4d64-85c1-4e73d96fb997\",\n      \"@type\": \"Tag\",\n      \"id\": \"e0a24894-7fbf-48ae-bfb0-efaae30a6319\",\n      \"name\": \"To be reviewed\",\n      \"resourceType\": \"invoice\",\n      \"color\": \"#22c558\",\n      \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n      \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n    }\n  ],\n  \"@id\": \"/invoices/91106968-1abd-4d64-85c1-4e73d96fb997\",\n  \"@type\": \"Invoice\",\n  \"id\": \"91106968-1abd-4d64-85c1-4e73d96fb997\",\n  \"uuid\": \"def404af-5eef-4112-aa99-d1ec8493b89a\",\n  \"version\": 3.3,\n  \"reference\": \"Branch-A\",\n  \"internalIdentifier\": \"00001\",\n  \"type\": \"N\",\n  \"usage\": \"G03\",\n  \"paymentType\": \"PUE\",\n  \"paymentMethod\": \"04\",\n  \"paymentTerms\": \"immediate_payment\",\n  \"placeOfIssue\": \"01210\",\n  \"issuer\": {\n    \"rfc\": \"PEIC211118IS0\",\n    \"name\": \"Pedro Infante Cruz\",\n    \"taxRegime\": 601,\n    \"blacklistStatus\": \"presumed\"\n  },\n  \"isIssuer\": true,\n  \"receiver\": {\n    \"rfc\": \"PEIC211118IS0\",\n    \"name\": \"Pedro Infante Cruz\",\n    \"blacklistStatus\": \"presumed\"\n  },\n  \"isReceiver\": false,\n  \"currency\": \"MXN\",\n  \"discount\": 3324,\n  \"tax\": 5224,\n  \"subtotal\": 51349.8,\n  \"creditedAmount\": 31.32,\n  \"subtotalCreditedAmount\": 27,\n  \"total\": 53249.8,\n  \"exchangeRate\": 19.8,\n  \"paidAmount\": 53249.8,\n  \"dueAmount\": 0,\n  \"lastPaymentDate\": \"2019-05-15T19:16:52.270Z\",\n  \"fullyPaidAt\": \"1986-04-10T06:27:53.530Z\",\n  \"paymentTermsRaw\": \"Tarjeta de crédito\",\n  \"status\": \"VIGENTE\",\n  \"pac\": \"SAT970701NN3\",\n  \"issuedAt\": \"2019-01-03T21:10:40.000Z\",\n  \"certifiedAt\": \"2019-01-03T21:10:41.000Z\",\n  \"cancellationStatus\": \"Cancelable con aceptación\",\n  \"cancellationProcessStatus\": \"En proceso\",\n  \"canceledAt\": \"1995-07-01T19:52:10.050Z\",\n  \"relations\": [\n    {\n      \"@id\": \"/invoices/relations/93a197e7-6baa-5dc5-bf8d-fb1645a770c1\",\n      \"@type\": \"InvoiceRelation\",\n      \"id\": \"91106968-1abd-4d64-85c1-4e73d96fb997\",\n      \"type\": 7,\n      \"invoice\": \"/invoices/92106967-2abd-5d64-95c2-4e73d96fb998\",\n      \"relatedInvoice\": \"/invoices/92106967-2abd-5d64-95c2-4e73d96fb998\",\n      \"relatedInvoiceUuid\": \"def404af-5eef-4112-aa99-d1ec8493b89a\",\n      \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n      \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n    },\n    {\n      \"@id\": \"/invoices/relations/93a197e7-6baa-5dc5-bf8d-fb1645a770c1\",\n      \"@type\": \"InvoiceRelation\",\n      \"id\": \"91106968-1abd-4d64-85c1-4e73d96fb997\",\n      \"type\": 7,\n      \"invoice\": \"/invoices/92106967-2abd-5d64-95c2-4e73d96fb998\",\n      \"relatedInvoice\": \"/invoices/92106967-2abd-5d64-95c2-4e73d96fb998\",\n      \"relatedInvoiceUuid\": \"def404af-5eef-4112-aa99-d1ec8493b89a\",\n      \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n      \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n    }\n  ],\n  \"xml\": true,\n  \"pdf\": false,\n  \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n  \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cf57df04-7cc1-4ccb-aa69-f04998003d17",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "33487ea1-ffd4-4bd7-a512-b81e84929a89",
+          "name": "Untag an invoice",
+          "request": {
+            "name": "Untag an invoice",
+            "description": {
+              "content": "Remove a tag from an invoice.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "invoices",
+                ":invoiceId",
+                "tags",
+                ":tagId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "invoiceId",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "tagId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "855aa06f-ee46-4cb0-b987-0d6f3b3fed77",
+              "name": "Untagged invoice",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":invoiceId",
+                    "tags",
+                    ":tagId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "invoiceId",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tagId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "54174bba-7942-4e3b-bfd5-ef7286e5ecea",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":invoiceId",
+                    "tags",
+                    ":tagId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "invoiceId",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tagId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "39389f07-a643-4aec-aaea-c42da220d9b1",
+          "name": "Tag multiple invoices",
+          "request": {
+            "name": "Tag multiple invoices",
+            "description": {
+              "content": "Add one or more tags to up to 100 invoices in a single request.\n\nThe operation is atomic: if any invoice or tag in the request cannot be found, no invoice is modified. Tags the invoice already has are kept as-is, so retrying the same request is safe.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "invoices",
+                "batch",
+                "tags"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resources\": [\n    \"<iri-reference>\"\n  ],\n  \"tags\": [\n    \"<iri-reference>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e3b4e875-d87d-404e-9a7a-6db071a24d68",
+              "name": "Result of a batch tag operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    "batch",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"resources\": [\n    \"c21ec081-f2dd-10bc-59f0-500b4fe63aa5\",\n    \"e2e958ba-8a2c-9301-6027-1d39913c8c91\"\n  ],\n  \"tags\": [\n    \"67714e20-9c96-2c1c-5a14-4c241343f15f\",\n    \"6e81e61e-2f7c-4745-2f7d-afde0e53e05b\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6ad21e5f-a10a-4f1e-8313-0ba55cd074d0",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    "batch",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "704bac4f-c640-4227-9187-1b55c60417ae",
+              "name": "An invoice or tag in the request was not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    "batch",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2f1ab039-638d-4676-ae25-eb592e16c4bc",
+              "name": "Validation error, e.g. empty lists or more than 100 invoices / 50 tags",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    "batch",
+                    "tags"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "20e50a18-231e-4227-be30-7df8823ca968",
+          "name": "Untag multiple invoices",
+          "request": {
+            "name": "Untag multiple invoices",
+            "description": {
+              "content": "Remove one or more tags from up to 100 invoices in a single request.\n\nThe operation is atomic: if any invoice or tag in the request cannot be found, no invoice is modified. Tags an invoice does not have are ignored, so retrying the same request is safe.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "invoices",
+                "batch",
+                "tags",
+                "remove"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resources\": [\n    \"<iri-reference>\"\n  ],\n  \"tags\": [\n    \"<iri-reference>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f5dd9e35-0492-4ba7-a03d-5186081749a2",
+              "name": "Result of a batch tag operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    "batch",
+                    "tags",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"resources\": [\n    \"588fe2ce-7d4c-9ab4-b821-7a4ee5b3312d\",\n    \"a0aa1878-6042-ddb5-8e01-56465aa845c3\"\n  ],\n  \"tags\": [\n    \"943a7bb2-b5b4-61b8-0aa1-9aa4278c63ef\",\n    \"e3fafaca-9be4-fd22-9002-c45adef44eb7\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "249bfe49-b47d-413a-8125-1ca087a82341",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    "batch",
+                    "tags",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b86696b0-9b59-4c0c-a3e2-b2efaccc0482",
+              "name": "An invoice or tag in the request was not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    "batch",
+                    "tags",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "bbd66de9-f2c6-4e9f-8bbf-80fbca4b322d",
+              "name": "Validation error, e.g. empty lists or more than 100 invoices / 50 tags",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    "batch",
+                    "tags",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3bc08145-a6cd-4e17-add2-987dec6a9ca5",
+          "name": "Retrieve an invoice's CFDI",
+          "request": {
+            "name": "Retrieve an invoice's CFDI",
+            "description": {
+              "content": "Retrieve the invoice CFDI in the requested format.\n\nBy default, this endpoint returns the CFDI parsed from XML to JSON. Set `Accept: text/xml` to retrieve the original XML file, or `Accept: application/pdf` to retrieve the PDF representation when one is available.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "invoices",
+                ":id",
+                "cfdi"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f8fcf1ff-ee93-48c0-8ee8-3a3b5b46bd27",
+              "name": "Invoice CFDI response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "cfdi"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "key": "Accept",
+                    "value": "application/json",
+                    "description": ""
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"Version\": 3.3,\n  \"Serie\": \"FA\",\n  \"Folio\": 6787763004,\n  \"Fecha\": \"2019-01-03T21:10:40\",\n  \"Sello\": \"pd77md8+...wiMlMQ==\",\n  \"FormaPago\": \"04\",\n  \"NoCertificado\": 1000000502192402,\n  \"Certificado\": \"MIIGTDCC...rOSkAn8=\",\n  \"CondicionesDePago\": \"Tarjeta de Credito\",\n  \"SubTotal\": 45905,\n  \"Descuento\": 0,\n  \"Moneda\": \"MXN\",\n  \"Total\": 53249.8,\n  \"TipoDeComprobante\": \"I\",\n  \"MetodoPago\": \"PUE\",\n  \"LugarExpedicion\": \"01210\",\n  \"Emisor\": {\n    \"Rfc\": \"AOM920820BEA\",\n    \"Nombre\": \"APPLE OPERATIONS MEXICO S.A. DE C.V.\",\n    \"RegimenFiscal\": 601\n  },\n  \"Receptor\": {\n    \"Rfc\": \"PEIC211118IS0\",\n    \"Nombre\": \"Pedro Infante Cruz\",\n    \"UsoCFDI\": \"G03\"\n  },\n  \"Conceptos\": {\n    \"Concepto\": [\n      {\n        \"ClaveProdServ\": 43211503,\n        \"NoIdentificacion\": \"Z0V0\",\n        \"Cantidad\": 1,\n        \"ClaveUnidad\": \"H87\",\n        \"Unidad\": \"06\",\n        \"Descripcion\": \"MBP 15.4 SPACE GRAY\",\n        \"ValorUnitario\": 45905,\n        \"Importe\": 45905,\n        \"Descuento\": 0,\n        \"Impuestos\": {\n          \"Traslados\": {\n            \"Traslado\": {\n              \"Base\": 45905,\n              \"Impuesto\": \"002\",\n              \"TipoFactor\": \"Tasa\",\n              \"TasaOCuota\": 0.16,\n              \"Importe\": 7344.8\n            }\n          }\n        },\n        \"InformacionAduanera\": {\n          \"NumeroPedimento\": \"19  47  1692  9000010\"\n        }\n      }\n    ]\n  },\n  \"Impuestos\": {\n    \"TotalImpuestosTrasladados\": 7344.8,\n    \"Traslados\": {\n      \"Traslado\": {\n        \"Impuesto\": \"002\",\n        \"TipoFactor\": \"Tasa\",\n        \"TasaOCuota\": 0.16,\n        \"Importe\": 7344.8\n      }\n    }\n  },\n  \"Complemento\": {\n    \"TimbreFiscalDigital\": {\n      \"Version\": 1.1,\n      \"UUID\": \"e0a24894-7fbf-48ae-bfb0-efaae30a6319\",\n      \"RfcProvCertif\": \"SAT970701NN3\",\n      \"FechaTimbrado\": \"2019-01-03T23:10:40\",\n      \"SelloCFD\": \"pd77md8+...wiMlMQ==\",\n      \"NoCertificadoSAT\": 1000000514965721,\n      \"SelloSAT\": \"R9TebKU2...q7lDgA==\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6264c1ce-3e1c-445b-b14c-3a077eca7f2c",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "cfdi"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "key": "Accept",
+                    "value": "application/json",
+                    "description": ""
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5483b7f1-d959-416a-a46b-ccdf00a0f726",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "invoices",
+                    ":id",
+                    "cfdi"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "key": "Accept",
+                    "value": "application/json",
+                    "description": ""
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2d7cf2c2-9a98-4450-998a-8a048d03e778",
+          "name": "Retrieve a SAT CFDI",
+          "request": {
+            "name": "Retrieve a SAT CFDI",
+            "description": {
+              "content": "Retrieve parsed SAT CFDI data by invoice UUID.\nWhen `X-Async-Process` is set to `1`, the endpoint can return `202 Accepted` while CFDI parsing continues asynchronously.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "datasources",
+                "mx",
+                "sat",
+                "cfdis",
+                ":uuid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "uuid",
+                  "description": "(Required) Invoice UUID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Set to `1` to request asynchronous processing when the CFDI has not been parsed yet",
+                "key": "X-Async-Process",
+                "value": "0"
+              },
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ef4ca5e9-4c9c-4b6f-b32b-9212a1827499",
+              "name": "Parsed SAT CFDI response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "datasources",
+                    "mx",
+                    "sat",
+                    "cfdis",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) Invoice UUID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Set to `1` to request asynchronous processing when the CFDI has not been parsed yet",
+                    "key": "X-Async-Process",
+                    "value": "0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"uuid\": \"def404af-5eef-4112-aa99-d1ec8493b89a\",\n  \"data\": {\n    \"key_0\": false\n  },\n  \"processedXmlAt\": \"2020-01-01T12:15:00.000Z\",\n  \"processedPdfAt\": \"2020-01-01T12:15:00.000Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "518c7314-f616-465c-b7a1-a6baee583640",
+              "name": "CFDI parsing accepted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "datasources",
+                    "mx",
+                    "sat",
+                    "cfdis",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) Invoice UUID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Set to `1` to request asynchronous processing when the CFDI has not been parsed yet",
+                    "key": "X-Async-Process",
+                    "value": "0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"The CFDI is being processed and will be available soon. Please try again later.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f87e38ab-31ff-4e4f-abb8-8f7172a3b12c",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "datasources",
+                    "mx",
+                    "sat",
+                    "cfdis",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) Invoice UUID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Set to `1` to request asynchronous processing when the CFDI has not been parsed yet",
+                    "key": "X-Async-Process",
+                    "value": "0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1801bed0-e521-42e9-81c8-d437ba6c04bc",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "datasources",
+                    "mx",
+                    "sat",
+                    "cfdis",
+                    ":uuid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "uuid",
+                      "description": "(Required) Invoice UUID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Set to `1` to request asynchronous processing when the CFDI has not been parsed yet",
+                    "key": "X-Async-Process",
+                    "value": "0"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8446ab21-c561-49ed-a694-cc88886894a8",
+          "name": "List an entity's invoices",
+          "request": {
+            "name": "List an entity's invoices",
+            "description": {
+              "content": "List invoices extracted for an entity.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":entityId",
+                "invoices"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "uuid",
+                  "value": "<uuid>",
+                  "description": "Filter by UUID/Folio Fiscal (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "version",
+                  "value": "<float>",
+                  "description": "Filter by CFDI version (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Filter by type (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "usage",
+                  "value": "<string>",
+                  "description": "Filter by usage (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "paymentType",
+                  "value": "<string>",
+                  "description": "Filter by payment type (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "paymentMethod",
+                  "value": "<string>",
+                  "description": "Filter by payment method (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "issuer.rfc",
+                  "value": "<string>",
+                  "description": "Filter by issuer RFC (partial match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "issuer.name",
+                  "value": "<string>",
+                  "description": "Filter by issuer name (partial match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "issuer.taxRegime",
+                  "value": "<number>",
+                  "description": "Filter by issuer tax regime (partial match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "issuer.blacklistStatus",
+                  "value": "<string>",
+                  "description": "Filter by issuer blacklist status"
+                },
+                {
+                  "disabled": false,
+                  "key": "isIssuer",
+                  "value": "<boolean>",
+                  "description": "Filter by whether the invoice issuer is the entity's RFC"
+                },
+                {
+                  "disabled": false,
+                  "key": "receiver.rfc",
+                  "value": "<string>",
+                  "description": "Filter by receiver RFC (partial match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "receiver.name",
+                  "value": "<string>",
+                  "description": "Filter by receiver name (partial match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "receiver.blacklistStatus",
+                  "value": "<string>",
+                  "description": "Filter by receiver blacklist status"
+                },
+                {
+                  "disabled": false,
+                  "key": "isReceiver",
+                  "value": "<boolean>",
+                  "description": "Filter by whether the invoice receiver is the entity's RFC"
+                },
+                {
+                  "disabled": false,
+                  "key": "currency",
+                  "value": "<string>",
+                  "description": "Filter by currency code (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by status (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "pac",
+                  "value": "<string>",
+                  "description": "Filter by certification provider (partial match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cancellationStatus",
+                  "value": "<string>",
+                  "description": "Filter by cancellation status (partial match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cancellationStatusProcess",
+                  "value": "<string>",
+                  "description": "Filter by cancellation process status (partial match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "issuedAt[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by issue date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "issuedAt[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by issue date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "issuedAt[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by issue date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "issuedAt[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by issue date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "canceledAt[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by cancellation date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "canceledAt[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by cancellation date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "canceledAt[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by cancellation date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "canceledAt[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by cancellation date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[before]",
+                  "value": "<string>",
+                  "description": "Filter by creation date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[strictly_before]",
+                  "value": "<string>",
+                  "description": "Filter by creation date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[after]",
+                  "value": "<string>",
+                  "description": "Filter by creation date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[strictly_after]",
+                  "value": "<string>",
+                  "description": "Filter by creation date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "updatedAt[before]",
+                  "value": "<string>",
+                  "description": "Filter by update date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "updatedAt[strictly_before]",
+                  "value": "<string>",
+                  "description": "Filter by update date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "updatedAt[after]",
+                  "value": "<string>",
+                  "description": "Filter by update date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "updatedAt[strictly_after]",
+                  "value": "<string>",
+                  "description": "Filter by update date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "certifiedAt[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by certified date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "certifiedAt[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by certified date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "certifiedAt[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by certified date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "certifiedAt[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by certified date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "lastPaymentDate[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by last payment date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "lastPaymentDate[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by last payment date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "lastPaymentDate[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by last payment date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "lastPaymentDate[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by last payment date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "fullyPaidAt[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by fully paid date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "fullyPaidAt[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by fully paid date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "fullyPaidAt[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by fully paid date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "fullyPaidAt[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by fully paid date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "tax[between]",
+                  "value": "<string>",
+                  "description": "Filter by tax between two values"
+                },
+                {
+                  "disabled": false,
+                  "key": "tax[gt]",
+                  "value": "<number>",
+                  "description": "Filter by tax (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "tax[gte]",
+                  "value": "<number>",
+                  "description": "Filter by tax (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "tax[lt]",
+                  "value": "<number>",
+                  "description": "Filter by tax (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "tax[lte]",
+                  "value": "<number>",
+                  "description": "Filter by tax (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "discount[between]",
+                  "value": "<string>",
+                  "description": "Filter by discount between two values"
+                },
+                {
+                  "disabled": false,
+                  "key": "discount[gt]",
+                  "value": "<number>",
+                  "description": "Filter by discount (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "discount[gte]",
+                  "value": "<number>",
+                  "description": "Filter by discount (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "discount[lt]",
+                  "value": "<number>",
+                  "description": "Filter by discount (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "discount[lte]",
+                  "value": "<number>",
+                  "description": "Filter by discount (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "subtotal[between]",
+                  "value": "<string>",
+                  "description": "Filter by subtotal between two values"
+                },
+                {
+                  "disabled": false,
+                  "key": "subtotal[gt]",
+                  "value": "<number>",
+                  "description": "Filter by subtotal (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "subtotal[gte]",
+                  "value": "<number>",
+                  "description": "Filter by subtotal (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "subtotal[lt]",
+                  "value": "<number>",
+                  "description": "Filter by subtotal (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "subtotal[lte]",
+                  "value": "<number>",
+                  "description": "Filter by subtotal (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "total[between]",
+                  "value": "<string>",
+                  "description": "Filter by total between two values"
+                },
+                {
+                  "disabled": false,
+                  "key": "total[gt]",
+                  "value": "<number>",
+                  "description": "Filter by total (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "total[gte]",
+                  "value": "<number>",
+                  "description": "Filter by total (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "total[lt]",
+                  "value": "<number>",
+                  "description": "Filter by total (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "total[lte]",
+                  "value": "<number>",
+                  "description": "Filter by total (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "paidAmount[between]",
+                  "value": "<string>",
+                  "description": "Filter by paidAmount between two values"
+                },
+                {
+                  "disabled": false,
+                  "key": "paidAmount[gt]",
+                  "value": "<number>",
+                  "description": "Filter by paidAmount (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "paidAmount[gte]",
+                  "value": "<number>",
+                  "description": "Filter by paidAmount (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "paidAmount[lt]",
+                  "value": "<number>",
+                  "description": "Filter by paidAmount (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "paidAmount[lte]",
+                  "value": "<number>",
+                  "description": "Filter by paidAmount (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "dueAmount[between]",
+                  "value": "<string>",
+                  "description": "Filter by dueAmount between two values"
+                },
+                {
+                  "disabled": false,
+                  "key": "dueAmount[gt]",
+                  "value": "<number>",
+                  "description": "Filter by dueAmount (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "dueAmount[gte]",
+                  "value": "<number>",
+                  "description": "Filter by dueAmount (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "dueAmount[lt]",
+                  "value": "<number>",
+                  "description": "Filter by dueAmount (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "dueAmount[lte]",
+                  "value": "<number>",
+                  "description": "Filter by dueAmount (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "hasXml",
+                  "value": "<boolean>",
+                  "description": "Filter by invoices that have the CFDI available in XML format"
+                },
+                {
+                  "disabled": false,
+                  "key": "hasPdf",
+                  "value": "<boolean>",
+                  "description": "Filter by invoices that have the CFDI available in PDF format"
+                },
+                {
+                  "disabled": false,
+                  "key": "order[issuedAt]",
+                  "value": "<string>",
+                  "description": "Order by issue date"
+                },
+                {
+                  "disabled": false,
+                  "key": "order[canceledAt]",
+                  "value": "<string>",
+                  "description": "Order by cancellation date"
+                },
+                {
+                  "disabled": false,
+                  "key": "order[certifiedAt]",
+                  "value": "<string>",
+                  "description": "Order by certification date"
+                },
+                {
+                  "disabled": false,
+                  "key": "order[amount]",
+                  "value": "<string>",
+                  "description": "Order by amount"
+                },
+                {
+                  "disabled": false,
+                  "key": "exists[paymentMethod]",
+                  "value": "<boolean>",
+                  "description": "Filter invoices that contains or not paymentMethod"
+                },
+                {
+                  "disabled": false,
+                  "key": "id[lt]",
+                  "value": "<string>",
+                  "description": "Collection cursor pointer to the next page"
+                },
+                {
+                  "disabled": false,
+                  "key": "id[gt]",
+                  "value": "<string>",
+                  "description": "Collection cursor pointer to the previous page"
+                },
+                {
+                  "disabled": false,
+                  "key": "itemsPerPage",
+                  "value": "20",
+                  "description": "Number of items per page"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "entityId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "da168b03-0934-49ce-8925-7c43f01d3ecf",
+              "name": "Taxpayer invoice collection response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "invoices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "version",
+                      "value": "3.2"
+                    },
+                    {
+                      "key": "type",
+                      "value": "I"
+                    },
+                    {
+                      "key": "usage",
+                      "value": "G03"
+                    },
+                    {
+                      "key": "paymentType",
+                      "value": "PUE"
+                    },
+                    {
+                      "key": "paymentMethod",
+                      "value": "04"
+                    },
+                    {
+                      "key": "issuer.rfc",
+                      "value": "AOM920820BEA"
+                    },
+                    {
+                      "key": "issuer.name",
+                      "value": "Apple"
+                    },
+                    {
+                      "key": "issuer.taxRegime",
+                      "value": "601"
+                    },
+                    {
+                      "key": "issuer.blacklistStatus",
+                      "value": "presumed"
+                    },
+                    {
+                      "key": "isIssuer",
+                      "value": "true"
+                    },
+                    {
+                      "key": "receiver.rfc",
+                      "value": "AOM920820BEA"
+                    },
+                    {
+                      "key": "receiver.name",
+                      "value": "Pedro"
+                    },
+                    {
+                      "key": "receiver.blacklistStatus",
+                      "value": "definitive"
+                    },
+                    {
+                      "key": "isReceiver",
+                      "value": "false"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "MXN"
+                    },
+                    {
+                      "key": "status",
+                      "value": "VIGENTE"
+                    },
+                    {
+                      "key": "pac",
+                      "value": "SAT970701NN3"
+                    },
+                    {
+                      "key": "cancellationStatus",
+                      "value": "Cancelable con aceptación"
+                    },
+                    {
+                      "key": "cancellationStatusProcess",
+                      "value": "En proceso"
+                    },
+                    {
+                      "key": "issuedAt[before]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[strictly_before]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[after]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[strictly_after]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "canceledAt[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[strictly_before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[strictly_after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[before]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[strictly_before]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[after]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[strictly_after]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "lastPaymentDate[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "tax[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "tax[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "tax[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "tax[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "tax[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "discount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "discount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "discount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "discount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "discount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "subtotal[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "subtotal[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "subtotal[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "subtotal[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "subtotal[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "total[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "total[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "total[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "total[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "total[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "paidAmount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "paidAmount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "paidAmount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "paidAmount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "paidAmount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "dueAmount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "dueAmount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "dueAmount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "dueAmount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "dueAmount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "hasXml",
+                      "value": "true"
+                    },
+                    {
+                      "key": "hasPdf",
+                      "value": "true"
+                    },
+                    {
+                      "key": "order[issuedAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[canceledAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[certifiedAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[amount]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "exists[paymentMethod]",
+                      "value": "true"
+                    },
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ee998ce-3e60-44a8-af8f-7b187ff25def",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "invoices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "version",
+                      "value": "3.2"
+                    },
+                    {
+                      "key": "type",
+                      "value": "I"
+                    },
+                    {
+                      "key": "usage",
+                      "value": "G03"
+                    },
+                    {
+                      "key": "paymentType",
+                      "value": "PUE"
+                    },
+                    {
+                      "key": "paymentMethod",
+                      "value": "04"
+                    },
+                    {
+                      "key": "issuer.rfc",
+                      "value": "AOM920820BEA"
+                    },
+                    {
+                      "key": "issuer.name",
+                      "value": "Apple"
+                    },
+                    {
+                      "key": "issuer.taxRegime",
+                      "value": "601"
+                    },
+                    {
+                      "key": "issuer.blacklistStatus",
+                      "value": "presumed"
+                    },
+                    {
+                      "key": "isIssuer",
+                      "value": "true"
+                    },
+                    {
+                      "key": "receiver.rfc",
+                      "value": "AOM920820BEA"
+                    },
+                    {
+                      "key": "receiver.name",
+                      "value": "Pedro"
+                    },
+                    {
+                      "key": "receiver.blacklistStatus",
+                      "value": "definitive"
+                    },
+                    {
+                      "key": "isReceiver",
+                      "value": "false"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "MXN"
+                    },
+                    {
+                      "key": "status",
+                      "value": "VIGENTE"
+                    },
+                    {
+                      "key": "pac",
+                      "value": "SAT970701NN3"
+                    },
+                    {
+                      "key": "cancellationStatus",
+                      "value": "Cancelable con aceptación"
+                    },
+                    {
+                      "key": "cancellationStatusProcess",
+                      "value": "En proceso"
+                    },
+                    {
+                      "key": "issuedAt[before]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[strictly_before]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[after]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[strictly_after]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "canceledAt[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[strictly_before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[strictly_after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[before]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[strictly_before]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[after]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[strictly_after]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "lastPaymentDate[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "tax[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "tax[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "tax[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "tax[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "tax[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "discount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "discount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "discount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "discount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "discount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "subtotal[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "subtotal[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "subtotal[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "subtotal[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "subtotal[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "total[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "total[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "total[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "total[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "total[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "paidAmount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "paidAmount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "paidAmount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "paidAmount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "paidAmount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "dueAmount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "dueAmount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "dueAmount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "dueAmount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "dueAmount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "hasXml",
+                      "value": "true"
+                    },
+                    {
+                      "key": "hasPdf",
+                      "value": "true"
+                    },
+                    {
+                      "key": "order[issuedAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[canceledAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[certifiedAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[amount]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "exists[paymentMethod]",
+                      "value": "true"
+                    },
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "60bedf32-1e38-480b-bb87-0b185df05113",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "invoices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "version",
+                      "value": "3.2"
+                    },
+                    {
+                      "key": "type",
+                      "value": "I"
+                    },
+                    {
+                      "key": "usage",
+                      "value": "G03"
+                    },
+                    {
+                      "key": "paymentType",
+                      "value": "PUE"
+                    },
+                    {
+                      "key": "paymentMethod",
+                      "value": "04"
+                    },
+                    {
+                      "key": "issuer.rfc",
+                      "value": "AOM920820BEA"
+                    },
+                    {
+                      "key": "issuer.name",
+                      "value": "Apple"
+                    },
+                    {
+                      "key": "issuer.taxRegime",
+                      "value": "601"
+                    },
+                    {
+                      "key": "issuer.blacklistStatus",
+                      "value": "presumed"
+                    },
+                    {
+                      "key": "isIssuer",
+                      "value": "true"
+                    },
+                    {
+                      "key": "receiver.rfc",
+                      "value": "AOM920820BEA"
+                    },
+                    {
+                      "key": "receiver.name",
+                      "value": "Pedro"
+                    },
+                    {
+                      "key": "receiver.blacklistStatus",
+                      "value": "definitive"
+                    },
+                    {
+                      "key": "isReceiver",
+                      "value": "false"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "MXN"
+                    },
+                    {
+                      "key": "status",
+                      "value": "VIGENTE"
+                    },
+                    {
+                      "key": "pac",
+                      "value": "SAT970701NN3"
+                    },
+                    {
+                      "key": "cancellationStatus",
+                      "value": "Cancelable con aceptación"
+                    },
+                    {
+                      "key": "cancellationStatusProcess",
+                      "value": "En proceso"
+                    },
+                    {
+                      "key": "issuedAt[before]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[strictly_before]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[after]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "issuedAt[strictly_after]",
+                      "value": "2019-01-03T21:10:40.000Z"
+                    },
+                    {
+                      "key": "canceledAt[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "canceledAt[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[strictly_before]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "updatedAt[strictly_after]",
+                      "value": "2020-01-01T12:15:00.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[before]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[strictly_before]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[after]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "certifiedAt[strictly_after]",
+                      "value": "2019-01-03T21:10:41.000Z"
+                    },
+                    {
+                      "key": "lastPaymentDate[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "lastPaymentDate[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[strictly_before]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fullyPaidAt[strictly_after]",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "tax[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "tax[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "tax[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "tax[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "tax[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "discount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "discount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "discount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "discount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "discount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "subtotal[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "subtotal[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "subtotal[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "subtotal[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "subtotal[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "total[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "total[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "total[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "total[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "total[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "paidAmount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "paidAmount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "paidAmount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "paidAmount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "paidAmount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "dueAmount[between]",
+                      "value": "12.99..15.99"
+                    },
+                    {
+                      "key": "dueAmount[gt]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "dueAmount[gte]",
+                      "value": "12.99"
+                    },
+                    {
+                      "key": "dueAmount[lt]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "dueAmount[lte]",
+                      "value": "15.99"
+                    },
+                    {
+                      "key": "hasXml",
+                      "value": "true"
+                    },
+                    {
+                      "key": "hasPdf",
+                      "value": "true"
+                    },
+                    {
+                      "key": "order[issuedAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[canceledAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[certifiedAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "order[amount]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "exists[paymentMethod]",
+                      "value": "true"
+                    },
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.syntage.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "72cabda9-370f-4e18-abb2-e893171a7434",
+    "name": "Syntage Accounts Payable Insight DS MX SAT Invoices API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Introduction\n\nThe Syntage API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer).\nOur API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns [JSON-LD](https://json-ld.org) responses, and uses standard HTTP response codes, authentication, and verbs.\n\n# Environments\n\n| Name | Description | Base URL |\n|------|-------------|----------|\n| **Sandbox** | The Sandbox environment is dedicated to development and testing. In this environment, no real taxpayer credentials are required and all interaction with the SAT is simulated generating life-like data, allowing you to pull test data from all endpoints. | https://api.sandbox.syntage.com |\n| **Production** | The Production environment is dedicated to live applications with real connections to the SAT. In this environment, real taxpayer credentials are required, and you will pull real fiscal data directly from the SAT. | https://api.syntage.com |\n\nEach environment has a different API Key for [authentication](#section/Authentication).\n\n# Request IDs\n\nEach API request has an associated request identifier.\nYou can find this value in the response headers, under `X-Request-ID`:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-Request-ID: Root=1-6532dcae-169bf139354cd48959f55c55\n```\n\nIf you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution.\n\n# Rate Limiting\n\nOur API employs a number of safeguards against bursts of incoming traffic to help maximize its stability.\nThe returned HTTP headers of any API request show your current rate limit status:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 56\nX-RateLimit-Reset: 1606678044\n```\n\n| Header Name           | Description |\n|-----------------------|------------------------------------------------------------------------------|\n| X-RateLimit-Limit     | The maximum number of requests you're permitted to make.                     |\n| X-RateLimit-Remaining | The number of requests remaining in the current rate limit window.           |\n| X-RateLimit-Reset     | The time at which the current rate limit window resets in UTC epoch seconds. |\n\nIf you exceed the rate limit, a [429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) response is returned:\n\n```http\nHTTP/1.1 429 Too Many Requests\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1606678044\n```\n\nWe may reduce limits to prevent abuse, or increase limits to enable high-traffic operations.\nYou can check your current limits in the [dashboard](https://app.syntage.com/settings/usage).\nTo request an increased rate limit, please [contact support](https://support.syntage.com/).\n# Pagination\nWhen issuing a GET request on a collection containing more than 1 page (e.g. [/events](#operation/ListEvent)),  a collection is returned. Links to the first, the last, previous and the next page in the collection are displayed as well as the  number of total items in the collection.\nAll endpoints that support this operation have a query parameter defined by:\n  - `itemsPerPage` The number of items per page (default: 20, max: 1000)\n  - `page` The collection page number\n\n```bash\n  \"hydra:totalItems\": 1,\n  \"hydra:view\": {\n    \"@id\": \"/events?page=1\",\n    \"@type\": \"hydra:PartialCollectionView\",\n    \"hydra:first\": \"/events?page=1\",\n    \"hydra:next\": \"/events?page=2\",\n    \"hydra:last\": \"/events?page=3\"\n  },\n```\n## Cursor Pagination\nCursor pagination is a technique used for navigating through large datasets efficiently. It allows you to retrieve a specific subset of results from a collection by using a cursor value that represents the position within the collection. The cursor serves as a reference point for fetching the next or previous set of results.\n### Benefits of Cursor Pagination:\n1. **Efficient Navigation:** Cursor pagination eliminates the need to fetch the entire dataset at once, making it more scalable and faster. You can retrieve data in smaller, manageable chunks based on the cursor values.\n2. **Consistent Results:** Each page of results in cursor pagination is stable and doesn't change even if new items are added or removed from the collection. This ensures that you get consistent and reliable results.\n3. **Flexibility:** Cursors can be used to navigate forwards and backwards in the collection without impacting performance.\n\n### How to Use Cursor Pagination:\nTo use cursor pagination with our API, follow these instructions:\n1. Make a request to retrieve the initial page of results. The response will be a JSON-LD document that includes a `hydra:next` attribute with the URI for the next page. The URI already includes the cursor attribute.\n2. To retrieve the next page of results, make a GET request to the URI provided in the `hydra:next` attribute. This URI will automatically include the cursor value for the next page.\n3. If you want to navigate to the previous page, you can use the `hydra:previous` attribute in the JSON-LD response. It will contain the URI for the previous page, including the cursor value.\n4. You can continue making requests to the `hydra:next` and `hydra:previous` URIs to navigate through the paginated results, based on your requirements.\nMake sure to update your request headers to include the necessary headers for JSON-LD content negotiation, such as `Accept: application/ld+json` or `Content-Type: application/ld+json`.\nBy following these instructions, you can effectively navigate through the paginated results using the cursor values provided in the `hydra:next` and `hydra:previous` attributes, without the need to manually include the cursor in your requests. This simplifies the pagination process and enhances the usability of our API.\n\n### Considerations About Cursor Pagination:\n\n  - By default, the API uses offset-based pagination (except for a few endpoints that we will list below). If you want to switch to cursor pagination, you need to include an additional header in your request. Set the `X-Pagination-Style` header with the value `\"cursor\"` to enable cursor pagination. If not specified, the API will assume offset-based pagination.\n\n  - After enabling cursor pagination, the API response will no longer include the `hydra:totalItems` field by default. Retrieving the total count can be resource intensive and impact response times, especially for large datasets. However, if you need the `hydra:totalItems` information, you can include an additional header in your request. Set the `X-Pagination-Enable-Partial` header with the value `0` to indicate that the response should include extra information, including the `hydra:totalItems` count. Please be aware that enabling this feature may impact API response times, as the backend needs to perform a count operation on the dataset.\n\nIf you require the `hydra:totalItems` count, please consider the potential impact on API response times.\n### Example\n```bash\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices?itemsPerPage=10' \\\n    --header 'Accept: application/ld+json' \\\n    --header 'X-Api-Key: {apiKey}' \\\n    --header 'X-Pagination-Style: cursor' \\\n    --header 'X-Pagination-Enable-Partial: 0'\n```\n**Note:** We only support cursor pagination for the following endpoints:\n - `GET /entities/{entityId}/invoices`\n - `GET /entities/{entityId}/invoices/line-items`\n - `GET /entities/{entityId}/invoices/{invoiceId}/line-items`\n - `GET /invoices/{invoiceId}/line-items`\n - `GET /entities/{entityId}/invoices/payments`\n\nFeel free to reach out if you have any further questions or need additional assistance!\n\n# Property Filtering\nThe property filter adds the possibility to select the properties for GET operations.\nSyntax: `?properties[]=<property>&properties[<relation>][]=<property>`\nYou can add as many properties as you need. The following example shows how to select `paymentType` and  `issuer.rfc` when fetching a list of invoices.\n```curl\n  curl -i https://api.syntage.com/entities/{entityId}/invoices?properties[]=paymentType&properties[issuer]=rfc\n```\n# Filtering\n**Warning:** Collection endpoints only apply the filter query parameters documented for that endpoint. If you send an unsupported or misspelled filter query parameter, the API ignores it and processes the request as if that parameter was not sent.\n\n# API Versioning Guide\nGuidance on changes between versions.\n## Version: 2020-01-01 to 2020-06-28\n### **Invoice**\n_**Affected Endpoints:** `GET /invoices/{id}` and `GET /entities/{entityId}/invoices`_\n- The `amount` property has been removed from API responses. Use the `total` property instead.\n- Retrieval by invoice's `uuid` at `/invoices/{id}` is now removed. To retrieve an invoice, use the invoice's `id` at the specified endpoint. To find an invoice using its `uuid`, filter the invoice collection at `/entities/{entityId}/invoices?uuid[]={uuid}`.\n- Previously, the `@iri` property for an invoice pointed to the resource using `uuid`, like `/invoices/{uuid}`. Now, it points using its `id`, like `/invoices/{id}`.\n\n### **Entity (Formerly Link)**\n_**Affected Endpoint:** `GET /entities`_\n- Filtering entities by `status` is removed. Use `credential.status` instead. For example, utilize `GET /entities?credential.status[]=active` instead of `GET /entities?status[]=active`.\n\n### **Tax Return**\n_**Affected Endpoints:** `GET /tax-returns/{id}` and `GET /entities/{entityId}/tax-returns`_\n- Retrieval by tax return's `operationNumber` at `/tax-returns/{id}` is removed. To retrieve a tax return, use the tax return's `id` at the mentioned endpoint. To find a tax return using its `operationNumber`, filter the collection at `/entities/{entityId}/tax-returns?operationNumber[]={operationNumber}`.\n- Previously, the `@iri` property for a tax return pointed to the resource using `operationNumber`, like `/tax-returns/{operationNumber}`. Now, it directs to its `id`, like `/tax-returns/{id}`.\n\n### **Event**\n_**Affected Endpoints:** `GET /events` and `GET /events/{id}`_\n- For events associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}` instead of the previous `/tax-returns/{operationNumber}`.\n- For events associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}` instead of the previous `/invoices/{uuid}`.\n\n### **Extraction**\n_**Affected Endpoints:** `GET /extractions` and `GET /extractions/{id}`_\n- The `periodFrom` property has been removed. Use `options.period.from` instead.\n- The `periodTo` property has been removed. Use `options.period.to` instead.\n\n### **File**\n_**Affected Endpoint:** `GET /file/{id}`_\n- For files associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}`, instead of the previous `/tax-returns/{operationNumber}`.\n- For files associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}`, instead of the previous `/invoices/{uuid}`.\n\n### Trying Out This Version\nIf you want to test this version, you can do so by making any request with the `Accept-Version` header pointing to the latest version:\n```curl\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices' \\\n    --header 'Accept-Version: 2020-06-28' \\\n    --header 'X-Api-Key: {apiKey}'\n```\n\n\nContact Support:\n Name: Email\n Email: support@syntage.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Company Verification Reports API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Company Verification Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List company verification reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/mx/company-verification/reports",
+            "params": [
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              }
+            ]
+          },
+          "docs": "Lists company verification reports available to the organization. Use this endpoint when you need to page through reports across entities.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a company verification report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/mx/company-verification/reports/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves one company verification report, including its verification details, metadata, and supporting file references.\n"
+        },
+        {
+          "info": {
+            "name": "Download company verification report PDF",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/mx/company-verification/reports/:id/pdf",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Downloads the generated PDF for a company verification report. The response body is the PDF file itself.\n"
+        },
+        {
+          "info": {
+            "name": "List an entity's company verification reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/datasources/mx/company-verification/reports",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              }
+            ]
+          },
+          "docs": "Lists company verification reports associated with an entity. Use this endpoint when your integration is working from a known entity ID.\n"
+        },
+        {
+          "info": {
+            "name": "Get a report's found entities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/mx/company-verification/reports/:reportId/found-entities",
+            "params": [
+              {
+                "name": "reportId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "Identifier of the Company Verification report."
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "fullName",
+                "value": "pérez",
+                "type": "query",
+                "description": "Filter by partial, case-insensitive match on `fullName`."
+              },
+              {
+                "name": "entityType",
+                "value": "",
+                "type": "query",
+                "description": "Filter by entity type."
+              },
+              {
+                "name": "isActive",
+                "value": "",
+                "type": "query",
+                "description": "Filter by whether the entity still holds shares at the report cut-off date."
+              },
+              {
+                "name": "order[fullName]",
+                "value": "",
+                "type": "query",
+                "description": "Order by full name."
+              },
+              {
+                "name": "order[totalsPercentage]",
+                "value": "",
+                "type": "query",
+                "description": "Order by ownership percentage."
+              }
+            ]
+          },
+          "docs": "List every person or company identified in the source documents of a\nMexican Company Verification report, with their cap-table holdings and\npowers of attorney expanded inline.\n"
+        },
+        {
+          "info": {
+            "name": "Get a specific found entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/mx/company-verification/reports/:reportId/found-entities/:id",
+            "params": [
+              {
+                "name": "reportId",
+                "value": "91ab5678-1234-5678-9abc-def012345678",
+                "type": "path",
+                "description": "Identifier of the Company Verification report."
+              },
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single found entity, with its cap-table holdings and powers expanded inline."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

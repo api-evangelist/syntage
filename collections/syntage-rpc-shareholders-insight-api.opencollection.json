@@ -1,0 +1,44 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight RPC Shareholders Insight API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "RPC Shareholders Insight",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get RPC Shareholders (beta)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/insights/rpc-shareholders",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "**Deprecated:** Use [Get Shareholders](/api-reference/shareholders-insight/get-shareholders) instead.\n\nShareholder information is obtained from the Registro Público de Comercio (RPC) and, when available for the entity, from Company Verification reports.\n\nWhen at least one shareholder for the entity has been ingested from a Company Verification report, the response returns only the Company Verification-sourced shareholders, and ownership percentages reflect the values recorded on the verification"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,231 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Events API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/events",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by type (exact match)"
+              },
+              {
+                "name": "taxpayer.id",
+                "value": "PEIC211118IS0",
+                "type": "query",
+                "description": "Filter events by RFC (exact match)"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by source (exact match)"
+              },
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by resource (exact match)"
+              },
+              {
+                "name": "createdAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than `<`)"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than `>`)"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List recent events for resources in your organization. Events are ordered and paginated with cursor pagination."
+        },
+        {
+          "info": {
+            "name": "Retrieve an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/events/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a single event by ID, including the event type and resource data captured when the event was created."
+        },
+        {
+          "info": {
+            "name": "Delete an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.syntage.com/events/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an event resource."
+        },
+        {
+          "info": {
+            "name": "List an entity's events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/events",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by type (exact match)"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by source (exact match)"
+              },
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by resource (exact match)"
+              },
+              {
+                "name": "createdAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than `<`)"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than `>`)"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              }
+            ]
+          },
+          "docs": "List recent events for a specific entity."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight Mexico Addresses API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Mexico Addresses",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve Mexico addresses by postal code",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/mx/addresses/:postalCode",
+            "params": [
+              {
+                "name": "postalCode",
+                "value": "",
+                "type": "path",
+                "description": "Five-digit Mexico postal code"
+              }
+            ]
+          },
+          "docs": "Retrieve Mexico address options for a postal code. Buró de Crédito and Buró Empresas require submitted addresses to match the postal-code address catalog, and a postal code can return multiple neighborhoods."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

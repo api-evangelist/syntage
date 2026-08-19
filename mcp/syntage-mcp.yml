@@ -2,10 +2,9 @@ generated: '2026-07-21'
 method: derived
 status: candidate
 source: openapi/syntage-openapi-original.yml
-note: >-
-  No official hosted/remote Syntage MCP server was found (docs, npm @modelcontextprotocol,
-  MCP registries). This is a DERIVED candidate tool list mapping marquee Syntage API
-  operations to MCP tools, one tool per operationId. Not published by Syntage.
+note: No official hosted/remote Syntage MCP server was found (docs, npm @modelcontextprotocol, MCP registries).
+  This is a DERIVED candidate tool list mapping marquee Syntage API operations to MCP tools, one tool
+  per operationId. Not published by Syntage.
 server:
   name: syntage
   transport: http
@@ -70,3 +69,9 @@ tools:
 - name: create_webhook_endpoint
   description: Subscribe a URL to Syntage events.
   source_operation: openapi/syntage-openapi-original.yml#CreateWebhookEndpoint
+deployment:
+  mode: none
+  verified: derived
+  tools: 20
+  checked: '2026-08-12'
+  source: catalog MCP census

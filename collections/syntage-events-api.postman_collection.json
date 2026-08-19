@@ -1,0 +1,1143 @@
+{
+  "item": [
+    {
+      "id": "0128736f-01c0-44c3-819b-5d2727e2c2fb",
+      "name": "Events",
+      "description": {
+        "content": "Events record meaningful changes to resources in your organization.\n\nWhen something changes, Syntage creates an Event resource. For example, submitting an entity's SAT credential can create credential and entity events, and a completed extraction can create an `extraction.updated` event.\n\nMany requests can create more than one event. For example, submitting valid SAT credentials for an entity can create `credential.created`, `credential.updated`, and `link.created` events.\n\nEvents occur when the state of another resource changes. The state of that resource at the time of the change is embedded in the event's `data` field. For example, a `credential.updated` event contains a Credential, and an `invoice.updated` event contains an Invoice.\n\nUse the Events endpoints to retrieve recent events directly. Use [webhooks](/api-reference/webhooks/overview) when you want Syntage to deliver events to your server automatically.\n\nAccess to events is only guaranteed for 7 days.\n\nEntity lifecycle events still use the `link.*` event type names for backwards compatibility.\n\nThe suffix describes the kind of change:\n\n| Suffix | Meaning |\n| --- | --- |\n| `.created` | A new resource was created. |\n| `.updated` | An existing resource changed. |\n| `.deleted` | A resource was deleted or is no longer available. |\n\n| Resource | Event types |\n| --- | --- |\n| Credentials | `credential.created`, `credential.updated`, `credential.deleted` |\n| Entities | `link.created`, `link.updated`, `link.deleted` |\n| Files | `file.created` |\n| Extractions | `extraction.created`, `extraction.updated` |\n| Exports | `export.created`, `export.updated` |\n| Invoices | `invoice.created`, `invoice.updated`, `invoice.deleted` |\n| Invoice payments | `invoice_payment.created`, `invoice_payment.updated` |\n| Invoice line items | `invoice_line_item.created`, `invoice_line_item.updated` |\n| Tax returns | `tax_return.created`, `tax_return.updated`, `tax_return.deleted` |\n| Tax status | `tax_status.created`, `tax_status.updated`, `tax_status.deleted` |\n| Tax compliance checks | `tax_compliance_check.created`, `tax_compliance_check.updated`, `tax_compliance_check.deleted` |\n| Tax retentions | `tax_retention.created`, `tax_retention.updated`, `tax_retention.deleted` |\n| Electronic accounting records | `electronic_accounting_record.created`, `electronic_accounting_record.updated` |\n| RPC entidades | `rpc_entidades.created`, `rpc_entidades.updated` |\n| RPC socios | `rpc_socios.created`, `rpc_socios.updated` |\n| RPC actos | `rpc_acto.created`, `rpc_acto.updated` |\n| Shareholder relations | `shareholder_relation.created`, `shareholder_relation.updated` |\n| Shareholder relation sources | `shareholder_relation_source.created` |\n| RUG garantias | `rug_garantia.created`, `rug_garantia.updated` |\n| Buró de Crédito reports | `buro_de_credito_report.created`, `buro_de_credito_report.updated` |\n| Background checks | `background_check.created` |\n| SAT certificates | `sat_certificate.created`, `sat_certificate.updated` |\n| Company verification reports | `company_verification_report.created`, `company_verification_report.updated` |\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ac7f8190-65f8-4c3d-8ff0-52433e55b2f6",
+          "name": "List all events",
+          "request": {
+            "name": "List all events",
+            "description": {
+              "content": "List recent events for resources in your organization. Events are ordered and paginated with cursor pagination.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Filter events by type (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "taxpayer.id",
+                  "value": "<string>",
+                  "description": "Filter events by RFC (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "source",
+                  "value": "<iri-reference>",
+                  "description": "Filter events by source (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "resource",
+                  "value": "<iri-reference>",
+                  "description": "Filter events by resource (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "order[createdAt]",
+                  "value": "<string>",
+                  "description": "Order by resource creation date"
+                },
+                {
+                  "disabled": false,
+                  "key": "id[lt]",
+                  "value": "<string>",
+                  "description": "Collection cursor pointer to the next page"
+                },
+                {
+                  "disabled": false,
+                  "key": "id[gt]",
+                  "value": "<string>",
+                  "description": "Collection cursor pointer to the previous page"
+                },
+                {
+                  "disabled": false,
+                  "key": "itemsPerPage",
+                  "value": "20",
+                  "description": "Number of items per page"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "43ba38dd-ede2-4160-8ca3-6577d53d0569",
+              "name": "Event collection response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "credential.updated"
+                    },
+                    {
+                      "key": "taxpayer.id",
+                      "value": "PEIC211118IS0"
+                    },
+                    {
+                      "key": "source",
+                      "value": "/extractions/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "resource",
+                      "value": "/credentials/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "order[createdAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b076acda-0ba7-47dc-85c2-465157242abc",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "credential.updated"
+                    },
+                    {
+                      "key": "taxpayer.id",
+                      "value": "PEIC211118IS0"
+                    },
+                    {
+                      "key": "source",
+                      "value": "/extractions/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "resource",
+                      "value": "/credentials/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "order[createdAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f00030bb-c6e5-414e-8780-81a26e3a673b",
+          "name": "Retrieve an event",
+          "request": {
+            "name": "Retrieve an event",
+            "description": {
+              "content": "Retrieve a single event by ID, including the event type and resource data captured when the event was created.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "events",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "24bf238c-0cb2-42b7-a42a-7ad85061c09b",
+              "name": "Event resource response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"@context\": \"/contexts/Event\",\n  \"@id\": \"/events/91106968-1abd-4d64-85c1-4e73d96fb997\",\n  \"@type\": \"Event\",\n  \"id\": \"e0a24894-7fbf-48ae-bfb0-efaae30a6319\",\n  \"taxpayer\": {\n    \"@id\": \"/taxpayers/PEIC211118IS0\",\n    \"@type\": \"Taxpayer\",\n    \"id\": \"PEIC211118IS0\",\n    \"personType\": \"physical\",\n    \"registrationDate\": \"2014-11-14\",\n    \"name\": \"Pedro Infante Cruz\"\n  },\n  \"type\": \"credential.updated\",\n  \"source\": \"/extractions/91106968-1abd-4d64-85c1-4e73d96fb997\",\n  \"resource\": \"/credentials/91106968-1abd-4d64-85c1-4e73d96fb997\",\n  \"data\": {\n    \"object\": {\n      \"rfc\": \"PEIC211118IS0\",\n      \"type\": \"ciec\",\n      \"status\": \"valid\",\n      \"createdAt\": \"2020-01-17 11:47:27\"\n    },\n    \"changes\": {\n      \"status\": {\n        \"old\": \"pending\",\n        \"new\": \"valid\"\n      }\n    }\n  },\n  \"createdAt\": \"2020-01-01T12:15:00.000Z\",\n  \"updatedAt\": \"2020-01-01T12:15:00.000Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9d2140e3-00f1-4bf2-b901-69b275448852",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1e44078b-eae3-493d-9043-f8814e1ca3e2",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3a46b55a-5b5f-44af-8708-0cf7040995d0",
+          "name": "Delete an event",
+          "request": {
+            "name": "Delete an event",
+            "description": {
+              "content": "Delete an event resource.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "events",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cfe70d56-62d4-40dc-8d3f-f958a1a1929c",
+              "name": "Event resource deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d1462684-0d93-4c41-9cbf-18d7931dd143",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "16fed867-121c-40df-9efd-9f1d5fbedd18",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bef07efd-24c9-4af7-8f35-5320e24b883c",
+          "name": "List an entity's events",
+          "request": {
+            "name": "List an entity's events",
+            "description": {
+              "content": "List recent events for a specific entity.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":entityId",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Filter events by type (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "source",
+                  "value": "<iri-reference>",
+                  "description": "Filter events by source (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "resource",
+                  "value": "<iri-reference>",
+                  "description": "Filter events by resource (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (less than or equal `<=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[strictly_before]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (less than `<`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (greater than or equal `>=`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "createdAt[strictly_after]",
+                  "value": "<dateTime>",
+                  "description": "Filter by resource creation date (greater than `>`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "order[createdAt]",
+                  "value": "<string>",
+                  "description": "Order by resource creation date"
+                },
+                {
+                  "disabled": false,
+                  "key": "id[lt]",
+                  "value": "<string>",
+                  "description": "Collection cursor pointer to the next page"
+                },
+                {
+                  "disabled": false,
+                  "key": "id[gt]",
+                  "value": "<string>",
+                  "description": "Collection cursor pointer to the previous page"
+                },
+                {
+                  "disabled": false,
+                  "key": "itemsPerPage",
+                  "value": "20",
+                  "description": "Number of items per page"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "entityId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/ld+json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d0281d8c-3dc6-4f50-a41a-93887ac3d1a4",
+              "name": "Event collection response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "credential.updated"
+                    },
+                    {
+                      "key": "source",
+                      "value": "/extractions/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "resource",
+                      "value": "/credentials/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "order[createdAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/ld+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/ld+json"
+                }
+              ],
+              "body": "{\n  \"value\": \"<Error: Could not resolve allOf schema\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a28db028-0850-4a37-9c14-3955427525aa",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "credential.updated"
+                    },
+                    {
+                      "key": "source",
+                      "value": "/extractions/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "resource",
+                      "value": "/credentials/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "order[createdAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "70ec0c74-9a8e-4a62-9ef6-4b0223574aaf",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":entityId",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "credential.updated"
+                    },
+                    {
+                      "key": "source",
+                      "value": "/extractions/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "resource",
+                      "value": "/credentials/91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "createdAt[before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_before]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "createdAt[strictly_after]",
+                      "value": "2020-01-17 11:47:27"
+                    },
+                    {
+                      "key": "order[createdAt]",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "id[lt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "id[gt]",
+                      "value": "91106968-1abd-4d64-85c1-4e73d96fb997"
+                    },
+                    {
+                      "key": "itemsPerPage",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "entityId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.syntage.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ec765eb6-fa61-460f-bb34-0825ecad9b5d",
+    "name": "Syntage Accounts Payable Insight Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Introduction\n\nThe Syntage API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer).\nOur API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns [JSON-LD](https://json-ld.org) responses, and uses standard HTTP response codes, authentication, and verbs.\n\n# Environments\n\n| Name | Description | Base URL |\n|------|-------------|----------|\n| **Sandbox** | The Sandbox environment is dedicated to development and testing. In this environment, no real taxpayer credentials are required and all interaction with the SAT is simulated generating life-like data, allowing you to pull test data from all endpoints. | https://api.sandbox.syntage.com |\n| **Production** | The Production environment is dedicated to live applications with real connections to the SAT. In this environment, real taxpayer credentials are required, and you will pull real fiscal data directly from the SAT. | https://api.syntage.com |\n\nEach environment has a different API Key for [authentication](#section/Authentication).\n\n# Request IDs\n\nEach API request has an associated request identifier.\nYou can find this value in the response headers, under `X-Request-ID`:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-Request-ID: Root=1-6532dcae-169bf139354cd48959f55c55\n```\n\nIf you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution.\n\n# Rate Limiting\n\nOur API employs a number of safeguards against bursts of incoming traffic to help maximize its stability.\nThe returned HTTP headers of any API request show your current rate limit status:\n\n```curl\ncurl -i https://api.syntage.com\nHTTP/1.1 200 OK\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 56\nX-RateLimit-Reset: 1606678044\n```\n\n| Header Name           | Description |\n|-----------------------|------------------------------------------------------------------------------|\n| X-RateLimit-Limit     | The maximum number of requests you're permitted to make.                     |\n| X-RateLimit-Remaining | The number of requests remaining in the current rate limit window.           |\n| X-RateLimit-Reset     | The time at which the current rate limit window resets in UTC epoch seconds. |\n\nIf you exceed the rate limit, a [429 Too Many Requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) response is returned:\n\n```http\nHTTP/1.1 429 Too Many Requests\nDate: Sun, 29 Nov 2020 19:21:21 GMT\nX-RateLimit-Limit: 60\nX-RateLimit-Remaining: 0\nX-RateLimit-Reset: 1606678044\n```\n\nWe may reduce limits to prevent abuse, or increase limits to enable high-traffic operations.\nYou can check your current limits in the [dashboard](https://app.syntage.com/settings/usage).\nTo request an increased rate limit, please [contact support](https://support.syntage.com/).\n# Pagination\nWhen issuing a GET request on a collection containing more than 1 page (e.g. [/events](#operation/ListEvent)),  a collection is returned. Links to the first, the last, previous and the next page in the collection are displayed as well as the  number of total items in the collection.\nAll endpoints that support this operation have a query parameter defined by:\n  - `itemsPerPage` The number of items per page (default: 20, max: 1000)\n  - `page` The collection page number\n\n```bash\n  \"hydra:totalItems\": 1,\n  \"hydra:view\": {\n    \"@id\": \"/events?page=1\",\n    \"@type\": \"hydra:PartialCollectionView\",\n    \"hydra:first\": \"/events?page=1\",\n    \"hydra:next\": \"/events?page=2\",\n    \"hydra:last\": \"/events?page=3\"\n  },\n```\n## Cursor Pagination\nCursor pagination is a technique used for navigating through large datasets efficiently. It allows you to retrieve a specific subset of results from a collection by using a cursor value that represents the position within the collection. The cursor serves as a reference point for fetching the next or previous set of results.\n### Benefits of Cursor Pagination:\n1. **Efficient Navigation:** Cursor pagination eliminates the need to fetch the entire dataset at once, making it more scalable and faster. You can retrieve data in smaller, manageable chunks based on the cursor values.\n2. **Consistent Results:** Each page of results in cursor pagination is stable and doesn't change even if new items are added or removed from the collection. This ensures that you get consistent and reliable results.\n3. **Flexibility:** Cursors can be used to navigate forwards and backwards in the collection without impacting performance.\n\n### How to Use Cursor Pagination:\nTo use cursor pagination with our API, follow these instructions:\n1. Make a request to retrieve the initial page of results. The response will be a JSON-LD document that includes a `hydra:next` attribute with the URI for the next page. The URI already includes the cursor attribute.\n2. To retrieve the next page of results, make a GET request to the URI provided in the `hydra:next` attribute. This URI will automatically include the cursor value for the next page.\n3. If you want to navigate to the previous page, you can use the `hydra:previous` attribute in the JSON-LD response. It will contain the URI for the previous page, including the cursor value.\n4. You can continue making requests to the `hydra:next` and `hydra:previous` URIs to navigate through the paginated results, based on your requirements.\nMake sure to update your request headers to include the necessary headers for JSON-LD content negotiation, such as `Accept: application/ld+json` or `Content-Type: application/ld+json`.\nBy following these instructions, you can effectively navigate through the paginated results using the cursor values provided in the `hydra:next` and `hydra:previous` attributes, without the need to manually include the cursor in your requests. This simplifies the pagination process and enhances the usability of our API.\n\n### Considerations About Cursor Pagination:\n\n  - By default, the API uses offset-based pagination (except for a few endpoints that we will list below). If you want to switch to cursor pagination, you need to include an additional header in your request. Set the `X-Pagination-Style` header with the value `\"cursor\"` to enable cursor pagination. If not specified, the API will assume offset-based pagination.\n\n  - After enabling cursor pagination, the API response will no longer include the `hydra:totalItems` field by default. Retrieving the total count can be resource intensive and impact response times, especially for large datasets. However, if you need the `hydra:totalItems` information, you can include an additional header in your request. Set the `X-Pagination-Enable-Partial` header with the value `0` to indicate that the response should include extra information, including the `hydra:totalItems` count. Please be aware that enabling this feature may impact API response times, as the backend needs to perform a count operation on the dataset.\n\nIf you require the `hydra:totalItems` count, please consider the potential impact on API response times.\n### Example\n```bash\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices?itemsPerPage=10' \\\n    --header 'Accept: application/ld+json' \\\n    --header 'X-Api-Key: {apiKey}' \\\n    --header 'X-Pagination-Style: cursor' \\\n    --header 'X-Pagination-Enable-Partial: 0'\n```\n**Note:** We only support cursor pagination for the following endpoints:\n - `GET /entities/{entityId}/invoices`\n - `GET /entities/{entityId}/invoices/line-items`\n - `GET /entities/{entityId}/invoices/{invoiceId}/line-items`\n - `GET /invoices/{invoiceId}/line-items`\n - `GET /entities/{entityId}/invoices/payments`\n\nFeel free to reach out if you have any further questions or need additional assistance!\n\n# Property Filtering\nThe property filter adds the possibility to select the properties for GET operations.\nSyntax: `?properties[]=<property>&properties[<relation>][]=<property>`\nYou can add as many properties as you need. The following example shows how to select `paymentType` and  `issuer.rfc` when fetching a list of invoices.\n```curl\n  curl -i https://api.syntage.com/entities/{entityId}/invoices?properties[]=paymentType&properties[issuer]=rfc\n```\n# Filtering\n**Warning:** Collection endpoints only apply the filter query parameters documented for that endpoint. If you send an unsupported or misspelled filter query parameter, the API ignores it and processes the request as if that parameter was not sent.\n\n# API Versioning Guide\nGuidance on changes between versions.\n## Version: 2020-01-01 to 2020-06-28\n### **Invoice**\n_**Affected Endpoints:** `GET /invoices/{id}` and `GET /entities/{entityId}/invoices`_\n- The `amount` property has been removed from API responses. Use the `total` property instead.\n- Retrieval by invoice's `uuid` at `/invoices/{id}` is now removed. To retrieve an invoice, use the invoice's `id` at the specified endpoint. To find an invoice using its `uuid`, filter the invoice collection at `/entities/{entityId}/invoices?uuid[]={uuid}`.\n- Previously, the `@iri` property for an invoice pointed to the resource using `uuid`, like `/invoices/{uuid}`. Now, it points using its `id`, like `/invoices/{id}`.\n\n### **Entity (Formerly Link)**\n_**Affected Endpoint:** `GET /entities`_\n- Filtering entities by `status` is removed. Use `credential.status` instead. For example, utilize `GET /entities?credential.status[]=active` instead of `GET /entities?status[]=active`.\n\n### **Tax Return**\n_**Affected Endpoints:** `GET /tax-returns/{id}` and `GET /entities/{entityId}/tax-returns`_\n- Retrieval by tax return's `operationNumber` at `/tax-returns/{id}` is removed. To retrieve a tax return, use the tax return's `id` at the mentioned endpoint. To find a tax return using its `operationNumber`, filter the collection at `/entities/{entityId}/tax-returns?operationNumber[]={operationNumber}`.\n- Previously, the `@iri` property for a tax return pointed to the resource using `operationNumber`, like `/tax-returns/{operationNumber}`. Now, it directs to its `id`, like `/tax-returns/{id}`.\n\n### **Event**\n_**Affected Endpoints:** `GET /events` and `GET /events/{id}`_\n- For events associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}` instead of the previous `/tax-returns/{operationNumber}`.\n- For events associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}` instead of the previous `/invoices/{uuid}`.\n\n### **Extraction**\n_**Affected Endpoints:** `GET /extractions` and `GET /extractions/{id}`_\n- The `periodFrom` property has been removed. Use `options.period.from` instead.\n- The `periodTo` property has been removed. Use `options.period.to` instead.\n\n### **File**\n_**Affected Endpoint:** `GET /file/{id}`_\n- For files associated to an `tax-return`, the `@iri` property now directs to `/tax-returns/{id}`, instead of the previous `/tax-returns/{operationNumber}`.\n- For files associated to an `invoice`, the `@iri` property now directs to `/invoices/{id}`, instead of the previous `/invoices/{uuid}`.\n\n### Trying Out This Version\nIf you want to test this version, you can do so by making any request with the `Accept-Version` header pointing to the latest version:\n```curl\n  curl -i 'https://api.syntage.com/entities/{entityId}/invoices' \\\n    --header 'Accept-Version: 2020-06-28' \\\n    --header 'X-Api-Key: {apiKey}'\n```\n\n\nContact Support:\n Name: Email\n Email: support@syntage.com",
+      "type": "text/plain"
+    }
+  }
+}

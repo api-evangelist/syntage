@@ -1,0 +1,175 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Syntage Accounts Payable Insight DS MX RUG Operaciones API",
+    "version": "2020-06-28"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "{{X-API-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "DS MX RUG Operaciones",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve RUG operation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/datasources/rug/operaciones/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve one RUG operation by ID, including operation type, seat number, guarantee number, grantors, parsed boleta data, and file reference when available."
+        },
+        {
+          "info": {
+            "name": "List an entity's RUG operations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.syntage.com/entities/:entityId/datasources/rug/operaciones",
+            "params": [
+              {
+                "name": "entityId",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "path"
+              },
+              {
+                "name": "id[lt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the next page"
+              },
+              {
+                "name": "id[gt]",
+                "value": "91106968-1abd-4d64-85c1-4e73d96fb997",
+                "type": "query",
+                "description": "Collection cursor pointer to the previous page"
+              },
+              {
+                "name": "itemsPerPage",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page"
+              },
+              {
+                "name": "numeroDeAsiento",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "tipo",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "numeroDeGarantia",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fecha[before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fecha[strictly_before]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fecha[after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fecha[strictly_after]",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "createdAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than or equal `>=`)"
+              },
+              {
+                "name": "createdAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (greater than `>`)"
+              },
+              {
+                "name": "createdAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than or equal `<=`)"
+              },
+              {
+                "name": "createdAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by resource creation date (less than `<`)"
+              },
+              {
+                "name": "updatedAt[after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (greater than or equal `>=`)"
+              },
+              {
+                "name": "updatedAt[strictly_after]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (greater than `>`)"
+              },
+              {
+                "name": "updatedAt[before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (less than or equal `<=`)"
+              },
+              {
+                "name": "updatedAt[strictly_before]",
+                "value": "2020-01-17 11:47:27",
+                "type": "query",
+                "description": "Filter by the date the resource was last updated (less than `<`)"
+              },
+              {
+                "name": "order[createdAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource creation date"
+              },
+              {
+                "name": "order[updatedAt]",
+                "value": "",
+                "type": "query",
+                "description": "Order by resource update date"
+              }
+            ]
+          },
+          "docs": "List RUG operations extracted for an entity. Use this endpoint after a `rug` extraction finishes to review registry acts related to the entity's guarantees."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
