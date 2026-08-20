@@ -823,6 +823,8 @@ apis:
   humanURL: https://docs.syntage.com/
   baseURL: https://api.syntage.com
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -857,6 +859,8 @@ apis:
   humanURL: https://docs.syntage.com/
   baseURL: https://api.syntage.com
   tags:
+  - Export
+  tags_raw:
   - Exports
   properties:
   - type: OpenAPI
@@ -996,6 +1000,8 @@ apis:
   humanURL: https://docs.syntage.com/
   baseURL: https://api.syntage.com
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
