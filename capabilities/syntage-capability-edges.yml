@@ -1,0 +1,38 @@
+slug: syntage
+provider: Syntage
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Webhook Endpoints
+  spec_file: syntage-webhook-endpoints-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.8
+  evidence: POST /webhook-endpoints  CreateWebhookEndpoint  Create webhook endpoint; schemas WebhookEndpointUrl,
+    WebhookEndpointEventType
+  reason: Full lifecycle of outbound webhook endpoint subscriptions with event types — exactly the Webhook
+    & Event Subscription Management sub-capability that this frame explicitly carries, so it is mapped
+    rather than treated as pure plumbing.
+- tag: Webhook Requests
+  spec_file: syntage-webhook-requests-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.72
+  evidence: GET /webhook-requests  ListWebhookRequest  List webhook requests; schemas WebhookEndpoint,
+    WebhookEndpointEventType, WebhookRequestResponseStatusCode
+  reason: Read-only surface over outbound webhook delivery attempts and endpoints (with response status
+    codes), i.e. lifecycle and delivery reliability of event subscriptions exposed to API consumers. This
+    is platform/event-subscription plumbing, not any of Syntage's fiscal-data business capabilities, so
+    the developer-platform webhook sub-capability is the honest mapping.
