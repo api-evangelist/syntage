@@ -5,18 +5,24 @@ hosts_probed:
 - https://api.syntage.com
 - https://www.syntage.com
 - https://docs.syntage.com
-documents:
-- path: /.well-known/api-catalog
-  host: https://docs.syntage.com
-  status: 200
-  file: syntage-api-catalog.json
-  standard: RFC 9727 (api-catalog linkset)
-  note: Mintlify-generated linkset advertising the Syntage OpenAPI service description.
-- path: /.well-known/security.txt
-  status: 404
-- path: /.well-known/openid-configuration
-  status: 404
-- path: /.well-known/oauth-authorization-server
-  status: 404
-- path: /.well-known/ai-plugin.json
-  status: 404
+hosts:
+- host: ''
+  documents:
+  - path: /.well-known/api-catalog
+    status: 200
+    file: syntage-api-catalog.json
+    standard: RFC 9727 (api-catalog linkset)
+    note: Mintlify-generated linkset advertising the Syntage OpenAPI service description.
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+x-shape-fix:
+  converted: '2026-08-20'
+  from: documents
+  note: Rewritten into hosts[] -> documents[], the only shape well_known_docs() in score.rb reads. A served
+    .well-known surface recorded in any other shape scores as absent.
