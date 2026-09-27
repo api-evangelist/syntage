@@ -58,8 +58,8 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -177,8 +177,8 @@ components:
                                                 type: number
                                                 description: Ending balance data
                                                 example: 2173831.27
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:

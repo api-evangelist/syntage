@@ -53,6 +53,15 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     Unauthorized:
       description: Unauthorized
       content:
@@ -91,15 +100,6 @@ components:
                       type: number
                       format: float
                       example: 100
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   parameters:
     entityId:
       name: entityId

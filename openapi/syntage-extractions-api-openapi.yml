@@ -187,97 +187,231 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    DuplicateExtraction:
-      description: 'One or more requested extractions are already `pending` or `running` for the same entity, extractor, and options.
-
-        The response lists the extractors whose equivalent extraction is already in progress; remove them before retrying the request.
+  requestBodies:
+    ExtractionCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - type: object
+              required:
+              - entity
+              - extractor
+              properties:
+                entity:
+                  type: string
+                  format: iri-reference
+                  description: Entity IRI reference
+                  example: /entities/7b3a25a9-a53a-4846-abe6-f2574c9c2d5d
+                extractor:
+                  $ref: '#/components/schemas/ExtractionExtractor'
+                options:
+                  $ref: '#/components/schemas/ExtractionOptions'
+            - type: object
+              deprecated: true
+              required:
+              - taxpayer
+              - extractor
+              properties:
+                taxpayer:
+                  type: string
+                  format: iri-reference
+                  description: Taxpayer IRI reference
+                  example: /taxpayers/PEIC211118IS0
+                extractor:
+                  $ref: '#/components/schemas/ExtractionExtractor'
+                options:
+                  $ref: '#/components/schemas/ExtractionOptions'
+  parameters:
+    createdAtBefore:
+      name: createdAt[before]
+      in: query
+      description: Filter by resource creation date (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
+      in: query
+      description: Filter by resource creation date (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
+      in: query
+      description: Filter by resource creation date (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtAfter:
+      name: createdAt[after]
+      in: query
+      description: Filter by resource creation date (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+  schemas:
+    ExtractionRateLimitedAt:
+      type: string
+      format: date-time
+      description: 'This field returns a date when the taxpayer reached the max amount of downloaded CFDI files allowed by SAT in a range of 24hrs. You should retry this extraction 24hrs later. If your taxpayer has not reached the max amount this value should be `NULL`
 
         '
-      content:
-        application/ld+json:
-          schema:
-            type: object
-            required:
-            - conflictingExtractors
-            properties:
-              conflictingExtractors:
-                type: array
-                description: Extractors whose equivalent extraction is already in progress.
-                minItems: 1
-                uniqueItems: true
-                items:
-                  $ref: '#/components/schemas/ExtractionExtractor'
+      example: '2019-01-03T21:10:40.000Z'
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    ExtractionExtractor:
+      type: string
+      description: Extractor to run, which retrieves resources from the corresponding datasource
+      enum:
+      - invoice
+      - monthly_tax_return
+      - annual_tax_return
+      - rif_tax_return
+      - tax_status
+      - tax_retention
+      - tax_compliance
+      - electronic_accounting
+      - sat_certificates
+      - rpc
+      - buro_de_credito_report
+      - bil
+      - rug
+      - background_check
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    ExtractionOptions:
+      type: object
+      description: Extractor options; check the available options for each extractor in [Extractions](https://docs.syntage.com/api-reference/extractions/overview#extractors)
+      example:
+        types:
+        - I
+        - E
+        - P
+        period:
+          from: '2020-01-01T00:00:00.000Z'
+          to: '2020-03-31T23:59:59.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
     Extraction:
-      description: Extraction resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/Extraction
-            - $ref: '#/components/schemas/Extraction'
-    ConstraintViolation:
-      description: Validation error
-      content:
-        application/ld+json:
-          schema:
-            type: object
-            properties:
-              '@context':
-                type: string
-                default: /contexts/ConstraintViolation
-              '@type':
-                type: string
-                default: ConstraintViolation
-              hydra:title:
-                type: string
-                default: An error occurred
-              hydra:description:
-                type: string
-                description: Concatenated violation messages
-                example: 'exampleField: This value should not be blank.'
-              violations:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    propertyPath:
-                      type: string
-                      description: Property access path
-                      example: exampleField
-                    message:
-                      type: string
-                      description: Validaton error message
-                      example: This value should not be blank.
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    ExtractionCollection:
-      description: Extraction collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/ExtractionCollection'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  schemas:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Extraction IRI reference
+          example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: Extraction
+        id:
+          type: string
+          format: uuid
+          description: Unique extraction ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        taxpayer:
+          $ref: '#/components/schemas/Taxpayer'
+        extractor:
+          $ref: '#/components/schemas/ExtractionExtractor'
+        options:
+          $ref: '#/components/schemas/ExtractionOptions'
+        status:
+          $ref: '#/components/schemas/ExtractionStatus'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Time when the _status_ changed from **pending** to **running**
+        finishedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Time when the _status_ changed from **running** to **finished** or **failed**
+        rateLimitedAt:
+          $ref: '#/components/schemas/ExtractionRateLimitedAt'
+        errorCode:
+          $ref: '#/components/schemas/ExtractionErrorCode'
+        createdDataPoints:
+          $ref: '#/components/schemas/ExtractionCreatedDataPoints'
+        updatedDataPoints:
+          $ref: '#/components/schemas/ExtractionUpdatedDataPoints'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
     Taxpayer:
       type: object
       properties:
@@ -299,21 +433,6 @@ components:
           description: Taxpayer registration date
         name:
           $ref: '#/components/schemas/TaxpayerName'
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    ExtractionUpdatedDataPoints:
-      type: integer
-      description: 'When your taxpayer has resources by a previous extraction and new extraction found changes between our data and Sat data it would update this resource. For example, when a new extraction finds a Canceled invoice which you previously extracted as an Active invoice.
-
-        '
-      example: 2
     ExtractionStatus:
       type: string
       enum:
@@ -323,21 +442,6 @@ components:
       - failed
       - stopping
       - stopped
-    ExtractionErrorCode:
-      type:
-      - string
-      - 'null'
-      description: '[Extraction error code](#section/Extraction-error-codes)
-
-        '
-      example: null
-      enum:
-      - invalid_credentials
-      - login_failed
-      - unrecoverable
-      - sat_unavailable
-      - internal_error
-      - undefined
     CursorCollection:
       type: object
       properties:
@@ -393,19 +497,33 @@ components:
                     type: string
                   required:
                     type: boolean
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
-    ExtractionRateLimitedAt:
-      type: string
-      format: date-time
-      description: 'This field returns a date when the taxpayer reached the max amount of downloaded CFDI files allowed by SAT in a range of 24hrs. You should retry this extraction 24hrs later. If your taxpayer has not reached the max amount this value should be `NULL`
+    ExtractionCreatedDataPoints:
+      type: integer
+      description: 'This is the number of created resources. For example, if 1 invoice was created with its XML and PDF file this value should be 3. And If you previously extracted all the resources and there are no more resources to create this value is 0.
 
         '
-      example: '2019-01-03T21:10:40.000Z'
+      example: 3
+    ExtractionUpdatedDataPoints:
+      type: integer
+      description: 'When your taxpayer has resources by a previous extraction and new extraction found changes between our data and Sat data it would update this resource. For example, when a new extraction finds a Canceled invoice which you previously extracted as an Active invoice.
+
+        '
+      example: 2
+    ExtractionErrorCode:
+      type:
+      - string
+      - 'null'
+      description: '[Extraction error code](#section/Extraction-error-codes)
+
+        '
+      example: null
+      enum:
+      - invalid_credentials
+      - login_failed
+      - unrecoverable
+      - sat_unavailable
+      - internal_error
+      - undefined
     ExtractionCollection:
       allOf:
       - $ref: '#/components/schemas/CursorCollection'
@@ -418,224 +536,106 @@ components:
           hydra:member:
             items:
               $ref: '#/components/schemas/Extraction'
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
-    ExtractionOptions:
-      type: object
-      description: Extractor options; check the available options for each extractor in [Extractions](https://docs.syntage.com/api-reference/extractions/overview#extractors)
-      example:
-        types:
-        - I
-        - E
-        - P
-        period:
-          from: '2020-01-01T00:00:00.000Z'
-          to: '2020-03-31T23:59:59.000Z'
-    ExtractionCreatedDataPoints:
-      type: integer
-      description: 'This is the number of created resources. For example, if 1 invoice was created with its XML and PDF file this value should be 3. And If you previously extracted all the resources and there are no more resources to create this value is 0.
-
-        '
-      example: 3
-    ExtractionExtractor:
-      type: string
-      description: Extractor to run, which retrieves resources from the corresponding datasource
-      enum:
-      - invoice
-      - monthly_tax_return
-      - annual_tax_return
-      - rif_tax_return
-      - tax_status
-      - tax_retention
-      - tax_compliance
-      - electronic_accounting
-      - sat_certificates
-      - rpc
-      - buro_de_credito_report
-      - bil
-      - rug
-      - background_check
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    Extraction:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Extraction IRI reference
-          example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: Extraction
-        id:
-          type: string
-          format: uuid
-          description: Unique extraction ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        taxpayer:
-          $ref: '#/components/schemas/Taxpayer'
-        extractor:
-          $ref: '#/components/schemas/ExtractionExtractor'
-        options:
-          $ref: '#/components/schemas/ExtractionOptions'
-        status:
-          $ref: '#/components/schemas/ExtractionStatus'
-        startedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Time when the _status_ changed from **pending** to **running**
-        finishedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Time when the _status_ changed from **running** to **finished** or **failed**
-        rateLimitedAt:
-          $ref: '#/components/schemas/ExtractionRateLimitedAt'
-        errorCode:
-          $ref: '#/components/schemas/ExtractionErrorCode'
-        createdDataPoints:
-          $ref: '#/components/schemas/ExtractionCreatedDataPoints'
-        updatedDataPoints:
-          $ref: '#/components/schemas/ExtractionUpdatedDataPoints'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
     TaxpayerPersonType:
       type: string
       enum:
       - physical
       - legal
       example: physical
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    createdAtStrictlyAfter:
-      name: createdAt[strictly_after]
-      in: query
-      description: Filter by resource creation date (greater than `>`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtStrictlyBefore:
-      name: createdAt[strictly_before]
-      in: query
-      description: Filter by resource creation date (less than `<`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    createdAtBefore:
-      name: createdAt[before]
-      in: query
-      description: Filter by resource creation date (less than or equal `<=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    orderUpdatedAt:
-      name: order[updatedAt]
-      in: query
-      description: Order by resource update date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    createdAtAfter:
-      name: createdAt[after]
-      in: query
-      description: Filter by resource creation date (greater than or equal `>=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
-  requestBodies:
-    ExtractionCreate:
-      required: true
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+  responses:
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
-            oneOf:
+            type: object
+            properties:
+              message:
+                type: string
+    Extraction:
+      description: Extraction resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
             - type: object
-              required:
-              - entity
-              - extractor
               properties:
-                entity:
+                '@context':
                   type: string
-                  format: iri-reference
-                  description: Entity IRI reference
-                  example: /entities/7b3a25a9-a53a-4846-abe6-f2574c9c2d5d
-                extractor:
+                  default: /contexts/Extraction
+            - $ref: '#/components/schemas/Extraction'
+    DuplicateExtraction:
+      description: 'One or more requested extractions are already `pending` or `running` for the same entity, extractor, and options.
+
+        The response lists the extractors whose equivalent extraction is already in progress; remove them before retrying the request.
+
+        '
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            required:
+            - conflictingExtractors
+            properties:
+              conflictingExtractors:
+                type: array
+                description: Extractors whose equivalent extraction is already in progress.
+                minItems: 1
+                uniqueItems: true
+                items:
                   $ref: '#/components/schemas/ExtractionExtractor'
-                options:
-                  $ref: '#/components/schemas/ExtractionOptions'
-            - type: object
-              deprecated: true
-              required:
-              - taxpayer
-              - extractor
-              properties:
-                taxpayer:
-                  type: string
-                  format: iri-reference
-                  description: Taxpayer IRI reference
-                  example: /taxpayers/PEIC211118IS0
-                extractor:
-                  $ref: '#/components/schemas/ExtractionExtractor'
-                options:
-                  $ref: '#/components/schemas/ExtractionOptions'
+    ExtractionCollection:
+      description: Extraction collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/ExtractionCollection'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    ConstraintViolation:
+      description: Validation error
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            properties:
+              '@context':
+                type: string
+                default: /contexts/ConstraintViolation
+              '@type':
+                type: string
+                default: ConstraintViolation
+              hydra:title:
+                type: string
+                default: An error occurred
+              hydra:description:
+                type: string
+                description: Concatenated violation messages
+                example: 'exampleField: This value should not be blank.'
+              violations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    propertyPath:
+                      type: string
+                      description: Property access path
+                      example: exampleField
+                    message:
+                      type: string
+                      description: Validaton error message
+                      example: This value should not be blank.
   securitySchemes:
     ApiKey:
       type: apiKey

@@ -237,6 +237,174 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    RpcEntidadeNombreRazonSocial:
+      type:
+      - string
+      - 'null'
+      description: Legal name reported by RPC
+      example: FOO BAR, S.A. DE C.V.
+    File:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: File IRI reference
+          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: File
+          example: File
+        id:
+          type: string
+          format: uuid
+          description: Unique file ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          type: string
+          description: File category, such as an invoice CFDI XML or PDF
+          example: invoice.cfdi.xml
+        resource:
+          type: string
+          description: IRI of the resource that produced or owns the file
+          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
+        mimeType:
+          type: string
+          description: Media type of the file content
+          example: text/xml
+        extension:
+          type: string
+          description: File extension for the stored content
+          example: xml
+        size:
+          type: integer
+          description: File size in bytes
+          example: 40544
+        filename:
+          type: string
+          description: Suggested filename for the file content
+          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    HydraView:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:totalItems:
+          type: integer
+          description: Total number of items found
+          minimum: 0
+          example: 1
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:first:
+              type: string
+              format: iri-reference
+              description: First page IRI reference; omitted when there is no pagination
+            hydra:next:
+              type: string
+              format: iri-reference
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              format: iri-reference
+              description: Last page IRI reference; omitted when there is no pagination
+    Collection:
+      allOf:
+      - $ref: '#/components/schemas/HydraView'
+      - type: object
+        properties:
+          hydra:search:
+            type: object
+            properties:
+              '@type':
+                type: string
+              hydra:template:
+                type: string
+              hydra:variableRepresentation:
+                type: string
+              hydra:mapping:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                    variable:
+                      type: string
+                    property:
+                      type: string
+                    required:
+                      type: boolean
+    CompanyVerificationReport:
+      type: object
+      required:
+      - id
+      - link
+      - rpcEntity
+      - extraction
+      - files
+      - createdAt
+      - updatedAt
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Company Verification Report IRI reference
+          example: /datasources/mx/company-verification/reports/91ab5678-1234-5678-9abc-def012345678
+        '@type':
+          type: string
+          default: CompanyVerificationReport
+        id:
+          type: string
+          format: uuid
+          description: Unique company verification report ID
+          example: 91ab5678-1234-5678-9abc-def012345678
+        link:
+          type: string
+          format: iri-reference
+          description: Entity associated with the company verification report
+          example: /entities/91ab5678-1234-5678-9abc-def012345678
+        rpcEntity:
+          allOf:
+          - $ref: '#/components/schemas/RpcEntidadeProfile'
+          description: RPC company profile used for the verification report
+        extraction:
+          type: string
+          format: iri-reference
+          description: Extraction that produced the report
+          example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+          description: Files generated for the company verification report, including PDF and HTML reports when available
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
     CompanyVerificationFoundEntity:
       type: object
       description: 'A person or company identified in the source documents of a Mexican
@@ -338,94 +506,6 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    File:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: File IRI reference
-          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: File
-          example: File
-        id:
-          type: string
-          format: uuid
-          description: Unique file ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        type:
-          type: string
-          description: File category, such as an invoice CFDI XML or PDF
-          example: invoice.cfdi.xml
-        resource:
-          type: string
-          description: IRI of the resource that produced or owns the file
-          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
-        mimeType:
-          type: string
-          description: Media type of the file content
-          example: text/xml
-        extension:
-          type: string
-          description: File extension for the stored content
-          example: xml
-        size:
-          type: integer
-          description: File size in bytes
-          example: 40544
-        filename:
-          type: string
-          description: Suggested filename for the file content
-          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    HydraView:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:totalItems:
-          type: integer
-          description: Total number of items found
-          minimum: 0
-          example: 1
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:first:
-              type: string
-              format: iri-reference
-              description: First page IRI reference; omitted when there is no pagination
-            hydra:next:
-              type: string
-              format: iri-reference
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              format: iri-reference
-              description: Last page IRI reference; omitted when there is no pagination
     updatedAt:
       type: string
       description: Date and time the resource was last updated
@@ -435,41 +515,18 @@ components:
       default: 20
       minimum: 1
       maximum: 1000
-    RpcEntidadeID:
-      type: string
-      format: uuid
-      description: RPC Entidade ID
-      example: 99c13810-868f-482e-a6f1-878254248d27
-    RpcEntidadeProfile:
-      type: object
-      description: Basic RPC entidade profile information
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: RPC entidade IRI reference
-          example: /datasources/mx/rpc/entidades/99c13810-868f-482e-a6f1-878254248d27
-        '@type':
-          type: string
-          default: RpcEntidade
-        id:
-          $ref: '#/components/schemas/RpcEntidadeID'
-        fme:
-          $ref: '#/components/schemas/RpcEntidadeFme'
-        nombreRazonSocial:
-          $ref: '#/components/schemas/RpcEntidadeNombreRazonSocial'
-    RpcEntidadeNombreRazonSocial:
-      type:
-      - string
-      - 'null'
-      description: Legal name reported by RPC
-      example: FOO BAR, S.A. DE C.V.
     CollectionOrder:
       type: string
       enum:
       - asc
       - desc
       example: asc
+    RpcEntidadeFme:
+      type:
+      - string
+      - 'null'
+      description: Electronic commercial folio assigned by RPC
+      example: N-2000000000
     CompanyVerificationFoundEntityCapTableEntry:
       type: object
       description: 'A single cap-table holding row for a found entity, scoped to one
@@ -528,86 +585,29 @@ components:
 
             '
           example: '60.0000'
-    Collection:
-      allOf:
-      - $ref: '#/components/schemas/HydraView'
-      - type: object
-        properties:
-          hydra:search:
-            type: object
-            properties:
-              '@type':
-                type: string
-              hydra:template:
-                type: string
-              hydra:variableRepresentation:
-                type: string
-              hydra:mapping:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                    variable:
-                      type: string
-                    property:
-                      type: string
-                    required:
-                      type: boolean
-    RpcEntidadeFme:
-      type:
-      - string
-      - 'null'
-      description: Electronic commercial folio assigned by RPC
-      example: N-2000000000
-    CompanyVerificationReport:
+    RpcEntidadeID:
+      type: string
+      format: uuid
+      description: RPC Entidade ID
+      example: 99c13810-868f-482e-a6f1-878254248d27
+    RpcEntidadeProfile:
       type: object
-      required:
-      - id
-      - link
-      - rpcEntity
-      - extraction
-      - files
-      - createdAt
-      - updatedAt
+      description: Basic RPC entidade profile information
       properties:
         '@id':
           type: string
           format: iri-reference
-          description: Company Verification Report IRI reference
-          example: /datasources/mx/company-verification/reports/91ab5678-1234-5678-9abc-def012345678
+          description: RPC entidade IRI reference
+          example: /datasources/mx/rpc/entidades/99c13810-868f-482e-a6f1-878254248d27
         '@type':
           type: string
-          default: CompanyVerificationReport
+          default: RpcEntidade
         id:
-          type: string
-          format: uuid
-          description: Unique company verification report ID
-          example: 91ab5678-1234-5678-9abc-def012345678
-        link:
-          type: string
-          format: iri-reference
-          description: Entity associated with the company verification report
-          example: /entities/91ab5678-1234-5678-9abc-def012345678
-        rpcEntity:
-          allOf:
-          - $ref: '#/components/schemas/RpcEntidadeProfile'
-          description: RPC company profile used for the verification report
-        extraction:
-          type: string
-          format: iri-reference
-          description: Extraction that produced the report
-          example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
-        files:
-          type: array
-          items:
-            $ref: '#/components/schemas/File'
-          description: Files generated for the company verification report, including PDF and HTML reports when available
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
+          $ref: '#/components/schemas/RpcEntidadeID'
+        fme:
+          $ref: '#/components/schemas/RpcEntidadeFme'
+        nombreRazonSocial:
+          $ref: '#/components/schemas/RpcEntidadeNombreRazonSocial'
     CompanyVerificationFoundEntityPower:
       type: object
       description: A power of attorney granted to a found entity.
@@ -717,6 +717,67 @@ components:
       type: string
       description: Date and time the resource was created
       example: '2020-01-01T12:15:00.000Z'
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    companyVerificationReportId:
+      name: reportId
+      in: path
+      required: true
+      description: Identifier of the Company Verification report.
+      example: 91ab5678-1234-5678-9abc-def012345678
+      schema:
+        type: string
+        format: uuid
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
   responses:
     NotFound:
       description: Not found
@@ -736,67 +797,6 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    orderUpdatedAt:
-      name: order[updatedAt]
-      in: query
-      description: Order by resource update date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    companyVerificationReportId:
-      name: reportId
-      in: path
-      required: true
-      description: Identifier of the Company Verification report.
-      example: 91ab5678-1234-5678-9abc-def012345678
-      schema:
-        type: string
-        format: uuid
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   securitySchemes:
     ApiKey:
       type: apiKey

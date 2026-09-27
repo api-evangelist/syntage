@@ -125,82 +125,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    UnprocessableEntity:
-      description: Unprocessable Entity
-      content:
-        application/ld+json:
-          schema:
-            type: object
-            properties:
-              '@context':
-                type: string
-                default: /contexts/Error
-              '@type':
-                type: string
-                default: hydra:Error
-              hydra:title:
-                type: string
-                default: An error occurred
-              hydra:description:
-                type: string
-                description: Concatenated violation messages
-                example: 'exampleField: Syntage score already exists.'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Forbidden:
-      description: Forbidden
-      content:
-        application/ld+json:
-          schema:
-            type: object
-            properties:
-              '@context':
-                type: string
-                default: /contexts/Error
-              '@type':
-                type: string
-                default: hydra:Error
-              hydra:title:
-                type: string
-                default: An error occurred
-              hydra:description:
-                type: string
-                example: Access Denied.
-    InsightReportCollection:
-      description: Report collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/InsightReportCollection'
-    InsightReport:
-      description: Report resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/InsightReport
-            - $ref: '#/components/schemas/InsightReport'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   parameters:
     collectionPage:
       name: page
@@ -209,33 +133,18 @@ components:
       description: Collection page number
       schema:
         $ref: '#/components/schemas/CollectionPage'
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
+    createdAtBefore:
+      name: createdAt[before]
       in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    createdAtStrictlyAfter:
-      name: createdAt[strictly_after]
-      in: query
-      description: Filter by resource creation date (greater than `>`)
+      description: Filter by resource creation date (less than or equal `<=`)
       example: '2020-01-17 11:47:27'
       schema:
         type: string
         format: date-time
-    createdAtStrictlyBefore:
-      name: createdAt[strictly_before]
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
       in: query
-      description: Filter by resource creation date (less than `<`)
+      description: Filter by resource creation date (greater than `>`)
       example: '2020-01-17 11:47:27'
       schema:
         type: string
@@ -246,10 +155,10 @@ components:
       description: Order by resource creation date
       schema:
         $ref: '#/components/schemas/CollectionOrder'
-    createdAtBefore:
-      name: createdAt[before]
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
       in: query
-      description: Filter by resource creation date (less than or equal `<=`)
+      description: Filter by resource creation date (less than `<`)
       example: '2020-01-17 11:47:27'
       schema:
         type: string
@@ -262,7 +171,50 @@ components:
       schema:
         type: string
         format: date-time
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   schemas:
+    InsightReportInsightEntryInput:
+      type: object
+      required:
+      - name
+      - type
+      properties:
+        name:
+          type: string
+          description: Entry identifier within the report layout
+          example: sales-revenue
+        type:
+          type: string
+          description: '`insight` renders a single insight; `group` renders a titled section of child insight entries'
+          enum:
+          - insight
+          - group
+        insight:
+          type: string
+          description: Name of the insight rendered by this entry; required when `type` is `insight`
+          example: sales-revenue
+        visible:
+          type: boolean
+          description: Whether the entry is shown when the report is rendered
+        children:
+          type: array
+          description: Child insight entries; used when `type` is `group`
+          items:
+            $ref: '#/components/schemas/InsightReportInsightEntryInput'
     HydraView:
       type: object
       properties:
@@ -305,24 +257,18 @@ components:
               type: string
               format: iri-reference
               description: Last page IRI reference; omitted when there is no pagination
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    CollectionPage:
-      type: integer
-      default: 1
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
+    InsightReportCollection:
+      allOf:
+      - $ref: '#/components/schemas/Collection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/InsightReport
+          '@id':
+            default: /reports
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/InsightReport'
     Collection:
       allOf:
       - $ref: '#/components/schemas/HydraView'
@@ -350,18 +296,21 @@ components:
                       type: string
                     required:
                       type: boolean
-    InsightReportCollection:
-      allOf:
-      - $ref: '#/components/schemas/Collection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/InsightReport
-          '@id':
-            default: /reports
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/InsightReport'
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
     InsightReportInsightEntry:
       type: object
       required:
@@ -393,38 +342,6 @@ components:
         builtIn:
           type: boolean
           description: Whether the entry comes from a built-in report definition; omitted for entries defined in custom reports
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    InsightReportInsightEntryInput:
-      type: object
-      required:
-      - name
-      - type
-      properties:
-        name:
-          type: string
-          description: Entry identifier within the report layout
-          example: sales-revenue
-        type:
-          type: string
-          description: '`insight` renders a single insight; `group` renders a titled section of child insight entries'
-          enum:
-          - insight
-          - group
-        insight:
-          type: string
-          description: Name of the insight rendered by this entry; required when `type` is `insight`
-          example: sales-revenue
-        visible:
-          type: boolean
-          description: Whether the entry is shown when the report is rendered
-        children:
-          type: array
-          description: Child insight entries; used when `type` is `group`
-          items:
-            $ref: '#/components/schemas/InsightReportInsightEntryInput'
     InsightReport:
       type: object
       properties:
@@ -481,6 +398,89 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
+    CollectionPage:
+      type: integer
+      default: 1
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    Forbidden:
+      description: Forbidden
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            properties:
+              '@context':
+                type: string
+                default: /contexts/Error
+              '@type':
+                type: string
+                default: hydra:Error
+              hydra:title:
+                type: string
+                default: An error occurred
+              hydra:description:
+                type: string
+                example: Access Denied.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    InsightReport:
+      description: Report resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/InsightReport
+            - $ref: '#/components/schemas/InsightReport'
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            properties:
+              '@context':
+                type: string
+                default: /contexts/Error
+              '@type':
+                type: string
+                default: hydra:Error
+              hydra:title:
+                type: string
+                default: An error occurred
+              hydra:description:
+                type: string
+                description: Concatenated violation messages
+                example: 'exampleField: Syntage score already exists.'
+    InsightReportCollection:
+      description: Report collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/InsightReportCollection'
   requestBodies:
     InsightReportSave:
       required: true

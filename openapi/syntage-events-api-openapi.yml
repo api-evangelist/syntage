@@ -134,36 +134,10 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Taxpayer:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Taxpayer IRI reference
-          example: /taxpayers/PEIC211118IS0
-        '@type':
-          type: string
-          default: Taxpayer
-        id:
-          $ref: '#/components/schemas/TaxpayerID'
-        personType:
-          $ref: '#/components/schemas/TaxpayerPersonType'
-        registrationDate:
-          type: string
-          format: date
-          description: Taxpayer registration date
-        name:
-          $ref: '#/components/schemas/TaxpayerName'
-    updatedAt:
+    uuid:
       type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
     EventType:
       type: string
       enum:
@@ -219,6 +193,99 @@ components:
       - company_verification_report.created
       - company_verification_report.updated
       example: credential.updated
+    Event:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Event IRI reference
+          example: /events/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: Event
+        id:
+          $ref: '#/components/schemas/uuid'
+        taxpayer:
+          $ref: '#/components/schemas/Taxpayer'
+        type:
+          $ref: '#/components/schemas/EventType'
+        source:
+          $ref: '#/components/schemas/EventSource'
+        resource:
+          $ref: '#/components/schemas/EventResource'
+        data:
+          type: object
+          description: Resource data (data.object) and changes (data.changes)
+          example:
+            object:
+              id: 91106968-1abd-4d64-85c1-4e73d96fb997
+              rfc: PEIC211118IS0
+              type: ciec
+              status: valid
+              createdAt: '2020-01-17 11:47:27'
+            changes:
+              status:
+                old: pending
+                new: valid
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    EventSource:
+      type: string
+      format: iri-reference
+      description: Source that originated the event
+      example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
+    Taxpayer:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Taxpayer IRI reference
+          example: /taxpayers/PEIC211118IS0
+        '@type':
+          type: string
+          default: Taxpayer
+        id:
+          $ref: '#/components/schemas/TaxpayerID'
+        personType:
+          $ref: '#/components/schemas/TaxpayerPersonType'
+        registrationDate:
+          type: string
+          format: date
+          description: Taxpayer registration date
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
     CursorCollection:
       type: object
       properties:
@@ -274,84 +341,6 @@ components:
                     type: string
                   required:
                     type: boolean
-    EventResource:
-      type: string
-      format: iri-reference
-      description: Resource related to the event
-      example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
-    Event:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Event IRI reference
-          example: /events/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: Event
-        id:
-          $ref: '#/components/schemas/uuid'
-        taxpayer:
-          $ref: '#/components/schemas/Taxpayer'
-        type:
-          $ref: '#/components/schemas/EventType'
-        source:
-          $ref: '#/components/schemas/EventSource'
-        resource:
-          $ref: '#/components/schemas/EventResource'
-        data:
-          type: object
-          description: Resource data (data.object) and changes (data.changes)
-          example:
-            object:
-              id: 91106968-1abd-4d64-85c1-4e73d96fb997
-              rfc: PEIC211118IS0
-              type: ciec
-              status: valid
-              createdAt: '2020-01-17 11:47:27'
-            changes:
-              status:
-                old: pending
-                new: valid
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    EventSource:
-      type: string
-      format: iri-reference
-      description: Source that originated the event
-      example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    TaxpayerPersonType:
-      type: string
-      enum:
-      - physical
-      - legal
-      example: physical
     EventCollection:
       allOf:
       - $ref: '#/components/schemas/CursorCollection'
@@ -364,17 +353,100 @@ components:
           hydra:member:
             items:
               $ref: '#/components/schemas/Event'
-    uuid:
+    TaxpayerPersonType:
       type: string
-      format: uuid
-      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+      enum:
+      - physical
+      - legal
+      example: physical
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    EventResource:
+      type: string
+      format: iri-reference
+      description: Resource related to the event
+      example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
+  parameters:
+    createdAtBefore:
+      name: createdAt[before]
+      in: query
+      description: Filter by resource creation date (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
+      in: query
+      description: Filter by resource creation date (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
+      in: query
+      description: Filter by resource creation date (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtAfter:
+      name: createdAt[after]
+      in: query
+      description: Filter by resource creation date (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
   responses:
-    EventCollection:
-      description: Event collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/EventCollection'
     NotFound:
       description: Not found
       content:
@@ -384,6 +456,12 @@ components:
             properties:
               message:
                 type: string
+    EventCollection:
+      description: Event collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EventCollection'
     Event:
       description: Event resource response
       content:
@@ -405,84 +483,6 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    createdAtStrictlyAfter:
-      name: createdAt[strictly_after]
-      in: query
-      description: Filter by resource creation date (greater than `>`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtStrictlyBefore:
-      name: createdAt[strictly_before]
-      in: query
-      description: Filter by resource creation date (less than `<`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    createdAtBefore:
-      name: createdAt[before]
-      in: query
-      description: Filter by resource creation date (less than or equal `<=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    createdAtAfter:
-      name: createdAt[after]
-      in: query
-      description: Filter by resource creation date (greater than or equal `>=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
   securitySchemes:
     ApiKey:
       type: apiKey

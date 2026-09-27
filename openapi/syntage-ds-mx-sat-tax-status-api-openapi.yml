@@ -132,6 +132,24 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
+    TaxStatusCompany:
+      description: Company information. Null when the taxpayer is not a legal person.
+      type:
+      - object
+      - 'null'
+      properties:
+        legalName:
+          type: string
+          description: Legal name from the SAT tax status document
+          example: APPLE OPERATIONS MEXICO
+        tradeName:
+          type: string
+          description: Trade name from the SAT tax status document
+          example: APPLE OPERATIONS MEXICO S.A. DE C.V.
+        entityType:
+          type: string
+          description: Legal entity type from the SAT tax status document
+          example: SOCIEDAD ANONIMA DE CAPITAL VARIABLE
     updatedAt:
       type: string
       description: Date and time the resource was last updated
@@ -141,6 +159,61 @@ components:
       default: 20
       minimum: 1
       maximum: 1000
+    TaxStatusPerson:
+      type:
+      - object
+      - 'null'
+      description: Physical person information extracted from the SAT tax status document. Null when the entity is not a physical person.
+      properties:
+        fullName:
+          type:
+          - string
+          - 'null'
+          description: Full name from the SAT tax status document.
+          example: Pedro Infante Cruz
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: Given name or names from the SAT tax status document.
+          example: Pedro
+        middleName:
+          type:
+          - string
+          - 'null'
+          description: First surname from the SAT tax status document.
+          example: Infante
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: Second surname from the SAT tax status document.
+          example: Cruz
+        curp:
+          type:
+          - string
+          - 'null'
+          description: CURP from the SAT tax status document when present.
+          example: PEIC90110UEYBVT85
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    TaxpayerTaxStatusCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/TaxStatus
+          '@id':
+            default: /entities/{entityId}/tax-status
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/tax-status
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/TaxStatus'
     TaxStatusEconomicActivities:
       type: array
       items:
@@ -216,70 +289,23 @@ components:
                     type: string
                   required:
                     type: boolean
-    TaxStatusAddress:
-      type: object
-      description: Fiscal address from the SAT tax status document
-      properties:
-        streetReferences:
-          type: array
-          minItems: 1
-          description: Address references or nearby streets
-          items:
-            type: string
-            example: Camiño Galván
-        streetNumber:
-          type: string
-          description: Exterior street number
-          example: '8124'
-        buildingNumber:
-          type: string
-          description: Interior building or unit number
-          example: '496'
-        locality:
-          type: string
-          description: Locality or city
-          example: TUXTLA GUTIERREZ
-        municipality:
-          type: string
-          description: Municipality or delegation
-          example: TUXTLA GUTIERREZ
-        postalCode:
-          type: string
-          description: Postal code
-          example: '29000'
-        state:
-          type: string
-          description: State
-          example: CHIAPAS
-        streetName:
-          type: string
-          description: Street name
-          example: Plaza Jorge Luis
-        streetType:
-          type: string
-          description: Street type
-          example: Calle
-        neighborhood:
-          type: string
-          description: Neighborhood or colonia
-          example: Paseo Ricardo
-        statusRaw:
-          type: string
-          description: Raw SAT address location status
-          example: LOCALIZADO - Domicilio Localizado
-    TaxpayerTaxStatusCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
+    TaxStatusObligations:
+      type: array
+      items:
+        type: object
         properties:
-          '@context':
-            default: /contexts/TaxStatus
-          '@id':
-            default: /entities/{entityId}/tax-status
-            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/tax-status
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/TaxStatus'
+          description:
+            type: string
+            example: Pago definitivo mensual de IVA.
+          dueDate:
+            type: string
+            example: A más tardar el día 17 del mes inmediato posterior al periodo que corresponda.
+          endDate:
+            type: string
+            format: date
+          startDate:
+            type: string
+            format: date
     TaxStatus:
       type: object
       properties:
@@ -347,23 +373,57 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    TaxStatusObligations:
-      type: array
-      items:
-        type: object
-        properties:
-          description:
+    TaxStatusAddress:
+      type: object
+      description: Fiscal address from the SAT tax status document
+      properties:
+        streetReferences:
+          type: array
+          minItems: 1
+          description: Address references or nearby streets
+          items:
             type: string
-            example: Pago definitivo mensual de IVA.
-          dueDate:
-            type: string
-            example: A más tardar el día 17 del mes inmediato posterior al periodo que corresponda.
-          endDate:
-            type: string
-            format: date
-          startDate:
-            type: string
-            format: date
+            example: Camiño Galván
+        streetNumber:
+          type: string
+          description: Exterior street number
+          example: '8124'
+        buildingNumber:
+          type: string
+          description: Interior building or unit number
+          example: '496'
+        locality:
+          type: string
+          description: Locality or city
+          example: TUXTLA GUTIERREZ
+        municipality:
+          type: string
+          description: Municipality or delegation
+          example: TUXTLA GUTIERREZ
+        postalCode:
+          type: string
+          description: Postal code
+          example: '29000'
+        state:
+          type: string
+          description: State
+          example: CHIAPAS
+        streetName:
+          type: string
+          description: Street name
+          example: Plaza Jorge Luis
+        streetType:
+          type: string
+          description: Street type
+          example: Calle
+        neighborhood:
+          type: string
+          description: Neighborhood or colonia
+          example: Paseo Ricardo
+        statusRaw:
+          type: string
+          description: Raw SAT address location status
+          example: LOCALIZADO - Domicilio Localizado
     TaxStatusTaxRegimes:
       type: array
       items:
@@ -381,88 +441,59 @@ components:
           startDate:
             type: string
             format: date
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    TaxStatusCompany:
-      description: Company information. Null when the taxpayer is not a legal person.
-      type:
-      - object
-      - 'null'
-      properties:
-        legalName:
-          type: string
-          description: Legal name from the SAT tax status document
-          example: APPLE OPERATIONS MEXICO
-        tradeName:
-          type: string
-          description: Trade name from the SAT tax status document
-          example: APPLE OPERATIONS MEXICO S.A. DE C.V.
-        entityType:
-          type: string
-          description: Legal entity type from the SAT tax status document
-          example: SOCIEDAD ANONIMA DE CAPITAL VARIABLE
     createdAt:
       type: string
       description: Date and time the resource was created
       example: '2020-01-01T12:15:00.000Z'
-    TaxStatusPerson:
-      type:
-      - object
-      - 'null'
-      description: Physical person information extracted from the SAT tax status document. Null when the entity is not a physical person.
-      properties:
-        fullName:
-          type:
-          - string
-          - 'null'
-          description: Full name from the SAT tax status document.
-          example: Pedro Infante Cruz
-        firstName:
-          type:
-          - string
-          - 'null'
-          description: Given name or names from the SAT tax status document.
-          example: Pedro
-        middleName:
-          type:
-          - string
-          - 'null'
-          description: First surname from the SAT tax status document.
-          example: Infante
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: Second surname from the SAT tax status document.
-          example: Cruz
-        curp:
-          type:
-          - string
-          - 'null'
-          description: CURP from the SAT tax status document when present.
-          example: PEIC90110UEYBVT85
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
   responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     TaxpayerTaxStatusCollection:
       description: Taxpayer tax status collection response
       content:
         application/ld+json:
           schema:
             $ref: '#/components/schemas/TaxpayerTaxStatusCollection'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -482,46 +513,15 @@ components:
                   type: string
                   default: /contexts/TaxStatus
             - $ref: '#/components/schemas/TaxStatus'
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

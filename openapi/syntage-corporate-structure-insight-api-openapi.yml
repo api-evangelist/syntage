@@ -89,16 +89,102 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
+    CorporateStructureCurrentPowersEntity:
+      type: object
+      description: 'A person or company appearing in the latest Company Verification
+
+        report for the entity with at least one currently effective power of
+
+        attorney. A simplified projection of a found entity, limited to the
+
+        holder''s identity and their current powers — no cap-table holdings,
+
+        share totals, or ownership percentages.
+
+        '
+      required:
+      - name
+      - entityType
+      - powers
+      properties:
+        name:
+          type: string
+          description: Full name of the holder, as resolved by the upstream pipeline.
+          example: Juan Pérez García
+        entityType:
+          type: string
+          description: Whether the holder is a natural person or a legal entity.
+          enum:
+          - person
+          - company
+          example: person
+        powers:
+          type: array
+          description: Currently effective powers of attorney granted to this holder, ordered by grant date ascending.
+          items:
+            $ref: '#/components/schemas/CorporateStructureCurrentPowersPower'
+    HydraView:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:totalItems:
+          type: integer
+          description: Total number of items found
+          minimum: 0
+          example: 1
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:first:
+              type: string
+              format: iri-reference
+              description: First page IRI reference; omitted when there is no pagination
+            hydra:next:
+              type: string
+              format: iri-reference
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              format: iri-reference
+              description: Last page IRI reference; omitted when there is no pagination
     CorporateStructureCurrentPowersPower:
       type: object
       description: A single currently effective power of attorney granted to a holder.
@@ -203,48 +289,6 @@ components:
           type: boolean
           description: Whether the grantee may dispose of or sell real estate on behalf of the principal.
           example: false
-    HydraView:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:totalItems:
-          type: integer
-          description: Total number of items found
-          minimum: 0
-          example: 1
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:first:
-              type: string
-              format: iri-reference
-              description: First page IRI reference; omitted when there is no pagination
-            hydra:next:
-              type: string
-              format: iri-reference
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              format: iri-reference
-              description: Last page IRI reference; omitted when there is no pagination
     Collection:
       allOf:
       - $ref: '#/components/schemas/HydraView'
@@ -272,59 +316,15 @@ components:
                       type: string
                     required:
                       type: boolean
-    CorporateStructureCurrentPowersEntity:
-      type: object
-      description: 'A person or company appearing in the latest Company Verification
-
-        report for the entity with at least one currently effective power of
-
-        attorney. A simplified projection of a found entity, limited to the
-
-        holder''s identity and their current powers — no cap-table holdings,
-
-        share totals, or ownership percentages.
-
-        '
-      required:
-      - name
-      - entityType
-      - powers
-      properties:
-        name:
-          type: string
-          description: Full name of the holder, as resolved by the upstream pipeline.
-          example: Juan Pérez García
-        entityType:
-          type: string
-          description: Whether the holder is a natural person or a legal entity.
-          enum:
-          - person
-          - company
-          example: person
-        powers:
-          type: array
-          description: Currently effective powers of attorney granted to this holder, ordered by grant date ascending.
-          items:
-            $ref: '#/components/schemas/CorporateStructureCurrentPowersPower'
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     ApiKey:
       type: apiKey

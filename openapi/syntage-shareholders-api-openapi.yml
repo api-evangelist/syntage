@@ -499,6 +499,174 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    sourceId:
+      name: sourceId
+      in: path
+      required: true
+      description: The source ID
+      example: 73de0123-4567-8901-bcde-f23456789012
+      schema:
+        type: string
+        format: uuid
+    orderOwnership:
+      name: order[ownership]
+      in: query
+      description: Order by ownership percentage
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    orderShares:
+      name: order[shares]
+      in: query
+      description: Order by number of shares
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    shareholderNameFilter:
+      name: name
+      in: query
+      description: Filter shareholders by name (supports partial matching)
+      example: JUAN PEREZ
+      schema:
+        type: string
+    shareholderRfcFilter:
+      name: rfc
+      in: query
+      description: Filter shareholders by RFC (supports partial matching)
+      example: PEGJ850101
+      schema:
+        type: string
+    sourceNameFilter:
+      name: sourceName
+      in: query
+      description: Filter sources by name
+      schema:
+        type: string
+        enum:
+        - manual
+        - rpc_socio
+        - company_verification
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    orderName:
+      name: order[name]
+      in: query
+      description: Order by name
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    relationTypeFilter:
+      name: relationType
+      in: query
+      description: Filter relations by type
+      schema:
+        type: string
+        enum:
+        - shareholders
+        - shareholder_of
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    shareholderTypeFilter:
+      name: type
+      in: query
+      description: Filter shareholders by type
+      schema:
+        type: string
+        enum:
+        - physical
+        - legal
+        - unknown
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    shareholderId:
+      name: shareholderId
+      in: path
+      required: true
+      description: The shareholder ID
+      example: 91ab5678-1234-5678-9abc-def012345678
+      schema:
+        type: string
+        format: uuid
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    relationId:
+      name: relationId
+      in: path
+      required: true
+      description: The relation ID
+      example: 82cd9012-3456-7890-abcd-ef1234567890
+      schema:
+        type: string
+        format: uuid
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
     updatedAt:
       type: string
@@ -509,6 +677,18 @@ components:
       default: 20
       minimum: 1
       maximum: 1000
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
     CursorCollection:
       type: object
       properties:
@@ -564,12 +744,63 @@ components:
                     type: string
                   required:
                     type: boolean
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
+    Shareholder:
+      type: object
+      required:
+      - id
+      - name
+      - type
+      - rfc
+      - relations
+      - entity
+      - createdAt
+      - updatedAt
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Shareholder IRI reference
+          example: /shareholders/91ab5678-1234-5678-9abc-def012345678
+        '@type':
+          type: string
+          default: Shareholder
+        id:
+          type: string
+          format: uuid
+          description: Unique shareholder ID
+          example: 91ab5678-1234-5678-9abc-def012345678
+        name:
+          type: string
+          description: Name of the person or company that owns shares
+          example: JUAN MANUEL PEREZ GONZALEZ
+        type:
+          type: string
+          enum:
+          - physical
+          - legal
+          - unknown
+          description: Shareholder type, where `physical` is a person, `legal` is a company, and `unknown` means the type cannot be determined
+          example: physical
+        rfc:
+          allOf:
+          - $ref: '#/components/schemas/TaxpayerID'
+          description: Shareholder RFC, when available
+        relations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShareholderRelation'
+          description: Relations that connect this shareholder to entities
+        entity:
+          type:
+          - string
+          - 'null'
+          format: iri-reference
+          description: Entity created for this shareholder after promotion, if the shareholder has been promoted
+          example: /entities/91ab5678-1234-5678-9abc-def012345678
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
     ShareholderRelation:
       type: object
       required:
@@ -637,73 +868,6 @@ components:
           format: float
           description: Ownership ratio as a decimal value, for example `0.15` means 15%
           example: 0.15
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    Shareholder:
-      type: object
-      required:
-      - id
-      - name
-      - type
-      - rfc
-      - relations
-      - entity
-      - createdAt
-      - updatedAt
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Shareholder IRI reference
-          example: /shareholders/91ab5678-1234-5678-9abc-def012345678
-        '@type':
-          type: string
-          default: Shareholder
-        id:
-          type: string
-          format: uuid
-          description: Unique shareholder ID
-          example: 91ab5678-1234-5678-9abc-def012345678
-        name:
-          type: string
-          description: Name of the person or company that owns shares
-          example: JUAN MANUEL PEREZ GONZALEZ
-        type:
-          type: string
-          enum:
-          - physical
-          - legal
-          - unknown
-          description: Shareholder type, where `physical` is a person, `legal` is a company, and `unknown` means the type cannot be determined
-          example: physical
-        rfc:
-          allOf:
-          - $ref: '#/components/schemas/TaxpayerID'
-          description: Shareholder RFC, when available
-        relations:
-          type: array
-          items:
-            $ref: '#/components/schemas/ShareholderRelation'
-          description: Relations that connect this shareholder to entities
-        entity:
-          type:
-          - string
-          - 'null'
-          format: iri-reference
-          description: Entity created for this shareholder after promotion, if the shareholder has been promoted
-          example: /entities/91ab5678-1234-5678-9abc-def012345678
         createdAt:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
@@ -776,174 +940,10 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    orderShares:
-      name: order[shares]
-      in: query
-      description: Order by number of shares
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    relationId:
-      name: relationId
-      in: path
-      required: true
-      description: The relation ID
-      example: 82cd9012-3456-7890-abcd-ef1234567890
-      schema:
-        type: string
-        format: uuid
-    sourceId:
-      name: sourceId
-      in: path
-      required: true
-      description: The source ID
-      example: 73de0123-4567-8901-bcde-f23456789012
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    shareholderTypeFilter:
-      name: type
-      in: query
-      description: Filter shareholders by type
-      schema:
-        type: string
-        enum:
-        - physical
-        - legal
-        - unknown
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    shareholderNameFilter:
-      name: name
-      in: query
-      description: Filter shareholders by name (supports partial matching)
-      example: JUAN PEREZ
-      schema:
-        type: string
-    orderName:
-      name: order[name]
-      in: query
-      description: Order by name
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    orderUpdatedAt:
-      name: order[updatedAt]
-      in: query
-      description: Order by resource update date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    shareholderId:
-      name: shareholderId
-      in: path
-      required: true
-      description: The shareholder ID
-      example: 91ab5678-1234-5678-9abc-def012345678
-      schema:
-        type: string
-        format: uuid
-    sourceNameFilter:
-      name: sourceName
-      in: query
-      description: Filter sources by name
-      schema:
-        type: string
-        enum:
-        - manual
-        - rpc_socio
-        - company_verification
-    shareholderRfcFilter:
-      name: rfc
-      in: query
-      description: Filter shareholders by RFC (supports partial matching)
-      example: PEGJ850101
-      schema:
-        type: string
-    orderOwnership:
-      name: order[ownership]
-      in: query
-      description: Order by ownership percentage
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    relationTypeFilter:
-      name: relationType
-      in: query
-      description: Filter relations by type
-      schema:
-        type: string
-        enum:
-        - shareholders
-        - shareholder_of
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
   securitySchemes:
     ApiKey:
       type: apiKey

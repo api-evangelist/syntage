@@ -69,6 +69,15 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
 components:
   responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     UnprocessableEntity:
       description: Unprocessable Entity
       content:
@@ -89,15 +98,6 @@ components:
                 type: string
                 description: Concatenated violation messages
                 example: 'exampleField: Syntage score already exists.'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     BadRequest:
       description: Bad Request
       content:
@@ -107,8 +107,8 @@ components:
             properties:
               message:
                 type: string
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:

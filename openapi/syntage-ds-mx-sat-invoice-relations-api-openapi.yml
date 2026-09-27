@@ -88,7 +88,91 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    invoiceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/InvoiceID'
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
+    InvoiceRelationRelatedInvoice:
+      type:
+      - string
+      - 'null'
+      format: iri-reference
+      description: Invoice IRI reference
+      example: /invoices/92106967-2abd-5d64-95c2-4e73d96fb998
+    InvoiceRelationCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/InvoiceRelation
+          '@id':
+            default: /invoices/relations
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/InvoiceRelation'
     updatedAt:
       type: string
       description: Date and time the resource was last updated
@@ -98,6 +182,11 @@ components:
       default: 20
       minimum: 1
       maximum: 1000
+    InvoiceRelationInvoice:
+      type: string
+      format: iri-reference
+      description: Invoice IRI reference
+      example: /invoices/92106967-2abd-5d64-95c2-4e73d96fb998
     CursorCollection:
       type: object
       properties:
@@ -153,49 +242,27 @@ components:
                     type: string
                   required:
                     type: boolean
-    InvoiceID:
-      type: string
-      format: uuid
-      description: Invoice ID
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-    InvoiceRelationCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/InvoiceRelation
-          '@id':
-            default: /invoices/relations
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/InvoiceRelation'
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    InvoiceRelationRelatedInvoice:
-      type:
-      - string
-      - 'null'
-      format: iri-reference
-      description: Invoice IRI reference
-      example: /invoices/92106967-2abd-5d64-95c2-4e73d96fb998
     InvoiceRelationRelatedInvoiceUuid:
       type: string
       format: uuid
       description: The related Invoice UUID (Folio fiscal)
       example: def404af-5eef-4112-aa99-d1ec8493b89a
-    InvoiceRelationInvoice:
-      type: string
-      format: iri-reference
-      description: Invoice IRI reference
-      example: /invoices/92106967-2abd-5d64-95c2-4e73d96fb998
-    InvoiceRelationID:
-      type: string
-      format: uuid
-      description: Invoice relation ID
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+    InvoiceRelationType:
+      type: number
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      description: Invoice relation type code from the [c_TipoRelacion](/guides/catalogs#c_tiporelacion) catalog
+      example: 7
+      externalDocs:
+        url: https://syntage.com/docs/catalogs/#c_tiporelacion
     InvoiceRelation:
       type: object
       properties:
@@ -221,87 +288,20 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    InvoiceRelationType:
-      type: number
-      enum:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      description: Invoice relation type code from the [c_TipoRelacion](/guides/catalogs#c_tiporelacion) catalog
-      example: 7
-      externalDocs:
-        url: https://syntage.com/docs/catalogs/#c_tiporelacion
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    invoiceId:
-      name: id
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/InvoiceID'
-    resourceId:
-      name: id
-      in: path
-      required: true
+    InvoiceID:
+      type: string
+      format: uuid
+      description: Invoice ID
       example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    entityId:
-      name: entityId
-      in: path
-      required: true
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    InvoiceRelationID:
+      type: string
+      format: uuid
+      description: Invoice relation ID
       example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   securitySchemes:
     ApiKey:
       type: apiKey

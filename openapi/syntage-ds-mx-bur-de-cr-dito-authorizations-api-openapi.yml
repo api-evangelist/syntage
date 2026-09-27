@@ -341,6 +341,94 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    Entity:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Entity IRI reference
+          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type; Entity resources currently use the legacy `Link` JSON-LD type for backwards compatibility
+          default: Link
+        id:
+          $ref: '#/components/schemas/uuid'
+        type:
+          $ref: '#/components/schemas/EntityType'
+        taxpayer:
+          $ref: '#/components/schemas/Taxpayer'
+        credential:
+          $ref: '#/components/schemas/Credential'
+        tags:
+          $ref: '#/components/schemas/EntityTagCollection'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    EntityType:
+      type: string
+      enum:
+      - company
+      - person
+      description: Type of entity
+      example: company
+    Credential:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: SAT Credential IRI reference
+          example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          default: Credential
+        id:
+          type: string
+          format: uuid
+          description: Credential ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          $ref: '#/components/schemas/CredentialType'
+        rfc:
+          $ref: '#/components/schemas/TaxpayerID'
+        status:
+          $ref: '#/components/schemas/CredentialStatus'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    EntityTagCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntityTag'
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
     Taxpayer:
       type: object
       properties:
@@ -362,22 +450,95 @@ components:
           description: Taxpayer registration date
         name:
           $ref: '#/components/schemas/TaxpayerName'
-    EntityType:
+    CredentialType:
       type: string
       enum:
-      - company
-      - person
-      description: Type of entity
-      example: company
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
+      - ciec
+      - efirma
+      example: ciec
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    EntityTag:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Entity Tag IRI reference
+          example: /entity-tags/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: EntityTag
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+          description: Display name for the entity tag
+          example: Priority Entity
+        color:
+          type:
+          - string
+          - 'null'
+          description: Lowercase 7-character hexadecimal color used to display the tag (`#RRGGBB`). Defaults to `#a3aab5` when an entity tag is created without a color.
+          example: '#22c558'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
     BuroDeCreditoAuthorization:
       oneOf:
       - title: Person
@@ -685,177 +846,56 @@ components:
 
         '
       example: pending
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
-    Entity:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Entity IRI reference
-          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type; Entity resources currently use the legacy `Link` JSON-LD type for backwards compatibility
-          default: Link
-        id:
-          $ref: '#/components/schemas/uuid'
-        type:
-          $ref: '#/components/schemas/EntityType'
-        taxpayer:
-          $ref: '#/components/schemas/Taxpayer'
-        credential:
-          $ref: '#/components/schemas/Credential'
-        tags:
-          $ref: '#/components/schemas/EntityTagCollection'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    EntityTag:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Entity Tag IRI reference
-          example: /entity-tags/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: EntityTag
-        id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          type: string
-          description: Display name for the entity tag
-          example: Priority Entity
-        color:
-          type:
-          - string
-          - 'null'
-          description: Lowercase 7-character hexadecimal color used to display the tag (`#RRGGBB`). Defaults to `#a3aab5` when an entity tag is created without a color.
-          example: '#22c558'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    Credential:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: SAT Credential IRI reference
-          example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          default: Credential
-        id:
-          type: string
-          format: uuid
-          description: Credential ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        type:
-          $ref: '#/components/schemas/CredentialType'
-        rfc:
-          $ref: '#/components/schemas/TaxpayerID'
-        status:
-          $ref: '#/components/schemas/CredentialStatus'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    EntityTagCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EntityTag'
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
     TaxpayerPersonType:
       type: string
       enum:
       - physical
       - legal
       example: physical
-    CredentialType:
+    createdAt:
       type: string
-      enum:
-      - ciec
-      - efirma
-      example: ciec
-    uuid:
-      type: string
-      format: uuid
-      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
   responses:
     NotFound:
       description: Not found
@@ -875,46 +915,6 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
   securitySchemes:
     ApiKey:
       type: apiKey

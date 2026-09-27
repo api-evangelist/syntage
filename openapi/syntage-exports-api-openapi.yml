@@ -53,7 +53,75 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    ConstraintViolation:
+      description: Validation error
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            properties:
+              '@context':
+                type: string
+                default: /contexts/ConstraintViolation
+              '@type':
+                type: string
+                default: ConstraintViolation
+              hydra:title:
+                type: string
+                default: An error occurred
+              hydra:description:
+                type: string
+                description: Concatenated violation messages
+                example: 'exampleField: This value should not be blank.'
+              violations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    propertyPath:
+                      type: string
+                      description: Property access path
+                      example: exampleField
+                    message:
+                      type: string
+                      description: Validaton error message
+                      example: This value should not be blank.
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    Export:
+      description: Export resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Export
+            - $ref: '#/components/schemas/Export'
   schemas:
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
     File:
       type: object
       properties:
@@ -100,14 +168,6 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
     Export:
       type: object
       properties:
@@ -171,70 +231,10 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-  responses:
-    Export:
-      description: Export resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/Export
-            - $ref: '#/components/schemas/Export'
-    ConstraintViolation:
-      description: Validation error
-      content:
-        application/ld+json:
-          schema:
-            type: object
-            properties:
-              '@context':
-                type: string
-                default: /contexts/ConstraintViolation
-              '@type':
-                type: string
-                default: ConstraintViolation
-              hydra:title:
-                type: string
-                default: An error occurred
-              hydra:description:
-                type: string
-                description: Concatenated violation messages
-                example: 'exampleField: This value should not be blank.'
-              violations:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    propertyPath:
-                      type: string
-                      description: Property access path
-                      example: exampleField
-                    message:
-                      type: string
-                      description: Validaton error message
-                      example: This value should not be blank.
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
   requestBodies:
     CreateExport:
       required: true

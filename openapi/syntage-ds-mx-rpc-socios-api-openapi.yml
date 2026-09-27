@@ -38,6 +38,27 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    RpcSocio:
+      allOf:
+      - $ref: '#/components/schemas/RpcEntidadeSocio'
+      - type: object
+        properties:
+          '@id':
+            type: string
+            format: iri-reference
+            description: RPC socio IRI reference
+            example: /datasources/rpc/socios/91106968-1abd-4d64-85c1-4e73d96fb997
+          '@type':
+            type: string
+            default: RpcSocio
+          rpcEntidade:
+            $ref: '#/components/schemas/RpcEntidadeProfile'
+    RpcEntidadeFme:
+      type:
+      - string
+      - 'null'
+      description: Electronic commercial folio assigned by RPC
+      example: N-2000000000
     RpcEntidadeSocio:
       type: object
       description: Shareholder or partner record nested in an RPC entidade response
@@ -124,30 +145,16 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
+    RpcEntidadeNombreRazonSocial:
+      type:
+      - string
+      - 'null'
+      description: Legal name reported by RPC
+      example: FOO BAR, S.A. DE C.V.
     updatedAt:
       type: string
       description: Date and time the resource was last updated
       example: '2020-01-01T12:15:00.000Z'
-    RpcEntidadeID:
-      type: string
-      format: uuid
-      description: RPC Entidade ID
-      example: 99c13810-868f-482e-a6f1-878254248d27
-    RpcSocio:
-      allOf:
-      - $ref: '#/components/schemas/RpcEntidadeSocio'
-      - type: object
-        properties:
-          '@id':
-            type: string
-            format: iri-reference
-            description: RPC socio IRI reference
-            example: /datasources/rpc/socios/91106968-1abd-4d64-85c1-4e73d96fb997
-          '@type':
-            type: string
-            default: RpcSocio
-          rpcEntidade:
-            $ref: '#/components/schemas/RpcEntidadeProfile'
     RpcEntidadeProfile:
       type: object
       description: Basic RPC entidade profile information
@@ -166,22 +173,15 @@ components:
           $ref: '#/components/schemas/RpcEntidadeFme'
         nombreRazonSocial:
           $ref: '#/components/schemas/RpcEntidadeNombreRazonSocial'
+    RpcEntidadeID:
+      type: string
+      format: uuid
+      description: RPC Entidade ID
+      example: 99c13810-868f-482e-a6f1-878254248d27
     createdAt:
       type: string
       description: Date and time the resource was created
       example: '2020-01-01T12:15:00.000Z'
-    RpcEntidadeNombreRazonSocial:
-      type:
-      - string
-      - 'null'
-      description: Legal name reported by RPC
-      example: FOO BAR, S.A. DE C.V.
-    RpcEntidadeFme:
-      type:
-      - string
-      - 'null'
-      description: Electronic commercial folio assigned by RPC
-      example: N-2000000000
   responses:
     RpcSocio:
       description: RPC socio resource response
@@ -195,8 +195,8 @@ components:
                   type: string
                   default: /contexts/RpcSocio
             - $ref: '#/components/schemas/RpcSocio'
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -204,8 +204,8 @@ components:
             properties:
               message:
                 type: string
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:

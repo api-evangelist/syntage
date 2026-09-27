@@ -143,67 +143,55 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
 components:
-  responses:
-    UnprocessableEntity:
-      description: Unprocessable Entity
-      content:
-        application/ld+json:
-          schema:
-            type: object
-            properties:
-              '@context':
-                type: string
-                default: /contexts/Error
-              '@type':
-                type: string
-                default: hydra:Error
-              hydra:title:
-                type: string
-                default: An error occurred
-              hydra:description:
-                type: string
-                description: Concatenated violation messages
-                example: 'exampleField: Syntage score already exists.'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    ScoresInsight:
-      description: Entity scores
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/Scores
-            - $ref: '#/components/schemas/Scores'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
   schemas:
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    Score:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Score IRI reference
+          example: /.well-known/genid/78c595ac88fa9659fa80
+        '@type':
+          type: string
+          description: Type of score object
+          default: ScoreBySource
+        id:
+          $ref: '#/components/schemas/uuid'
+        source:
+          type: string
+          description: Source of the score
+          example: syntage
+        type:
+          type: string
+          description: Type of score
+          example: internal
+        score:
+          type: string
+          description: Calculated score
+          example: '532'
+        generatedAt:
+          type: string
+          description: Date and time the resource was generated
+          example: '2020-01-01T12:15:00.000Z'
+        metadata:
+          type: object
+          description: Essential information and attributes about the score; structure changes depending on source and type
+          example:
+            breakdown:
+              offenders:
+                margen_bruto: Missing gross margin
+                margen_neto: Missing net margin
+              performers:
+                debt_to_income: Debt to income between 0.4 and 0.6
+                quick_ratio: Quick ratio > 3
+            distribution:
+            - label: 500
+              metric: 1
     BuroDeCreditoSummaryInsight:
       type: object
       description: Summary row for one Buró de Crédito report score.
@@ -252,24 +240,6 @@ components:
           - 'null'
           description: Provider return key for legal-entity report products when available
           example: '1'
-    ScoreDistribution:
-      type: object
-      description: Distribution of current Syntage Score values across score buckets.
-      properties:
-        distribution:
-          type: array
-          description: Number of Syntage Score records in each score bucket
-          items:
-            type: object
-            properties:
-              label:
-                type: integer
-                description: Score bucket label
-                example: 500
-              metric:
-                type: integer
-                description: Number of scores in the bucket
-                example: 12
     HydraView:
       type: object
       properties:
@@ -312,50 +282,6 @@ components:
               type: string
               format: iri-reference
               description: Last page IRI reference; omitted when there is no pagination
-    Score:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Score IRI reference
-          example: /.well-known/genid/78c595ac88fa9659fa80
-        '@type':
-          type: string
-          description: Type of score object
-          default: ScoreBySource
-        id:
-          $ref: '#/components/schemas/uuid'
-        source:
-          type: string
-          description: Source of the score
-          example: syntage
-        type:
-          type: string
-          description: Type of score
-          example: internal
-        score:
-          type: string
-          description: Calculated score
-          example: '532'
-        generatedAt:
-          type: string
-          description: Date and time the resource was generated
-          example: '2020-01-01T12:15:00.000Z'
-        metadata:
-          type: object
-          description: Essential information and attributes about the score; structure changes depending on source and type
-          example:
-            breakdown:
-              offenders:
-                margen_bruto: Missing gross margin
-                margen_neto: Missing net margin
-              performers:
-                debt_to_income: Debt to income between 0.4 and 0.6
-                quick_ratio: Quick ratio > 3
-            distribution:
-            - label: 500
-              metric: 1
     Scores:
       type: object
       properties:
@@ -372,10 +298,84 @@ components:
           description: List of score objects
           items:
             $ref: '#/components/schemas/Score'
-    uuid:
-      type: string
-      format: uuid
-      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    ScoreDistribution:
+      type: object
+      description: Distribution of current Syntage Score values across score buckets.
+      properties:
+        distribution:
+          type: array
+          description: Number of Syntage Score records in each score bucket
+          items:
+            type: object
+            properties:
+              label:
+                type: integer
+                description: Score bucket label
+                example: 500
+              metric:
+                type: integer
+                description: Number of scores in the bucket
+                example: 12
+  responses:
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            properties:
+              '@context':
+                type: string
+                default: /contexts/Error
+              '@type':
+                type: string
+                default: hydra:Error
+              hydra:title:
+                type: string
+                default: An error occurred
+              hydra:description:
+                type: string
+                description: Concatenated violation messages
+                example: 'exampleField: Syntage score already exists.'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    ScoresInsight:
+      description: Entity scores
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Scores
+            - $ref: '#/components/schemas/Scores'
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     ApiKey:
       type: apiKey

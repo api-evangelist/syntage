@@ -87,28 +87,16 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-  schemas:
-    TaxRegime:
-      type: object
-      properties:
-        id:
-          type: number
-          enum:
-          - 601
-          - 612
-          - 621
-          - 626
-          description: SAT tax regime code
   responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     NotFound:
       description: Not found
       content:
@@ -2295,15 +2283,27 @@ components:
                         Total: null
                         Comment: null
                       category: Participación no controladora
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    TaxRegime:
+      type: object
+      properties:
+        id:
+          type: number
+          enum:
+          - 601
+          - 612
+          - 621
+          - 626
+          description: SAT tax regime code
   securitySchemes:
     ApiKey:
       type: apiKey
