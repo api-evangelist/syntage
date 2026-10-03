@@ -96,24 +96,90 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  schemas:
-    InvoicePaymentPreviousBalance:
-      type: number
-      format: float
-      description: Amount before the payment
-      example: 53249.8
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     InvoicePaymentCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/InvoicePayment
-          '@id':
-            default: /invoices/payments
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/InvoicePayment'
+      description: Invoice payment collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/InvoicePaymentCollection'
+    InvoicePayment:
+      description: Invoice payment resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/InvoicePayment
+            - $ref: '#/components/schemas/InvoicePayment'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    invoiceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/InvoiceID'
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+  schemas:
     InvoicePaymentCurrency:
       type:
       - string
@@ -122,35 +188,20 @@ components:
       minLength: 3
       maxLength: 3
       example: MXN
-    updatedAt:
+    createdAt:
       type: string
-      description: Date and time the resource was last updated
+      description: Date and time the resource was created
       example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    InvoicePaymentCanceledAt:
-      type:
-      - string
-      - 'null'
-      format: date-time
-      description: Set when the payment invoice is canceled
-    InvoicePaymentOutstandingBalance:
-      type: number
-      format: float
-      description: Due amount after a payment
-      example: 0
-    InvoicePaymentInstallment:
-      type: integer
-      description: Payment installment
-      example: 3
     InvoicePaymentInvoiceUUID:
       type: string
       format: uuid
       description: The related deferred Invoice UUID (Folio fiscal)
       example: def404af-5eef-4112-aa99-d1ec8493b89a
+    InvoicePaymentPreviousBalance:
+      type: number
+      format: float
+      description: Amount before the payment
+      example: 53249.8
     CursorCollection:
       type: object
       properties:
@@ -206,16 +257,6 @@ components:
                     type: string
                   required:
                     type: boolean
-    InvoicePaymentAmount:
-      type: number
-      format: float
-      description: Payment amount applied to the invoice. Positive values are income for the entity; negative values are expenses.
-      example: -53249.8
-    InvoicePaymentID:
-      type: string
-      format: uuid
-      description: Invoice Payment ID
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
     InvoicePayment:
       type: object
       properties:
@@ -259,14 +300,35 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    createdAt:
+    InvoicePaymentInstallment:
+      type: integer
+      description: Payment installment
+      example: 3
+    InvoicePaymentCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/InvoicePayment
+          '@id':
+            default: /invoices/payments
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/InvoicePayment'
+    updatedAt:
       type: string
-      description: Date and time the resource was created
+      description: Date and time the resource was last updated
       example: '2020-01-01T12:15:00.000Z'
-    InvoiceID:
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    InvoicePaymentID:
       type: string
       format: uuid
-      description: Invoice ID
+      description: Invoice Payment ID
       example: 91106968-1abd-4d64-85c1-4e73d96fb997
     InvoicePaymentExchangeRate:
       type:
@@ -275,89 +337,27 @@ components:
       format: float
       description: Set when `currency` is different than MXN
       example: 19.8
-  parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
+    InvoicePaymentOutstandingBalance:
+      type: number
+      format: float
+      description: Due amount after a payment
+      example: 0
+    InvoicePaymentAmount:
+      type: number
+      format: float
+      description: Payment amount applied to the invoice. Positive values are income for the entity; negative values are expenses.
+      example: -53249.8
+    InvoiceID:
+      type: string
+      format: uuid
+      description: Invoice ID
       example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
-    invoiceId:
-      name: id
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/InvoiceID'
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    InvoicePayment:
-      description: Invoice payment resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/InvoicePayment
-            - $ref: '#/components/schemas/InvoicePayment'
-    InvoicePaymentCollection:
-      description: Invoice payment collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/InvoicePaymentCollection'
+    InvoicePaymentCanceledAt:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Set when the payment invoice is canceled
   securitySchemes:
     ApiKey:
       type: apiKey

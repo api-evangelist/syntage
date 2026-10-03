@@ -85,53 +85,88 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    TaxpayerTaxStatusCollection:
+      description: Taxpayer tax status collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/TaxpayerTaxStatusCollection'
+    TaxStatus:
+      description: Tax status resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/TaxStatus
+            - $ref: '#/components/schemas/TaxStatus'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
   schemas:
-    File:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: File IRI reference
-          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: File
-          example: File
-        id:
-          type: string
-          format: uuid
-          description: Unique file ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        type:
-          type: string
-          description: File category, such as an invoice CFDI XML or PDF
-          example: invoice.cfdi.xml
-        resource:
-          type: string
-          description: IRI of the resource that produced or owns the file
-          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
-        mimeType:
-          type: string
-          description: Media type of the file content
-          example: text/xml
-        extension:
-          type: string
-          description: File extension for the stored content
-          example: xml
-        size:
-          type: integer
-          description: File size in bytes
-          example: 40544
-        filename:
-          type: string
-          description: Suggested filename for the file content
-          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
     TaxStatusCompany:
       description: Company information. Null when the taxpayer is not a legal person.
       type:
@@ -150,90 +185,6 @@ components:
           type: string
           description: Legal entity type from the SAT tax status document
           example: SOCIEDAD ANONIMA DE CAPITAL VARIABLE
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    TaxStatusPerson:
-      type:
-      - object
-      - 'null'
-      description: Physical person information extracted from the SAT tax status document. Null when the entity is not a physical person.
-      properties:
-        fullName:
-          type:
-          - string
-          - 'null'
-          description: Full name from the SAT tax status document.
-          example: Pedro Infante Cruz
-        firstName:
-          type:
-          - string
-          - 'null'
-          description: Given name or names from the SAT tax status document.
-          example: Pedro
-        middleName:
-          type:
-          - string
-          - 'null'
-          description: First surname from the SAT tax status document.
-          example: Infante
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: Second surname from the SAT tax status document.
-          example: Cruz
-        curp:
-          type:
-          - string
-          - 'null'
-          description: CURP from the SAT tax status document when present.
-          example: PEIC90110UEYBVT85
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    TaxpayerTaxStatusCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/TaxStatus
-          '@id':
-            default: /entities/{entityId}/tax-status
-            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/tax-status
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/TaxStatus'
-    TaxStatusEconomicActivities:
-      type: array
-      items:
-        type: object
-        properties:
-          name:
-            type: string
-            example: Asalariado
-          order:
-            type: string
-            example: '1'
-          percentage:
-            type: string
-            example: '100'
-          endDate:
-            type: string
-            format: date
-          startDate:
-            type: string
-            format: date
     CursorCollection:
       type: object
       properties:
@@ -289,6 +240,42 @@ components:
                     type: string
                   required:
                     type: boolean
+    TaxStatusPerson:
+      type:
+      - object
+      - 'null'
+      description: Physical person information extracted from the SAT tax status document. Null when the entity is not a physical person.
+      properties:
+        fullName:
+          type:
+          - string
+          - 'null'
+          description: Full name from the SAT tax status document.
+          example: Pedro Infante Cruz
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: Given name or names from the SAT tax status document.
+          example: Pedro
+        middleName:
+          type:
+          - string
+          - 'null'
+          description: First surname from the SAT tax status document.
+          example: Infante
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: Second surname from the SAT tax status document.
+          example: Cruz
+        curp:
+          type:
+          - string
+          - 'null'
+          description: CURP from the SAT tax status document when present.
+          example: PEIC90110UEYBVT85
     TaxStatusObligations:
       type: array
       items:
@@ -306,6 +293,12 @@ components:
           startDate:
             type: string
             format: date
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
     TaxStatus:
       type: object
       properties:
@@ -373,6 +366,15 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
     TaxStatusAddress:
       type: object
       description: Fiscal address from the SAT tax status document
@@ -424,6 +426,85 @@ components:
           type: string
           description: Raw SAT address location status
           example: LOCALIZADO - Domicilio Localizado
+    TaxpayerTaxStatusCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/TaxStatus
+          '@id':
+            default: /entities/{entityId}/tax-status
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/tax-status
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/TaxStatus'
+    TaxStatusEconomicActivities:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            example: Asalariado
+          order:
+            type: string
+            example: '1'
+          percentage:
+            type: string
+            example: '100'
+          endDate:
+            type: string
+            format: date
+          startDate:
+            type: string
+            format: date
+    File:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: File IRI reference
+          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: File
+          example: File
+        id:
+          type: string
+          format: uuid
+          description: Unique file ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          type: string
+          description: File category, such as an invoice CFDI XML or PDF
+          example: invoice.cfdi.xml
+        resource:
+          type: string
+          description: IRI of the resource that produced or owns the file
+          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
+        mimeType:
+          type: string
+          description: Media type of the file content
+          example: text/xml
+        extension:
+          type: string
+          description: File extension for the stored content
+          example: xml
+        size:
+          type: integer
+          description: File size in bytes
+          example: 40544
+        filename:
+          type: string
+          description: Suggested filename for the file content
+          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
     TaxStatusTaxRegimes:
       type: array
       items:
@@ -441,87 +522,6 @@ components:
           startDate:
             type: string
             format: date
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-  parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
-  responses:
-    TaxpayerTaxStatusCollection:
-      description: Taxpayer tax status collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/TaxpayerTaxStatusCollection'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    TaxStatus:
-      description: Tax status resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/TaxStatus
-            - $ref: '#/components/schemas/TaxStatus'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

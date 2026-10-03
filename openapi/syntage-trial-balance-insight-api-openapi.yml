@@ -67,6 +67,15 @@ components:
             properties:
               message:
                 type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     TrialBalanceInsight:
       description: Entity trial balance
       content:
@@ -177,15 +186,6 @@ components:
                                                 type: number
                                                 description: Ending balance data
                                                 example: 2173831.27
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   parameters:
     entityId:
       name: entityId

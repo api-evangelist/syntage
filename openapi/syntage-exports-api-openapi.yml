@@ -53,9 +53,18 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   responses:
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -63,6 +72,18 @@ components:
             properties:
               message:
                 type: string
+    Export:
+      description: Export resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Export
+            - $ref: '#/components/schemas/Export'
     ConstraintViolation:
       description: Validation error
       content:
@@ -96,8 +117,8 @@ components:
                       type: string
                       description: Validaton error message
                       example: This value should not be blank.
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -105,136 +126,6 @@ components:
             properties:
               message:
                 type: string
-    Export:
-      description: Export resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/Export
-            - $ref: '#/components/schemas/Export'
-  schemas:
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    File:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: File IRI reference
-          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: File
-          example: File
-        id:
-          type: string
-          format: uuid
-          description: Unique file ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        type:
-          type: string
-          description: File category, such as an invoice CFDI XML or PDF
-          example: invoice.cfdi.xml
-        resource:
-          type: string
-          description: IRI of the resource that produced or owns the file
-          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
-        mimeType:
-          type: string
-          description: Media type of the file content
-          example: text/xml
-        extension:
-          type: string
-          description: File extension for the stored content
-          example: xml
-        size:
-          type: integer
-          description: File size in bytes
-          example: 40544
-        filename:
-          type: string
-          description: Suggested filename for the file content
-          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    Export:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Export IRI reference
-          example: /exports/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: Export
-        id:
-          type: string
-          format: uuid
-          description: Unique export ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        file:
-          description: Generated file once the export is finished
-          allOf:
-          - $ref: '#/components/schemas/File'
-          - example:
-              type: Export
-              resource: /exports/91106968-1abd-4d64-85c1-4e73d96fb997
-              mimeType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-              extension: xlsx
-              filename: 9137b53f-1abd-4d64-85c1-4e73d96fb997.xlsx
-        format:
-          type: string
-          description: Output format for the generated export file
-          example: xlsx
-        fileTypes:
-          type: array
-          description: File types to include in the export
-          minItems: 1
-          example:
-          - invoice.cfdi.xml
-          items:
-            type: string
-            enum:
-            - invoice.cfdi.xml
-            - invoice.cfdi.pdf
-            - tax_return.transcript
-            - tax_return.ack_receipt
-            - tax_return.payment_receipt
-            example: invoice.cfdi.xml
-        status:
-          type: string
-          description: Current export processing status
-          enum:
-          - pending
-          - running
-          - finished
-          - failed
-          example: pending
-        uri:
-          type: string
-          description: API collection URI used as the export source
-          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/invoices?usage=I01&type=I&issuedAt[after]=2020-01-01
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
   requestBodies:
     CreateExport:
       required: true
@@ -309,15 +200,124 @@ components:
                   To download a [report](/api-reference/reports/list-reports) as a PDF document, set `format` to `pdf` and `uri` to `/entities/{entityId}/reports/{reportId}?exporting=true`. The `exporting=true` query parameter is required; other query parameters are not supported on report URIs. The generated PDF renders the report the same way the dashboard shows it to the requesting user, in the user''s locale and over the report''s default period, and is attached to the export as a `report.insights.pdf` file.'
                 type: string
                 example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/invoices?issuedAt[after]=2026-01-01
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
+  schemas:
+    Export:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Export IRI reference
+          example: /exports/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: Export
+        id:
+          type: string
+          format: uuid
+          description: Unique export ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        file:
+          description: Generated file once the export is finished
+          allOf:
+          - $ref: '#/components/schemas/File'
+          - example:
+              type: Export
+              resource: /exports/91106968-1abd-4d64-85c1-4e73d96fb997
+              mimeType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+              extension: xlsx
+              filename: 9137b53f-1abd-4d64-85c1-4e73d96fb997.xlsx
+        format:
+          type: string
+          description: Output format for the generated export file
+          example: xlsx
+        fileTypes:
+          type: array
+          description: File types to include in the export
+          minItems: 1
+          example:
+          - invoice.cfdi.xml
+          items:
+            type: string
+            enum:
+            - invoice.cfdi.xml
+            - invoice.cfdi.pdf
+            - tax_return.transcript
+            - tax_return.ack_receipt
+            - tax_return.payment_receipt
+            example: invoice.cfdi.xml
+        status:
+          type: string
+          description: Current export processing status
+          enum:
+          - pending
+          - running
+          - finished
+          - failed
+          example: pending
+        uri:
+          type: string
+          description: API collection URI used as the export source
+          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/invoices?usage=I01&type=I&issuedAt[after]=2020-01-01
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    File:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: File IRI reference
+          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: File
+          example: File
+        id:
+          type: string
+          format: uuid
+          description: Unique file ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          type: string
+          description: File category, such as an invoice CFDI XML or PDF
+          example: invoice.cfdi.xml
+        resource:
+          type: string
+          description: IRI of the resource that produced or owns the file
+          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
+        mimeType:
+          type: string
+          description: Media type of the file content
+          example: text/xml
+        extension:
+          type: string
+          description: File extension for the stored content
+          example: xml
+        size:
+          type: integer
+          description: File size in bytes
+          example: 40544
+        filename:
+          type: string
+          description: Suggested filename for the file content
+          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
   securitySchemes:
     ApiKey:
       type: apiKey

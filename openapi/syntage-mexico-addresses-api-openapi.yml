@@ -101,7 +101,53 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
+    Collection:
+      allOf:
+      - $ref: '#/components/schemas/HydraView'
+      - type: object
+        properties:
+          hydra:search:
+            type: object
+            properties:
+              '@type':
+                type: string
+              hydra:template:
+                type: string
+              hydra:variableRepresentation:
+                type: string
+              hydra:mapping:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                    variable:
+                      type: string
+                    property:
+                      type: string
+                    required:
+                      type: boolean
     HydraView:
       type: object
       properties:
@@ -144,52 +190,6 @@ components:
               type: string
               format: iri-reference
               description: Last page IRI reference; omitted when there is no pagination
-    Collection:
-      allOf:
-      - $ref: '#/components/schemas/HydraView'
-      - type: object
-        properties:
-          hydra:search:
-            type: object
-            properties:
-              '@type':
-                type: string
-              hydra:template:
-                type: string
-              hydra:variableRepresentation:
-                type: string
-              hydra:mapping:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                    variable:
-                      type: string
-                    property:
-                      type: string
-                    required:
-                      type: boolean
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

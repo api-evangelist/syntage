@@ -90,15 +90,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     NotFound:
       description: Not found
       content:
@@ -108,41 +99,16 @@ components:
             properties:
               message:
                 type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
-    CorporateStructureCurrentPowersEntity:
-      type: object
-      description: 'A person or company appearing in the latest Company Verification
-
-        report for the entity with at least one currently effective power of
-
-        attorney. A simplified projection of a found entity, limited to the
-
-        holder''s identity and their current powers — no cap-table holdings,
-
-        share totals, or ownership percentages.
-
-        '
-      required:
-      - name
-      - entityType
-      - powers
-      properties:
-        name:
-          type: string
-          description: Full name of the holder, as resolved by the upstream pipeline.
-          example: Juan Pérez García
-        entityType:
-          type: string
-          description: Whether the holder is a natural person or a legal entity.
-          enum:
-          - person
-          - company
-          example: person
-        powers:
-          type: array
-          description: Currently effective powers of attorney granted to this holder, ordered by grant date ascending.
-          items:
-            $ref: '#/components/schemas/CorporateStructureCurrentPowersPower'
     HydraView:
       type: object
       properties:
@@ -289,6 +255,40 @@ components:
           type: boolean
           description: Whether the grantee may dispose of or sell real estate on behalf of the principal.
           example: false
+    CorporateStructureCurrentPowersEntity:
+      type: object
+      description: 'A person or company appearing in the latest Company Verification
+
+        report for the entity with at least one currently effective power of
+
+        attorney. A simplified projection of a found entity, limited to the
+
+        holder''s identity and their current powers — no cap-table holdings,
+
+        share totals, or ownership percentages.
+
+        '
+      required:
+      - name
+      - entityType
+      - powers
+      properties:
+        name:
+          type: string
+          description: Full name of the holder, as resolved by the upstream pipeline.
+          example: Juan Pérez García
+        entityType:
+          type: string
+          description: Whether the holder is a natural person or a legal entity.
+          enum:
+          - person
+          - company
+          example: person
+        powers:
+          type: array
+          description: Currently effective powers of attorney granted to this holder, ordered by grant date ascending.
+          items:
+            $ref: '#/components/schemas/CorporateStructureCurrentPowersPower'
     Collection:
       allOf:
       - $ref: '#/components/schemas/HydraView'

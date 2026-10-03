@@ -80,29 +80,80 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    SchedulerRule:
+      description: Scheduler rule resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/SchedulerRule
+            - $ref: '#/components/schemas/SchedulerRule'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  requestBodies:
+    SchedulerRuleUpdate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SchedulerRuleUpdateInput'
+    SchedulerRuleCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SchedulerRuleInput'
   schemas:
+    SchedulerRuleUpdateInput:
+      type: object
+      properties:
+        extractor:
+          $ref: '#/components/schemas/ExtractionExtractor'
+        options:
+          $ref: '#/components/schemas/ExtractionOptions'
+        cronExpression:
+          type: string
+          writeOnly: true
+          description: Cron expression that controls when the rule runs
+          example: '@daily'
     uuid:
       type: string
       format: uuid
       example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    ExtractionExtractor:
+    createdAt:
       type: string
-      description: Extractor to run, which retrieves resources from the corresponding datasource
-      enum:
-      - invoice
-      - monthly_tax_return
-      - annual_tax_return
-      - rif_tax_return
-      - tax_status
-      - tax_retention
-      - tax_compliance
-      - electronic_accounting
-      - sat_certificates
-      - rpc
-      - buro_de_credito_report
-      - bil
-      - rug
-      - background_check
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
     updatedAt:
       type: string
       description: Date and time the resource was last updated
@@ -174,75 +225,24 @@ components:
           writeOnly: true
           description: Cron expression that controls when the rule runs
           example: '@daily'
-    SchedulerRuleUpdateInput:
-      type: object
-      properties:
-        extractor:
-          $ref: '#/components/schemas/ExtractionExtractor'
-        options:
-          $ref: '#/components/schemas/ExtractionOptions'
-        cronExpression:
-          type: string
-          writeOnly: true
-          description: Cron expression that controls when the rule runs
-          example: '@daily'
-    createdAt:
+    ExtractionExtractor:
       type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-  responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    SchedulerRule:
-      description: Scheduler rule resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/SchedulerRule
-            - $ref: '#/components/schemas/SchedulerRule'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-  requestBodies:
-    SchedulerRuleCreate:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SchedulerRuleInput'
-    SchedulerRuleUpdate:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SchedulerRuleUpdateInput'
+      description: Extractor to run, which retrieves resources from the corresponding datasource
+      enum:
+      - invoice
+      - monthly_tax_return
+      - annual_tax_return
+      - rif_tax_return
+      - tax_status
+      - tax_retention
+      - tax_compliance
+      - electronic_accounting
+      - sat_certificates
+      - rpc
+      - buro_de_credito_report
+      - bil
+      - rug
+      - background_check
   securitySchemes:
     ApiKey:
       type: apiKey

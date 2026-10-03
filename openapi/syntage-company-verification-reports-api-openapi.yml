@@ -236,6 +236,86 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    companyVerificationReportId:
+      name: reportId
+      in: path
+      required: true
+      description: Identifier of the Company Verification report.
+      example: 91ab5678-1234-5678-9abc-def012345678
+      schema:
+        type: string
+        format: uuid
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
   schemas:
     RpcEntidadeNombreRazonSocial:
       type:
@@ -243,52 +323,68 @@ components:
       - 'null'
       description: Legal name reported by RPC
       example: FOO BAR, S.A. DE C.V.
-    File:
+    CompanyVerificationFoundEntityCapTableEntry:
       type: object
+      description: 'A single cap-table holding row for a found entity, scoped to one
+
+        `(capitalType, series)` bucket. A shareholder that holds both Serie A
+
+        fixed and Serie B fixed yields two entries.
+
+        '
+      required:
+      - id
+      - capitalType
+      - shares
+      - amount
+      - bucketPercentage
       properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: File IRI reference
-          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: File
-          example: File
         id:
           type: string
           format: uuid
-          description: Unique file ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        type:
+          example: 73cd5678-3456-7890-bcde-f01234567890
+        capitalType:
           type: string
-          description: File category, such as an invoice CFDI XML or PDF
-          example: invoice.cfdi.xml
-        resource:
-          type: string
-          description: IRI of the resource that produced or owns the file
-          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
-        mimeType:
-          type: string
-          description: Media type of the file content
-          example: text/xml
-        extension:
-          type: string
-          description: File extension for the stored content
-          example: xml
-        size:
+          description: 'Capital classification: `fixed`, `variable`, or `unspecified`.'
+          enum:
+          - fixed
+          - variable
+          - unspecified
+          example: fixed
+        series:
+          type:
+          - string
+          - 'null'
+          description: Capital series identifier (`A`, `B`, …) when the source document reports it.
+          example: A
+        shares:
           type: integer
-          description: File size in bytes
-          example: 40544
-        filename:
+          description: Number of shares held in this bucket.
+          example: 3000
+        amount:
           type: string
-          description: Suggested filename for the file content
-          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
+          description: Monetary value held in this bucket.
+          example: '30000.0000'
+        valuePerShare:
+          type:
+          - string
+          - 'null'
+          description: Face value per share for this bucket, when known.
+          example: '10.0000'
+        bucketPercentage:
+          type: string
+          description: 'Share of this `(capitalType, series)` bucket held by this entity.
+
+            All holdings of the same bucket across the report sum to `100` by
+
+            construction.
+
+            '
+          example: '60.0000'
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
     HydraView:
       type: object
       properties:
@@ -331,6 +427,16 @@ components:
               type: string
               format: iri-reference
               description: Last page IRI reference; omitted when there is no pagination
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
     Collection:
       allOf:
       - $ref: '#/components/schemas/HydraView'
@@ -358,6 +464,116 @@ components:
                       type: string
                     required:
                       type: boolean
+    CompanyVerificationFoundEntityPower:
+      type: object
+      description: A power of attorney granted to a found entity.
+      required:
+      - id
+      - status
+      - grantedAt
+      - documentSource
+      - documentNumber
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 64de4567-4567-8901-cdef-123456789012
+        status:
+          type: string
+          description: Whether the power is still in effect at the report cut-off date.
+          enum:
+          - current
+          - expired
+          example: current
+        power:
+          type:
+          - string
+          - 'null'
+          description: 'Canonical power type (for example, `administrative_acts` or
+
+            `lawsuits_and_collections`). `null` when the upstream pipeline
+
+            classified the power as `external` (a reference to another document).
+
+            '
+          example: administrative_acts
+        grantedAt:
+          type: string
+          format: date-time
+          description: Date the power was granted, as recorded in the source document.
+          example: '2020-01-15T00:00:00+00:00'
+        expirationDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Date the power expires or expired, when known.
+          example: '2025-01-15T00:00:00+00:00'
+        expirationSource:
+          type:
+          - string
+          - 'null'
+          description: Source used to derive the expiration date (for example, `document` or `inference`).
+          example: document
+        documentSource:
+          type: string
+          description: Where the granting document was sourced from.
+          example: rpc
+        documentNumber:
+          type: string
+          description: Identifier of the granting document (NCI, protocol number, etc.).
+          example: '12345'
+        documentGrantingState:
+          type:
+          - string
+          - 'null'
+          description: Mexican state where the granting document was issued, when known.
+          example: CDMX
+        referenceExternal:
+          type: boolean
+          description: True when the power refers to a separate external document instead of being defined inline.
+          example: false
+        referenceText:
+          type:
+          - string
+          - 'null'
+          description: Verbatim text of the external reference, when present.
+        referenceDocumentNumber:
+          type:
+          - string
+          - 'null'
+          description: Document number of the external reference, when present.
+        exerciseJointlyWith:
+          type:
+          - string
+          - 'null'
+          description: Name of the co-grantee with whom the power must be exercised jointly, when applicable.
+        exerciseJointlyRequired:
+          type: boolean
+          description: Whether the power can only be exercised jointly with the co-grantee.
+          example: false
+        exerciseSubstitutionAllowed:
+          type: boolean
+          description: Whether the power may be substituted or delegated to another party.
+          example: false
+        exerciseLimitations:
+          type:
+          - string
+          - 'null'
+          description: Free-text limitations recorded in the source document.
+        realEstateCanAcquire:
+          type: boolean
+          description: Whether the grantee may acquire real estate on behalf of the principal.
+          example: false
+        realEstateCanDispose:
+          type: boolean
+          description: Whether the grantee may dispose of or sell real estate on behalf of the principal.
+          example: false
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
     CompanyVerificationReport:
       type: object
       required:
@@ -506,90 +722,52 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
-    RpcEntidadeFme:
-      type:
-      - string
-      - 'null'
-      description: Electronic commercial folio assigned by RPC
-      example: N-2000000000
-    CompanyVerificationFoundEntityCapTableEntry:
+    File:
       type: object
-      description: 'A single cap-table holding row for a found entity, scoped to one
-
-        `(capitalType, series)` bucket. A shareholder that holds both Serie A
-
-        fixed and Serie B fixed yields two entries.
-
-        '
-      required:
-      - id
-      - capitalType
-      - shares
-      - amount
-      - bucketPercentage
       properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: File IRI reference
+          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: File
+          example: File
         id:
           type: string
           format: uuid
-          example: 73cd5678-3456-7890-bcde-f01234567890
-        capitalType:
+          description: Unique file ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
           type: string
-          description: 'Capital classification: `fixed`, `variable`, or `unspecified`.'
-          enum:
-          - fixed
-          - variable
-          - unspecified
-          example: fixed
-        series:
-          type:
-          - string
-          - 'null'
-          description: Capital series identifier (`A`, `B`, …) when the source document reports it.
-          example: A
-        shares:
+          description: File category, such as an invoice CFDI XML or PDF
+          example: invoice.cfdi.xml
+        resource:
+          type: string
+          description: IRI of the resource that produced or owns the file
+          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
+        mimeType:
+          type: string
+          description: Media type of the file content
+          example: text/xml
+        extension:
+          type: string
+          description: File extension for the stored content
+          example: xml
+        size:
           type: integer
-          description: Number of shares held in this bucket.
-          example: 3000
-        amount:
+          description: File size in bytes
+          example: 40544
+        filename:
           type: string
-          description: Monetary value held in this bucket.
-          example: '30000.0000'
-        valuePerShare:
-          type:
-          - string
-          - 'null'
-          description: Face value per share for this bucket, when known.
-          example: '10.0000'
-        bucketPercentage:
-          type: string
-          description: 'Share of this `(capitalType, series)` bucket held by this entity.
-
-            All holdings of the same bucket across the report sum to `100` by
-
-            construction.
-
-            '
-          example: '60.0000'
-    RpcEntidadeID:
-      type: string
-      format: uuid
-      description: RPC Entidade ID
-      example: 99c13810-868f-482e-a6f1-878254248d27
+          description: Suggested filename for the file content
+          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
     RpcEntidadeProfile:
       type: object
       description: Basic RPC entidade profile information
@@ -608,195 +786,17 @@ components:
           $ref: '#/components/schemas/RpcEntidadeFme'
         nombreRazonSocial:
           $ref: '#/components/schemas/RpcEntidadeNombreRazonSocial'
-    CompanyVerificationFoundEntityPower:
-      type: object
-      description: A power of attorney granted to a found entity.
-      required:
-      - id
-      - status
-      - grantedAt
-      - documentSource
-      - documentNumber
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 64de4567-4567-8901-cdef-123456789012
-        status:
-          type: string
-          description: Whether the power is still in effect at the report cut-off date.
-          enum:
-          - current
-          - expired
-          example: current
-        power:
-          type:
-          - string
-          - 'null'
-          description: 'Canonical power type (for example, `administrative_acts` or
-
-            `lawsuits_and_collections`). `null` when the upstream pipeline
-
-            classified the power as `external` (a reference to another document).
-
-            '
-          example: administrative_acts
-        grantedAt:
-          type: string
-          format: date-time
-          description: Date the power was granted, as recorded in the source document.
-          example: '2020-01-15T00:00:00+00:00'
-        expirationDate:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Date the power expires or expired, when known.
-          example: '2025-01-15T00:00:00+00:00'
-        expirationSource:
-          type:
-          - string
-          - 'null'
-          description: Source used to derive the expiration date (for example, `document` or `inference`).
-          example: document
-        documentSource:
-          type: string
-          description: Where the granting document was sourced from.
-          example: rpc
-        documentNumber:
-          type: string
-          description: Identifier of the granting document (NCI, protocol number, etc.).
-          example: '12345'
-        documentGrantingState:
-          type:
-          - string
-          - 'null'
-          description: Mexican state where the granting document was issued, when known.
-          example: CDMX
-        referenceExternal:
-          type: boolean
-          description: True when the power refers to a separate external document instead of being defined inline.
-          example: false
-        referenceText:
-          type:
-          - string
-          - 'null'
-          description: Verbatim text of the external reference, when present.
-        referenceDocumentNumber:
-          type:
-          - string
-          - 'null'
-          description: Document number of the external reference, when present.
-        exerciseJointlyWith:
-          type:
-          - string
-          - 'null'
-          description: Name of the co-grantee with whom the power must be exercised jointly, when applicable.
-        exerciseJointlyRequired:
-          type: boolean
-          description: Whether the power can only be exercised jointly with the co-grantee.
-          example: false
-        exerciseSubstitutionAllowed:
-          type: boolean
-          description: Whether the power may be substituted or delegated to another party.
-          example: false
-        exerciseLimitations:
-          type:
-          - string
-          - 'null'
-          description: Free-text limitations recorded in the source document.
-        realEstateCanAcquire:
-          type: boolean
-          description: Whether the grantee may acquire real estate on behalf of the principal.
-          example: false
-        realEstateCanDispose:
-          type: boolean
-          description: Whether the grantee may dispose of or sell real estate on behalf of the principal.
-          example: false
-    createdAt:
+    RpcEntidadeID:
       type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-  parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    companyVerificationReportId:
-      name: reportId
-      in: path
-      required: true
-      description: Identifier of the Company Verification report.
-      example: 91ab5678-1234-5678-9abc-def012345678
-      schema:
-        type: string
-        format: uuid
-    orderUpdatedAt:
-      name: order[updatedAt]
-      in: query
-      description: Order by resource update date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+      format: uuid
+      description: RPC Entidade ID
+      example: 99c13810-868f-482e-a6f1-878254248d27
+    RpcEntidadeFme:
+      type:
+      - string
+      - 'null'
+      description: Electronic commercial folio assigned by RPC
+      example: N-2000000000
   securitySchemes:
     ApiKey:
       type: apiKey

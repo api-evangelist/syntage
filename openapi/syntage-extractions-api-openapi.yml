@@ -187,365 +187,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  requestBodies:
-    ExtractionCreate:
-      required: true
-      content:
-        application/json:
-          schema:
-            oneOf:
-            - type: object
-              required:
-              - entity
-              - extractor
-              properties:
-                entity:
-                  type: string
-                  format: iri-reference
-                  description: Entity IRI reference
-                  example: /entities/7b3a25a9-a53a-4846-abe6-f2574c9c2d5d
-                extractor:
-                  $ref: '#/components/schemas/ExtractionExtractor'
-                options:
-                  $ref: '#/components/schemas/ExtractionOptions'
-            - type: object
-              deprecated: true
-              required:
-              - taxpayer
-              - extractor
-              properties:
-                taxpayer:
-                  type: string
-                  format: iri-reference
-                  description: Taxpayer IRI reference
-                  example: /taxpayers/PEIC211118IS0
-                extractor:
-                  $ref: '#/components/schemas/ExtractionExtractor'
-                options:
-                  $ref: '#/components/schemas/ExtractionOptions'
-  parameters:
-    createdAtBefore:
-      name: createdAt[before]
-      in: query
-      description: Filter by resource creation date (less than or equal `<=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    createdAtStrictlyAfter:
-      name: createdAt[strictly_after]
-      in: query
-      description: Filter by resource creation date (greater than `>`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    orderUpdatedAt:
-      name: order[updatedAt]
-      in: query
-      description: Order by resource update date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    createdAtStrictlyBefore:
-      name: createdAt[strictly_before]
-      in: query
-      description: Filter by resource creation date (less than `<`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtAfter:
-      name: createdAt[after]
-      in: query
-      description: Filter by resource creation date (greater than or equal `>=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
-  schemas:
-    ExtractionRateLimitedAt:
-      type: string
-      format: date-time
-      description: 'This field returns a date when the taxpayer reached the max amount of downloaded CFDI files allowed by SAT in a range of 24hrs. You should retry this extraction 24hrs later. If your taxpayer has not reached the max amount this value should be `NULL`
-
-        '
-      example: '2019-01-03T21:10:40.000Z'
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
-    ExtractionExtractor:
-      type: string
-      description: Extractor to run, which retrieves resources from the corresponding datasource
-      enum:
-      - invoice
-      - monthly_tax_return
-      - annual_tax_return
-      - rif_tax_return
-      - tax_status
-      - tax_retention
-      - tax_compliance
-      - electronic_accounting
-      - sat_certificates
-      - rpc
-      - buro_de_credito_report
-      - bil
-      - rug
-      - background_check
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    ExtractionOptions:
-      type: object
-      description: Extractor options; check the available options for each extractor in [Extractions](https://docs.syntage.com/api-reference/extractions/overview#extractors)
-      example:
-        types:
-        - I
-        - E
-        - P
-        period:
-          from: '2020-01-01T00:00:00.000Z'
-          to: '2020-03-31T23:59:59.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    Extraction:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Extraction IRI reference
-          example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: Extraction
-        id:
-          type: string
-          format: uuid
-          description: Unique extraction ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        taxpayer:
-          $ref: '#/components/schemas/Taxpayer'
-        extractor:
-          $ref: '#/components/schemas/ExtractionExtractor'
-        options:
-          $ref: '#/components/schemas/ExtractionOptions'
-        status:
-          $ref: '#/components/schemas/ExtractionStatus'
-        startedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Time when the _status_ changed from **pending** to **running**
-        finishedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Time when the _status_ changed from **running** to **finished** or **failed**
-        rateLimitedAt:
-          $ref: '#/components/schemas/ExtractionRateLimitedAt'
-        errorCode:
-          $ref: '#/components/schemas/ExtractionErrorCode'
-        createdDataPoints:
-          $ref: '#/components/schemas/ExtractionCreatedDataPoints'
-        updatedDataPoints:
-          $ref: '#/components/schemas/ExtractionUpdatedDataPoints'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
-    Taxpayer:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Taxpayer IRI reference
-          example: /taxpayers/PEIC211118IS0
-        '@type':
-          type: string
-          default: Taxpayer
-        id:
-          $ref: '#/components/schemas/TaxpayerID'
-        personType:
-          $ref: '#/components/schemas/TaxpayerPersonType'
-        registrationDate:
-          type: string
-          format: date
-          description: Taxpayer registration date
-        name:
-          $ref: '#/components/schemas/TaxpayerName'
-    ExtractionStatus:
-      type: string
-      enum:
-      - pending
-      - running
-      - finished
-      - failed
-      - stopping
-      - stopped
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
-    ExtractionCreatedDataPoints:
-      type: integer
-      description: 'This is the number of created resources. For example, if 1 invoice was created with its XML and PDF file this value should be 3. And If you previously extracted all the resources and there are no more resources to create this value is 0.
-
-        '
-      example: 3
-    ExtractionUpdatedDataPoints:
-      type: integer
-      description: 'When your taxpayer has resources by a previous extraction and new extraction found changes between our data and Sat data it would update this resource. For example, when a new extraction finds a Canceled invoice which you previously extracted as an Active invoice.
-
-        '
-      example: 2
-    ExtractionErrorCode:
-      type:
-      - string
-      - 'null'
-      description: '[Extraction error code](#section/Extraction-error-codes)
-
-        '
-      example: null
-      enum:
-      - invalid_credentials
-      - login_failed
-      - unrecoverable
-      - sat_unavailable
-      - internal_error
-      - undefined
-    ExtractionCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/Extraction
-          '@id':
-            default: /extractions
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/Extraction'
-    TaxpayerPersonType:
-      type: string
-      enum:
-      - physical
-      - legal
-      example: physical
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
   responses:
     NotFound:
       description: Not found
@@ -636,6 +277,365 @@ components:
                       type: string
                       description: Validaton error message
                       example: This value should not be blank.
+  schemas:
+    ExtractionErrorCode:
+      type:
+      - string
+      - 'null'
+      description: '[Extraction error code](#section/Extraction-error-codes)
+
+        '
+      example: null
+      enum:
+      - invalid_credentials
+      - login_failed
+      - unrecoverable
+      - sat_unavailable
+      - internal_error
+      - undefined
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    ExtractionOptions:
+      type: object
+      description: Extractor options; check the available options for each extractor in [Extractions](https://docs.syntage.com/api-reference/extractions/overview#extractors)
+      example:
+        types:
+        - I
+        - E
+        - P
+        period:
+          from: '2020-01-01T00:00:00.000Z'
+          to: '2020-03-31T23:59:59.000Z'
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    ExtractionStatus:
+      type: string
+      enum:
+      - pending
+      - running
+      - finished
+      - failed
+      - stopping
+      - stopped
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    ExtractionRateLimitedAt:
+      type: string
+      format: date-time
+      description: 'This field returns a date when the taxpayer reached the max amount of downloaded CFDI files allowed by SAT in a range of 24hrs. You should retry this extraction 24hrs later. If your taxpayer has not reached the max amount this value should be `NULL`
+
+        '
+      example: '2019-01-03T21:10:40.000Z'
+    Extraction:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Extraction IRI reference
+          example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: Extraction
+        id:
+          type: string
+          format: uuid
+          description: Unique extraction ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        taxpayer:
+          $ref: '#/components/schemas/Taxpayer'
+        extractor:
+          $ref: '#/components/schemas/ExtractionExtractor'
+        options:
+          $ref: '#/components/schemas/ExtractionOptions'
+        status:
+          $ref: '#/components/schemas/ExtractionStatus'
+        startedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Time when the _status_ changed from **pending** to **running**
+        finishedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Time when the _status_ changed from **running** to **finished** or **failed**
+        rateLimitedAt:
+          $ref: '#/components/schemas/ExtractionRateLimitedAt'
+        errorCode:
+          $ref: '#/components/schemas/ExtractionErrorCode'
+        createdDataPoints:
+          $ref: '#/components/schemas/ExtractionCreatedDataPoints'
+        updatedDataPoints:
+          $ref: '#/components/schemas/ExtractionUpdatedDataPoints'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    Taxpayer:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Taxpayer IRI reference
+          example: /taxpayers/PEIC211118IS0
+        '@type':
+          type: string
+          default: Taxpayer
+        id:
+          $ref: '#/components/schemas/TaxpayerID'
+        personType:
+          $ref: '#/components/schemas/TaxpayerPersonType'
+        registrationDate:
+          type: string
+          format: date
+          description: Taxpayer registration date
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+    ExtractionUpdatedDataPoints:
+      type: integer
+      description: 'When your taxpayer has resources by a previous extraction and new extraction found changes between our data and Sat data it would update this resource. For example, when a new extraction finds a Canceled invoice which you previously extracted as an Active invoice.
+
+        '
+      example: 2
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    ExtractionCreatedDataPoints:
+      type: integer
+      description: 'This is the number of created resources. For example, if 1 invoice was created with its XML and PDF file this value should be 3. And If you previously extracted all the resources and there are no more resources to create this value is 0.
+
+        '
+      example: 3
+    TaxpayerPersonType:
+      type: string
+      enum:
+      - physical
+      - legal
+      example: physical
+    ExtractionCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/Extraction
+          '@id':
+            default: /extractions
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/Extraction'
+    ExtractionExtractor:
+      type: string
+      description: Extractor to run, which retrieves resources from the corresponding datasource
+      enum:
+      - invoice
+      - monthly_tax_return
+      - annual_tax_return
+      - rif_tax_return
+      - tax_status
+      - tax_retention
+      - tax_compliance
+      - electronic_accounting
+      - sat_certificates
+      - rpc
+      - buro_de_credito_report
+      - bil
+      - rug
+      - background_check
+  parameters:
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    createdAtBefore:
+      name: createdAt[before]
+      in: query
+      description: Filter by resource creation date (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
+      in: query
+      description: Filter by resource creation date (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtAfter:
+      name: createdAt[after]
+      in: query
+      description: Filter by resource creation date (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
+      in: query
+      description: Filter by resource creation date (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+  requestBodies:
+    ExtractionCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - type: object
+              required:
+              - entity
+              - extractor
+              properties:
+                entity:
+                  type: string
+                  format: iri-reference
+                  description: Entity IRI reference
+                  example: /entities/7b3a25a9-a53a-4846-abe6-f2574c9c2d5d
+                extractor:
+                  $ref: '#/components/schemas/ExtractionExtractor'
+                options:
+                  $ref: '#/components/schemas/ExtractionOptions'
+            - type: object
+              deprecated: true
+              required:
+              - taxpayer
+              - extractor
+              properties:
+                taxpayer:
+                  type: string
+                  format: iri-reference
+                  description: Taxpayer IRI reference
+                  example: /taxpayers/PEIC211118IS0
+                extractor:
+                  $ref: '#/components/schemas/ExtractionExtractor'
+                options:
+                  $ref: '#/components/schemas/ExtractionOptions'
   securitySchemes:
     ApiKey:
       type: apiKey

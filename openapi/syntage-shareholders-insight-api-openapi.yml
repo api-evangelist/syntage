@@ -71,8 +71,8 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -181,8 +181,8 @@ components:
                               description: Additional score metadata
                               type: object
                               additionalProperties: true
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -190,15 +190,6 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
   schemas:
     HydraView:
       type: object
@@ -269,6 +260,15 @@ components:
                       type: string
                     required:
                       type: boolean
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     ApiKey:
       type: apiKey

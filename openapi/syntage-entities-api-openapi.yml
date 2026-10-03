@@ -400,84 +400,263 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    EntityTagCollection:
+      description: Entity tag collection response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/CursorCollection'
+            - type: object
+              properties:
+                '@context':
+                  default: /contexts/LinkTag
+                '@id':
+                  example: /entity-tags
+                hydra:member:
+                  items:
+                    $ref: '#/components/schemas/EntityTag'
+    EntityIdentifierCollection:
+      description: Entity identifier collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityIdentifierCollection'
+    EntityTag:
+      description: Entity tag resource response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityTag'
+    TagEntitiesBatch:
+      description: Result of a batch entity tag operation
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/TagEntitiesBatch'
+    EntityCollection:
+      description: Entity collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityCollection'
+    Entity:
+      description: Entity resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Entity
+            - $ref: '#/components/schemas/Entity'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    EntityIdentifier:
+      description: Entity identifier resource response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityIdentifier'
+  parameters:
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    updatedAtStrictlyAfter:
+      name: updatedAt[strictly_after]
+      in: query
+      description: Filter by the date the resource was last updated (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    createdAtBefore:
+      name: createdAt[before]
+      in: query
+      description: Filter by resource creation date (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtAfter:
+      name: updatedAt[after]
+      in: query
+      description: Filter by the date the resource was last updated (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
+      in: query
+      description: Filter by resource creation date (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtAfter:
+      name: createdAt[after]
+      in: query
+      description: Filter by resource creation date (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
+      in: query
+      description: Filter by resource creation date (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    updatedAtBefore:
+      name: updatedAt[before]
+      in: query
+      description: Filter by the date the resource was last updated (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtStrictlyBefore:
+      name: updatedAt[strictly_before]
+      in: query
+      description: Filter by the date the resource was last updated (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+  requestBodies:
+    EntityTagUpdate:
+      required: true
+      content:
+        application/merge-patch+json:
+          schema:
+            $ref: '#/components/schemas/EntityTagUpdateInput'
+    EntityIdentifierCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EntityIdentifierCreateInput'
+    EntityTagCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EntityTagCreateInput'
+    TagEntitiesBatch:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TagEntitiesBatchInput'
+    EntityUpdate:
+      required: true
+      content:
+        application/merge-patch+json:
+          schema:
+            $ref: '#/components/schemas/EntityUpdateInput'
   schemas:
     uuid:
       type: string
       format: uuid
       example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    EntityIdentifier:
+    EntityTagUpdateInput:
       type: object
       properties:
-        '@id':
+        name:
           type: string
-          format: iri-reference
-          description: Entity identifier IRI reference
-          example: /.well-known/genid/78c595ac88fa9659fa80
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: EntityIdentifier
-        id:
-          $ref: '#/components/schemas/uuid'
-        link:
-          type: string
-          format: iri-reference
-          description: Entity IRI reference
-          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997
-        country:
-          type: string
-          description: Country that issued the identifier
-          enum:
-          - mx
-          example: mx
-        identifier:
-          type: string
-          description: Kind of identifier for the entity
-          enum:
-          - curp
-          - rfc
-          example: rfc
-        value:
-          type: string
-          description: Identifier value
-          example: XAXX010101000
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    Entity:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Entity IRI reference
-          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type; Entity resources currently use the legacy `Link` JSON-LD type for backwards compatibility
-          default: Link
-        id:
-          $ref: '#/components/schemas/uuid'
-        type:
-          $ref: '#/components/schemas/EntityType'
-        taxpayer:
-          $ref: '#/components/schemas/Taxpayer'
-        credential:
-          $ref: '#/components/schemas/Credential'
-        tags:
-          $ref: '#/components/schemas/EntityTagCollection'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    EntityType:
+          writeOnly: true
+          description: Entity tag name
+          example: Priority Entity
+        color:
+          type:
+          - string
+          - 'null'
+          writeOnly: true
+          description: Optional display color as a 7-character hexadecimal string (`#RRGGBB`). Send `null` to clear the color and fall back to the default.
+          example: '#22c558'
+    createdAt:
       type: string
-      enum:
-      - company
-      - person
-      description: Type of entity
-      example: company
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
     HydraView:
       type: object
       properties:
@@ -520,133 +699,23 @@ components:
               type: string
               format: iri-reference
               description: Last page IRI reference; omitted when there is no pagination
-    Credential:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: SAT Credential IRI reference
-          example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          default: Credential
-        id:
-          type: string
-          format: uuid
-          description: Credential ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        type:
-          $ref: '#/components/schemas/CredentialType'
-        rfc:
-          $ref: '#/components/schemas/TaxpayerID'
-        status:
-          $ref: '#/components/schemas/CredentialStatus'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    Collection:
-      allOf:
-      - $ref: '#/components/schemas/HydraView'
-      - type: object
-        properties:
-          hydra:search:
-            type: object
-            properties:
-              '@type':
-                type: string
-              hydra:template:
-                type: string
-              hydra:variableRepresentation:
-                type: string
-              hydra:mapping:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                    variable:
-                      type: string
-                    property:
-                      type: string
-                    required:
-                      type: boolean
-    EntityTagCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EntityTag'
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
-    EntityIdentifierCreateInput:
+    EntityTagCreateInput:
       type: object
       required:
-      - country
-      - identifier
-      - value
+      - name
       properties:
-        country:
-          type: string
-          description: Country that issued the identifier
-          enum:
-          - mx
-          writeOnly: true
-          example: mx
-        identifier:
-          type: string
-          description: Kind of identifier to add to the entity
-          enum:
-          - curp
-          - rfc
-          writeOnly: true
-          example: rfc
-        value:
+        name:
           type: string
           writeOnly: true
-          description: Identifier value
-          example: XAXX010101000
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    TagEntitiesBatchInput:
-      type: object
-      required:
-      - resources
-      - tags
-      properties:
-        resources:
-          type: array
+          description: Entity tag name
+          example: Priority Entity
+        color:
+          type:
+          - string
+          - 'null'
           writeOnly: true
-          description: Entities to tag or untag, as IRI references
-          minItems: 1
-          maxItems: 100
-          items:
-            type: string
-            format: iri-reference
-          example:
-          - /entities/91106968-1abd-4d64-85c1-4e73d96fb997
-        tags:
-          type: array
-          writeOnly: true
-          description: Entity tags to add or remove, as IRI references
-          minItems: 1
-          maxItems: 50
-          items:
-            type: string
-            format: iri-reference
-          example:
-          - /entity-tags/018d9dd9-459f-768e-bc55-a8a72d0d3e9a
+          description: Optional display color as a 7-character hexadecimal string (`#RRGGBB`). Omit or send `null` to fall back to the default color.
+          example: '#22c558'
     EntityUpdateInput:
       properties:
         tags:
@@ -663,95 +732,6 @@ components:
           writeOnly: true
           description: Entity name
           example: Syntage
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
-    TagEntitiesBatch:
-      type: object
-      properties:
-        resources:
-          type: array
-          description: IDs of the entities the operation was applied to
-          items:
-            type: string
-            format: uuid
-        tags:
-          type: array
-          description: IDs of the entity tags added or removed
-          items:
-            type: string
-            format: uuid
-    Taxpayer:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Taxpayer IRI reference
-          example: /taxpayers/PEIC211118IS0
-        '@type':
-          type: string
-          default: Taxpayer
-        id:
-          $ref: '#/components/schemas/TaxpayerID'
-        personType:
-          $ref: '#/components/schemas/TaxpayerPersonType'
-        registrationDate:
-          type: string
-          format: date
-          description: Taxpayer registration date
-        name:
-          $ref: '#/components/schemas/TaxpayerName'
-    DatasourceName:
-      type: string
-      enum:
-      - sat
-      - buro_de_credito
-      - rpc
-      - rug
-      - bil
-    EntityCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/Entity
-          '@id':
-            default: /entities
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/Entity'
-    CredentialType:
-      type: string
-      enum:
-      - ciec
-      - efirma
-      example: ciec
-    EntityTagUpdateInput:
-      type: object
-      properties:
-        name:
-          type: string
-          writeOnly: true
-          description: Entity tag name
-          example: Priority Entity
-        color:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-          description: Optional display color as a 7-character hexadecimal string (`#RRGGBB`). Send `null` to clear the color and fall back to the default.
-          example: '#22c558'
     CursorCollection:
       type: object
       properties:
@@ -807,46 +787,6 @@ components:
                     type: string
                   required:
                     type: boolean
-    EntityTag:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Entity Tag IRI reference
-          example: /entity-tags/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: EntityTag
-        id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          type: string
-          description: Display name for the entity tag
-          example: Priority Entity
-        color:
-          type:
-          - string
-          - 'null'
-          description: Lowercase 7-character hexadecimal color used to display the tag (`#RRGGBB`). Defaults to `#a3aab5` when an entity tag is created without a color.
-          example: '#22c558'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    EntityIdentifierCollection:
-      allOf:
-      - $ref: '#/components/schemas/Collection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/EntityIdentifier
-          '@id':
-            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/identifiers
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/EntityIdentifier'
     CredentialStatus:
       type: string
       enum:
@@ -882,266 +822,326 @@ components:
 
         '
       example: pending
+    TagEntitiesBatch:
+      type: object
+      properties:
+        resources:
+          type: array
+          description: IDs of the entities the operation was applied to
+          items:
+            type: string
+            format: uuid
+        tags:
+          type: array
+          description: IDs of the entity tags added or removed
+          items:
+            type: string
+            format: uuid
+    EntityIdentifier:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Entity identifier IRI reference
+          example: /.well-known/genid/78c595ac88fa9659fa80
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: EntityIdentifier
+        id:
+          $ref: '#/components/schemas/uuid'
+        link:
+          type: string
+          format: iri-reference
+          description: Entity IRI reference
+          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997
+        country:
+          type: string
+          description: Country that issued the identifier
+          enum:
+          - mx
+          example: mx
+        identifier:
+          type: string
+          description: Kind of identifier for the entity
+          enum:
+          - curp
+          - rfc
+          example: rfc
+        value:
+          type: string
+          description: Identifier value
+          example: XAXX010101000
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    EntityTagCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntityTag'
+    Entity:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Entity IRI reference
+          example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type; Entity resources currently use the legacy `Link` JSON-LD type for backwards compatibility
+          default: Link
+        id:
+          $ref: '#/components/schemas/uuid'
+        type:
+          $ref: '#/components/schemas/EntityType'
+        taxpayer:
+          $ref: '#/components/schemas/Taxpayer'
+        credential:
+          $ref: '#/components/schemas/Credential'
+        tags:
+          $ref: '#/components/schemas/EntityTagCollection'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    EntityIdentifierCollection:
+      allOf:
+      - $ref: '#/components/schemas/Collection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/EntityIdentifier
+          '@id':
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/identifiers
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/EntityIdentifier'
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
+    TagEntitiesBatchInput:
+      type: object
+      required:
+      - resources
+      - tags
+      properties:
+        resources:
+          type: array
+          writeOnly: true
+          description: Entities to tag or untag, as IRI references
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+            format: iri-reference
+          example:
+          - /entities/91106968-1abd-4d64-85c1-4e73d96fb997
+        tags:
+          type: array
+          writeOnly: true
+          description: Entity tags to add or remove, as IRI references
+          minItems: 1
+          maxItems: 50
+          items:
+            type: string
+            format: iri-reference
+          example:
+          - /entity-tags/018d9dd9-459f-768e-bc55-a8a72d0d3e9a
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    Collection:
+      allOf:
+      - $ref: '#/components/schemas/HydraView'
+      - type: object
+        properties:
+          hydra:search:
+            type: object
+            properties:
+              '@type':
+                type: string
+              hydra:template:
+                type: string
+              hydra:variableRepresentation:
+                type: string
+              hydra:mapping:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                    variable:
+                      type: string
+                    property:
+                      type: string
+                    required:
+                      type: boolean
+    Taxpayer:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Taxpayer IRI reference
+          example: /taxpayers/PEIC211118IS0
+        '@type':
+          type: string
+          default: Taxpayer
+        id:
+          $ref: '#/components/schemas/TaxpayerID'
+        personType:
+          $ref: '#/components/schemas/TaxpayerPersonType'
+        registrationDate:
+          type: string
+          format: date
+          description: Taxpayer registration date
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+    EntityIdentifierCreateInput:
+      type: object
+      required:
+      - country
+      - identifier
+      - value
+      properties:
+        country:
+          type: string
+          description: Country that issued the identifier
+          enum:
+          - mx
+          writeOnly: true
+          example: mx
+        identifier:
+          type: string
+          description: Kind of identifier to add to the entity
+          enum:
+          - curp
+          - rfc
+          writeOnly: true
+          example: rfc
+        value:
+          type: string
+          writeOnly: true
+          description: Identifier value
+          example: XAXX010101000
+    DatasourceName:
+      type: string
+      enum:
+      - sat
+      - buro_de_credito
+      - rpc
+      - rug
+      - bil
+    EntityType:
+      type: string
+      enum:
+      - company
+      - person
+      description: Type of entity
+      example: company
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    CredentialType:
+      type: string
+      enum:
+      - ciec
+      - efirma
+      example: ciec
+    EntityTag:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Entity Tag IRI reference
+          example: /entity-tags/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: EntityTag
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+          description: Display name for the entity tag
+          example: Priority Entity
+        color:
+          type:
+          - string
+          - 'null'
+          description: Lowercase 7-character hexadecimal color used to display the tag (`#RRGGBB`). Defaults to `#a3aab5` when an entity tag is created without a color.
+          example: '#22c558'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    EntityCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/Entity
+          '@id':
+            default: /entities
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/Entity'
     TaxpayerPersonType:
       type: string
       enum:
       - physical
       - legal
       example: physical
-    EntityTagCreateInput:
+    Credential:
       type: object
-      required:
-      - name
       properties:
-        name:
+        '@id':
           type: string
-          writeOnly: true
-          description: Entity tag name
-          example: Priority Entity
-        color:
-          type:
-          - string
-          - 'null'
-          writeOnly: true
-          description: Optional display color as a 7-character hexadecimal string (`#RRGGBB`). Omit or send `null` to fall back to the default color.
-          example: '#22c558'
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-  requestBodies:
-    EntityTagUpdate:
-      required: true
-      content:
-        application/merge-patch+json:
-          schema:
-            $ref: '#/components/schemas/EntityTagUpdateInput'
-    EntityIdentifierCreate:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/EntityIdentifierCreateInput'
-    EntityTagCreate:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/EntityTagCreateInput'
-    EntityUpdate:
-      required: true
-      content:
-        application/merge-patch+json:
-          schema:
-            $ref: '#/components/schemas/EntityUpdateInput'
-    TagEntitiesBatch:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TagEntitiesBatchInput'
-  responses:
-    Entity:
-      description: Entity resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/Entity
-            - $ref: '#/components/schemas/Entity'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    EntityTag:
-      description: Entity tag resource response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/EntityTag'
-    TagEntitiesBatch:
-      description: Result of a batch entity tag operation
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/TagEntitiesBatch'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    EntityIdentifierCollection:
-      description: Entity identifier collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/EntityIdentifierCollection'
-    EntityTagCollection:
-      description: Entity tag collection response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/CursorCollection'
-            - type: object
-              properties:
-                '@context':
-                  default: /contexts/LinkTag
-                '@id':
-                  example: /entity-tags
-                hydra:member:
-                  items:
-                    $ref: '#/components/schemas/EntityTag'
-    EntityCollection:
-      description: Entity collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/EntityCollection'
-    EntityIdentifier:
-      description: Entity identifier resource response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/EntityIdentifier'
-  parameters:
-    createdAtBefore:
-      name: createdAt[before]
-      in: query
-      description: Filter by resource creation date (less than or equal `<=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    createdAtStrictlyAfter:
-      name: createdAt[strictly_after]
-      in: query
-      description: Filter by resource creation date (greater than `>`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    updatedAtBefore:
-      name: updatedAt[before]
-      in: query
-      description: Filter by the date the resource was last updated (less than or equal `<=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    orderUpdatedAt:
-      name: order[updatedAt]
-      in: query
-      description: Order by resource update date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    updatedAtStrictlyAfter:
-      name: updatedAt[strictly_after]
-      in: query
-      description: Filter by the date the resource was last updated (greater than `>`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    updatedAtAfter:
-      name: updatedAt[after]
-      in: query
-      description: Filter by the date the resource was last updated (greater than or equal `>=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtStrictlyBefore:
-      name: createdAt[strictly_before]
-      in: query
-      description: Filter by resource creation date (less than `<`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtAfter:
-      name: createdAt[after]
-      in: query
-      description: Filter by resource creation date (greater than or equal `>=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    updatedAtStrictlyBefore:
-      name: updatedAt[strictly_before]
-      in: query
-      description: Filter by the date the resource was last updated (less than `<`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
+          format: iri-reference
+          description: SAT Credential IRI reference
+          example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          default: Credential
+        id:
+          type: string
+          format: uuid
+          description: Credential ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          $ref: '#/components/schemas/CredentialType'
+        rfc:
+          $ref: '#/components/schemas/TaxpayerID'
+        status:
+          $ref: '#/components/schemas/CredentialStatus'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
   securitySchemes:
     ApiKey:
       type: apiKey

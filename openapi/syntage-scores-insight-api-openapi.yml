@@ -143,11 +143,138 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
 components:
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            properties:
+              '@context':
+                type: string
+                default: /contexts/Error
+              '@type':
+                type: string
+                default: hydra:Error
+              hydra:title:
+                type: string
+                default: An error occurred
+              hydra:description:
+                type: string
+                description: Concatenated violation messages
+                example: 'exampleField: Syntage score already exists.'
+    ScoresInsight:
+      description: Entity scores
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Scores
+            - $ref: '#/components/schemas/Scores'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
+    Scores:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Scores IRI reference
+          example: /.well-known/genid/78c595ac88fa9659fa80
+        '@type':
+          type: string
+          default: Scores
+        scores:
+          type: array
+          description: List of score objects
+          items:
+            $ref: '#/components/schemas/Score'
+    ScoreDistribution:
+      type: object
+      description: Distribution of current Syntage Score values across score buckets.
+      properties:
+        distribution:
+          type: array
+          description: Number of Syntage Score records in each score bucket
+          items:
+            type: object
+            properties:
+              label:
+                type: integer
+                description: Score bucket label
+                example: 500
+              metric:
+                type: integer
+                description: Number of scores in the bucket
+                example: 12
     uuid:
       type: string
       format: uuid
       example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    HydraView:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:totalItems:
+          type: integer
+          description: Total number of items found
+          minimum: 0
+          example: 1
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:first:
+              type: string
+              format: iri-reference
+              description: First page IRI reference; omitted when there is no pagination
+            hydra:next:
+              type: string
+              format: iri-reference
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              format: iri-reference
+              description: Last page IRI reference; omitted when there is no pagination
     Score:
       type: object
       properties:
@@ -240,133 +367,6 @@ components:
           - 'null'
           description: Provider return key for legal-entity report products when available
           example: '1'
-    HydraView:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:totalItems:
-          type: integer
-          description: Total number of items found
-          minimum: 0
-          example: 1
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:first:
-              type: string
-              format: iri-reference
-              description: First page IRI reference; omitted when there is no pagination
-            hydra:next:
-              type: string
-              format: iri-reference
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              format: iri-reference
-              description: Last page IRI reference; omitted when there is no pagination
-    Scores:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Scores IRI reference
-          example: /.well-known/genid/78c595ac88fa9659fa80
-        '@type':
-          type: string
-          default: Scores
-        scores:
-          type: array
-          description: List of score objects
-          items:
-            $ref: '#/components/schemas/Score'
-    ScoreDistribution:
-      type: object
-      description: Distribution of current Syntage Score values across score buckets.
-      properties:
-        distribution:
-          type: array
-          description: Number of Syntage Score records in each score bucket
-          items:
-            type: object
-            properties:
-              label:
-                type: integer
-                description: Score bucket label
-                example: 500
-              metric:
-                type: integer
-                description: Number of scores in the bucket
-                example: 12
-  responses:
-    UnprocessableEntity:
-      description: Unprocessable Entity
-      content:
-        application/ld+json:
-          schema:
-            type: object
-            properties:
-              '@context':
-                type: string
-                default: /contexts/Error
-              '@type':
-                type: string
-                default: hydra:Error
-              hydra:title:
-                type: string
-                default: An error occurred
-              hydra:description:
-                type: string
-                description: Concatenated violation messages
-                example: 'exampleField: Syntage score already exists.'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    ScoresInsight:
-      description: Entity scores
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/Scores
-            - $ref: '#/components/schemas/Scores'
   parameters:
     entityId:
       name: entityId

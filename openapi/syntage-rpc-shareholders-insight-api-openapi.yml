@@ -62,15 +62,6 @@ components:
             properties:
               message:
                 type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     RpcShareholdersInsight:
       description: RPC Shareholders
       content:
@@ -100,6 +91,15 @@ components:
                       type: number
                       format: float
                       example: 100
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   parameters:
     entityId:
       name: entityId
