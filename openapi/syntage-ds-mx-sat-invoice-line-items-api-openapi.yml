@@ -114,199 +114,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    InvoiceHasXML:
-      type: boolean
-      description: '`true` when the CFDI is available in the XML format. The file can be downloaded through the [retrieve an invoice CFDI](#operation/GetInvoiceCFDI) operation
-
-        '
-    InvoiceVersion:
-      type:
-      - number
-      - 'null'
-      format: float
-      enum:
-      - 3.2
-      - 3.3
-      - 4.0
-      description: CFDI version
-      example: 3.3
-    InvoiceExchangeRate:
-      type:
-      - number
-      - 'null'
-      format: float
-      description: Set when *currency* is different than MXN (Mexican Peso).
-      example: 19.8
-    uuid:
-      type: string
-      format: uuid
-      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    InvoiceHasPDF:
-      type: boolean
-      description: '`true` when the CFDI is available in the PDF format. The file can be downloaded through the [retrieve an invoice CFDI](#operation/GetInvoiceCFDI) operation
-
-        '
-    InvoiceStatus:
-      type: string
-      enum:
-      - VIGENTE
-      - CANCELADO
-      description: Whether the invoice is active or canceled
-      example: VIGENTE
-    InvoiceInternalIdentifier:
-      type:
-      - string
-      - 'null'
-      description: An open field for internal identification. Commonly used to identify an invoice
-      maxLength: 40
-      example: '00001'
-    InvoiceRelationRelatedInvoice:
-      type:
-      - string
-      - 'null'
-      format: iri-reference
-      description: Invoice IRI reference
-      example: /invoices/92106967-2abd-5d64-95c2-4e73d96fb998
-    InvoiceSubtotal:
-      type: number
-      format: float
-      description: Subtotal amount
-      example: 51349.8
-    InvoiceCertifiedAt:
-      type: string
-      format: date-time
-      description: Invoice certification date
-      example: '2019-01-03T21:10:41.000Z'
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
-    TaxpayerBlacklistStatus:
-      type:
-      - string
-      - 'null'
-      description: Show the blacklist status if a taxpayer is found in the list 69-B from SAT
-      example: presumed
-      enum:
-      - presumed
-      - dismissed
-      - definitive
-      - favorable
-    Invoice:
-      allOf:
-      - $ref: '#/components/schemas/InvoiceCollectionItem'
-      - type: object
-      properties:
-        tags:
-          $ref: '#/components/schemas/TagCollection'
-    InvoiceRelationType:
-      type: number
-      enum:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      description: Invoice relation type code from the [c_TipoRelacion](/guides/catalogs#c_tiporelacion) catalog
-      example: 7
-      externalDocs:
-        url: https://syntage.com/docs/catalogs/#c_tiporelacion
-    RetainedTaxes:
-      type: object
-      properties:
-        valueAddedTax:
-          type: number
-          format: double
-          description: Retained value-added tax amount
-          example: 0
-        incomeTax:
-          type: number
-          format: double
-          description: Retained income tax amount
-          example: 0
-        sinTax:
-          type: number
-          format: double
-          description: Retained special tax on production and services amount
-          example: 0
-    InvoiceIsReceiver:
-      type: boolean
-      description: '`true` if the invoice receiver is the entity''s RFC
-
-        '
-      example: false
-    TransferredTaxes:
-      type: object
-      properties:
-        valueAddedTax:
-          type: number
-          format: double
-          description: Transferred value-added tax amount
-          example: 0
-        sinTax:
-          type: number
-          format: double
-          description: Transferred special tax on production and services amount
-          example: 0
     TaxpayerID:
       type: string
       minLength: 12
@@ -317,44 +124,6 @@ components:
       type: string
       description: Date and time the resource was last updated
       example: '2020-01-01T12:15:00.000Z'
-    InvoicePaymentMethod:
-      type:
-      - string
-      - 'null'
-      enum:
-      - '01'
-      - '02'
-      - '03'
-      - '04'
-      - '05'
-      - '06'
-      - 08
-      - '12'
-      - '13'
-      - '14'
-      - '15'
-      - '17'
-      - '23'
-      - '24'
-      - '25'
-      - '26'
-      - '27'
-      - '28'
-      - '29'
-      - '30'
-      - '31'
-      - '99'
-      example: '04'
-      description: Payment method code from the [c_FormaPago](/guides/catalogs#c_formapago) catalog
-      externalDocs:
-        url: https://syntage.com/docs/catalogs#c_formapago
-    InvoiceCreditedAmount:
-      type:
-      - number
-      - 'null'
-      format: float
-      description: Credited amount
-      example: 31.32
     InvoiceCollectionItem:
       type: object
       properties:
@@ -448,96 +217,22 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    InvoicePaymentTerms:
-      type:
-      - string
-      - 'null'
-      enum:
-      - immediate_payment
-      - net_0
-      - net_15
-      - net_30
-      - net_45
-      - net_90
-      - net_120
-      example: immediate_payment
-      description: Payment terms
-    InvoiceLastPaymentDate:
-      type:
-      - string
-      - 'null'
-      format: date-time
-      description: This field is populated with the last related payment date (Applies only for "PPD" invoices).
-    InvoicePac:
+    InvoiceCertifiedAt:
       type: string
-      minLength: 12
-      maxLength: 12
-      description: Certification provider tax ID (Proveedor Autorizado de Certificación)
-      example: SAT970701NN3
+      format: date-time
+      description: Invoice certification date
+      example: '2019-01-03T21:10:41.000Z'
     CollectionLimit:
       type: integer
       default: 20
       minimum: 1
       maximum: 1000
-    InvoiceSubtotalCreditedAmount:
-      type:
-      - number
-      - 'null'
-      format: float
-      description: Subtotal credited amount
-      example: 27
-    InvoiceRelation:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Invoice Relation IRI reference
-          example: /invoices/relations/93a197e7-6baa-5dc5-bf8d-fb1645a770c1
-        '@type':
-          type: string
-          default: InvoiceRelation
-        id:
-          $ref: '#/components/schemas/InvoiceRelationID'
-        type:
-          $ref: '#/components/schemas/InvoiceRelationType'
-        invoice:
-          $ref: '#/components/schemas/InvoiceRelationInvoice'
-        relatedInvoice:
-          $ref: '#/components/schemas/InvoiceRelationRelatedInvoice'
-        relatedInvoiceUuid:
-          $ref: '#/components/schemas/InvoiceRelationRelatedInvoiceUuid'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    InvoiceIssuer:
-      type: object
-      properties:
-        rfc:
-          $ref: '#/components/schemas/TaxpayerID'
-        name:
-          $ref: '#/components/schemas/TaxpayerName'
-        taxRegime:
-          $ref: '#/components/schemas/InvoiceIssuerTaxRegime'
-        blacklistStatus:
-          $ref: '#/components/schemas/TaxpayerBlacklistStatus'
-      example:
-        rfc: AOM920820BEA
-        name: APPLE OPERATIONS MEXICO S.A. DE C.V.
-        taxRegime: 601
-        blacklistStatus: null
-    InvoicePaymentType:
+    InvoiceFullyPaidAt:
       type:
       - string
       - 'null'
-      enum:
-      - PUE
-      - PPD
-      description: Payment type code from the [c_MetodoPago](/guides/catalogs#c_metodopago) catalog
-      example: PUE
-      externalDocs:
-        url: https://syntage.com/docs/catalogs#c_metodopago
+      format: date-time
+      description: This field is populated when the total debt is paid. (Applies only for "PPD" invoices).
     InvoiceCancellationStatusProcess:
       type:
       - string
@@ -550,60 +245,52 @@ components:
       - Plazo vencido
       description: Set when the cancellation process starts
       example: En proceso
-    InvoiceRelationInvoice:
+    InvoicePac:
       type: string
-      format: iri-reference
-      description: Invoice IRI reference
-      example: /invoices/92106967-2abd-5d64-95c2-4e73d96fb998
-    InvoicePlaceOfIssue:
+      minLength: 12
+      maxLength: 12
+      description: Certification provider tax ID (Proveedor Autorizado de Certificación)
+      example: SAT970701NN3
+    InvoiceIssuedAt:
       type: string
-      example: '01210'
-      description: Postal code of the place of issue
-    TagCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/Tag'
-    InvoicePaidAmount:
-      type: number
-      format: float
-      description: For a deferred invoice this field state the paid amount. (Applies only for "PPD" invoices).
-      example: 53249.8
-    InvoiceUUID:
-      type: string
-      format: uuid
-      description: Invoice UUID (Folio fiscal)
-      example: def404af-5eef-4112-aa99-d1ec8493b89a
-    InvoicePaymentTermsRaw:
+      format: date-time
+      description: Invoice issue date
+      example: '2019-01-03T21:10:40.000Z'
+    InvoiceInternalIdentifier:
       type:
       - string
       - 'null'
-      example: Tarjeta de crédito
-      description: The invoice payment terms text exactly as it comes from the invoice, i.e. immediate, 30 days, cash, credit card, etc
+      description: An open field for internal identification. Commonly used to identify an invoice
+      maxLength: 40
+      example: '00001'
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    Invoice:
+      allOf:
+      - $ref: '#/components/schemas/InvoiceCollectionItem'
+      - type: object
+      properties:
+        tags:
+          $ref: '#/components/schemas/TagCollection'
     InvoiceIsIssuer:
       type: boolean
       description: '`true` if the invoice issuer is the entity''s RFC
 
         '
       example: true
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
-    InvoiceTax:
-      type: number
-      format: float
-      description: Tax amount
-      example: 5224
-    InvoiceCancellationStatus:
-      type: string
+    InvoicePaymentType:
+      type:
+      - string
+      - 'null'
       enum:
-      - Cancelable sin aceptación
-      - Cancelable con aceptación
-      - No cancelable
-      description: Whether or not the invoice can be canceled
-      example: Cancelable con aceptación
+      - PUE
+      - PPD
+      description: Payment type code from the [c_MetodoPago](/guides/catalogs#c_metodopago) catalog
+      example: PUE
+      externalDocs:
+        url: https://syntage.com/docs/catalogs#c_metodopago
     InvoiceLineItem:
       type: object
       properties:
@@ -681,77 +368,240 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    InvoiceCurrency:
+    InvoiceSubtotalCreditedAmount:
+      type:
+      - number
+      - 'null'
+      format: float
+      description: Subtotal credited amount
+      example: 27
+    InvoicePaymentTermsRaw:
       type:
       - string
       - 'null'
-      description: ISO 4217 alphabetic currency code
-      minLength: 3
-      maxLength: 3
-      example: MXN
-    InvoiceCanceledAt:
+      example: Tarjeta de crédito
+      description: The invoice payment terms text exactly as it comes from the invoice, i.e. immediate, 30 days, cash, credit card, etc
+    InvoiceSubtotal:
+      type: number
+      format: float
+      description: Subtotal amount
+      example: 51349.8
+    TaxpayerBlacklistStatus:
       type:
       - string
       - 'null'
-      format: date-time
-      description: Set when *status* is `CANCELADO`
+      description: Show the blacklist status if a taxpayer is found in the list 69-B from SAT
+      example: presumed
+      enum:
+      - presumed
+      - dismissed
+      - definitive
+      - favorable
+    InvoiceDueAmount:
+      type: number
+      format: float
+      description: For a deferred invoice this field state the due amount. (Applies only for "PPD" invoices).
+      example: 0
+    InvoiceUUID:
+      type: string
+      format: uuid
+      description: Invoice UUID (Folio fiscal)
+      example: def404af-5eef-4112-aa99-d1ec8493b89a
+    InvoiceID:
+      type: string
+      format: uuid
+      description: Invoice ID
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
     InvoiceTotal:
       type: number
       format: float
       description: Invoice total amount
       example: 53249.8
-    InvoiceDiscount:
-      type: number
-      format: float
-      description: Discount amount
-      example: 3324
-    InvoiceIssuedAt:
-      type: string
-      format: date-time
-      description: Invoice issue date
-      example: '2019-01-03T21:10:40.000Z'
-    InvoiceIssuerTaxRegime:
-      type:
-      - number
-      - 'null'
-      enum:
-      - 601
-      - 603
-      - 605
-      - 606
-      - 607
-      - 608
-      - 609
-      - 610
-      - 611
-      - 612
-      - 614
-      - 615
-      - 616
-      - 620
-      - 621
-      - 622
-      - 623
-      - 624
-      - 625
-      - 626
-      - 628
-      - 629
-      - 630
-      description: Tax regime code from the [c_RegimenFiscal](/guides/catalogs#c_regimenfiscal) catalog
-      example: 601
-      externalDocs:
-        url: https://syntage.com/docs/catalogs#c_regimenfiscal
+    RetainedTaxes:
+      type: object
+      properties:
+        valueAddedTax:
+          type: number
+          format: double
+          description: Retained value-added tax amount
+          example: 0
+        incomeTax:
+          type: number
+          format: double
+          description: Retained income tax amount
+          example: 0
+        sinTax:
+          type: number
+          format: double
+          description: Retained special tax on production and services amount
+          example: 0
     InvoiceRelationRelatedInvoiceUuid:
       type: string
       format: uuid
       description: The related Invoice UUID (Folio fiscal)
       example: def404af-5eef-4112-aa99-d1ec8493b89a
+    InvoiceLastPaymentDate:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: This field is populated with the last related payment date (Applies only for "PPD" invoices).
+    InvoiceRelationRelatedInvoice:
+      type:
+      - string
+      - 'null'
+      format: iri-reference
+      description: Invoice IRI reference
+      example: /invoices/92106967-2abd-5d64-95c2-4e73d96fb998
+    InvoiceCreditedAmount:
+      type:
+      - number
+      - 'null'
+      format: float
+      description: Credited amount
+      example: 31.32
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    InvoiceVersion:
+      type:
+      - number
+      - 'null'
+      format: float
+      enum:
+      - 3.2
+      - 3.3
+      - 4.0
+      description: CFDI version
+      example: 3.3
+    InvoicePlaceOfIssue:
+      type: string
+      example: '01210'
+      description: Postal code of the place of issue
+    InvoiceRelationInvoice:
+      type: string
+      format: iri-reference
+      description: Invoice IRI reference
+      example: /invoices/92106967-2abd-5d64-95c2-4e73d96fb998
+    InvoiceType:
+      type: string
+      enum:
+      - I
+      - E
+      - P
+      - N
+      - T
+      description: Invoice type code from the [c_TipoDeComprobante](/guides/catalogs#c_tipodecomprobante) catalog
+      externalDocs:
+        url: https://syntage.com/docs/catalogs/#c_tipodecomprobante
+    InvoiceHasXML:
+      type: boolean
+      description: '`true` when the CFDI is available in the XML format. The file can be downloaded through the [retrieve an invoice CFDI](#operation/GetInvoiceCFDI) operation
+
+        '
+    InvoicePaymentMethod:
+      type:
+      - string
+      - 'null'
+      enum:
+      - '01'
+      - '02'
+      - '03'
+      - '04'
+      - '05'
+      - '06'
+      - 08
+      - '12'
+      - '13'
+      - '14'
+      - '15'
+      - '17'
+      - '23'
+      - '24'
+      - '25'
+      - '26'
+      - '27'
+      - '28'
+      - '29'
+      - '30'
+      - '31'
+      - '99'
+      example: '04'
+      description: Payment method code from the [c_FormaPago](/guides/catalogs#c_formapago) catalog
+      externalDocs:
+        url: https://syntage.com/docs/catalogs#c_formapago
+    Tag:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Resource tag IRI reference
+          example: /tags/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: Tag
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+          description: Display name for the tag
+          example: To be reviewed
+        resourceType:
+          type: string
+          description: Resource type this tag can be applied to
+          example: invoice
+        color:
+          type:
+          - string
+          - 'null'
+          description: Lowercase 7-character hexadecimal color used to display the tag (`#RRGGBB`). Defaults to `#a3aab5` when a tag is created without a color.
+          example: '#22c558'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    InvoiceReference:
+      type:
+      - string
+      - 'null'
+      description: An open field for internal identification. Commonly used to identify a branch
+      maxLength: 25
+      example: Branch-A
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
     InvoiceRelationID:
       type: string
       format: uuid
       description: Invoice relation ID
       example: 91106968-1abd-4d64-85c1-4e73d96fb997
+    InvoiceExchangeRate:
+      type:
+      - number
+      - 'null'
+      format: float
+      description: Set when *currency* is different than MXN (Mexican Peso).
+      example: 19.8
+    InvoicePaymentTerms:
+      type:
+      - string
+      - 'null'
+      enum:
+      - immediate_payment
+      - net_0
+      - net_15
+      - net_30
+      - net_45
+      - net_90
+      - net_120
+      example: immediate_payment
+      description: Payment terms
     InvoiceUsage:
       type:
       - string
@@ -786,6 +636,63 @@ components:
       description: Invoice usage code from the [c_UsoCFDI](/guides/catalogs#c_usocfdi) catalog
       externalDocs:
         url: https://syntage.com/docs/catalogs/#c_usocfdi
+    InvoiceRelation:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Invoice Relation IRI reference
+          example: /invoices/relations/93a197e7-6baa-5dc5-bf8d-fb1645a770c1
+        '@type':
+          type: string
+          default: InvoiceRelation
+        id:
+          $ref: '#/components/schemas/InvoiceRelationID'
+        type:
+          $ref: '#/components/schemas/InvoiceRelationType'
+        invoice:
+          $ref: '#/components/schemas/InvoiceRelationInvoice'
+        relatedInvoice:
+          $ref: '#/components/schemas/InvoiceRelationRelatedInvoice'
+        relatedInvoiceUuid:
+          $ref: '#/components/schemas/InvoiceRelationRelatedInvoiceUuid'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    TransferredTaxes:
+      type: object
+      properties:
+        valueAddedTax:
+          type: number
+          format: double
+          description: Transferred value-added tax amount
+          example: 0
+        sinTax:
+          type: number
+          format: double
+          description: Transferred special tax on production and services amount
+          example: 0
+    InvoiceTax:
+      type: number
+      format: float
+      description: Tax amount
+      example: 5224
+    InvoiceCanceledAt:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Set when *status* is `CANCELADO`
+    InvoiceCurrency:
+      type:
+      - string
+      - 'null'
+      description: ISO 4217 alphabetic currency code
+      minLength: 3
+      maxLength: 3
+      example: MXN
     InvoiceReceiver:
       type: object
       properties:
@@ -795,72 +702,203 @@ components:
           $ref: '#/components/schemas/TaxpayerName'
         blacklistStatus:
           $ref: '#/components/schemas/TaxpayerBlacklistStatus'
-    InvoiceFullyPaidAt:
-      type:
-      - string
-      - 'null'
-      format: date-time
-      description: This field is populated when the total debt is paid. (Applies only for "PPD" invoices).
-    InvoiceType:
+    InvoiceCancellationStatus:
       type: string
       enum:
-      - I
-      - E
-      - P
-      - N
-      - T
-      description: Invoice type code from the [c_TipoDeComprobante](/guides/catalogs#c_tipodecomprobante) catalog
-      externalDocs:
-        url: https://syntage.com/docs/catalogs/#c_tipodecomprobante
-    Tag:
+      - Cancelable sin aceptación
+      - Cancelable con aceptación
+      - No cancelable
+      description: Whether or not the invoice can be canceled
+      example: Cancelable con aceptación
+    InvoiceIssuer:
       type: object
       properties:
+        rfc:
+          $ref: '#/components/schemas/TaxpayerID'
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+        taxRegime:
+          $ref: '#/components/schemas/InvoiceIssuerTaxRegime'
+        blacklistStatus:
+          $ref: '#/components/schemas/TaxpayerBlacklistStatus'
+      example:
+        rfc: AOM920820BEA
+        name: APPLE OPERATIONS MEXICO S.A. DE C.V.
+        taxRegime: 601
+        blacklistStatus: null
+    InvoiceRelationType:
+      type: number
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      description: Invoice relation type code from the [c_TipoRelacion](/guides/catalogs#c_tiporelacion) catalog
+      example: 7
+      externalDocs:
+        url: https://syntage.com/docs/catalogs/#c_tiporelacion
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
         '@id':
           type: string
-          format: iri-reference
-          description: Resource tag IRI reference
-          example: /tags/91106968-1abd-4d64-85c1-4e73d96fb997
         '@type':
           type: string
-          description: JSON-LD resource type
-          default: Tag
-        id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          type: string
-          description: Display name for the tag
-          example: To be reviewed
-        resourceType:
-          type: string
-          description: Resource type this tag can be applied to
-          example: invoice
-        color:
-          type:
-          - string
-          - 'null'
-          description: Lowercase 7-character hexadecimal color used to display the tag (`#RRGGBB`). Defaults to `#a3aab5` when a tag is created without a color.
-          example: '#22c558'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    InvoiceID:
-      type: string
-      format: uuid
-      description: Invoice ID
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-    InvoiceReference:
-      type:
-      - string
-      - 'null'
-      description: An open field for internal identification. Commonly used to identify a branch
-      maxLength: 25
-      example: Branch-A
-    InvoiceDueAmount:
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    InvoiceDiscount:
       type: number
       format: float
-      description: For a deferred invoice this field state the due amount. (Applies only for "PPD" invoices).
-      example: 0
+      description: Discount amount
+      example: 3324
+    InvoicePaidAmount:
+      type: number
+      format: float
+      description: For a deferred invoice this field state the paid amount. (Applies only for "PPD" invoices).
+      example: 53249.8
+    TagCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tag'
+    InvoiceHasPDF:
+      type: boolean
+      description: '`true` when the CFDI is available in the PDF format. The file can be downloaded through the [retrieve an invoice CFDI](#operation/GetInvoiceCFDI) operation
+
+        '
+    InvoiceIsReceiver:
+      type: boolean
+      description: '`true` if the invoice receiver is the entity''s RFC
+
+        '
+      example: false
+    InvoiceIssuerTaxRegime:
+      type:
+      - number
+      - 'null'
+      enum:
+      - 601
+      - 603
+      - 605
+      - 606
+      - 607
+      - 608
+      - 609
+      - 610
+      - 611
+      - 612
+      - 614
+      - 615
+      - 616
+      - 620
+      - 621
+      - 622
+      - 623
+      - 624
+      - 625
+      - 626
+      - 628
+      - 629
+      - 630
+      description: Tax regime code from the [c_RegimenFiscal](/guides/catalogs#c_regimenfiscal) catalog
+      example: 601
+      externalDocs:
+        url: https://syntage.com/docs/catalogs#c_regimenfiscal
+    InvoiceStatus:
+      type: string
+      enum:
+      - VIGENTE
+      - CANCELADO
+      description: Whether the invoice is active or canceled
+      example: VIGENTE
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    invoiceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/InvoiceID'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
   responses:
     NotFound:
       description: Not found
@@ -880,44 +918,6 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    invoiceId:
-      name: id
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/InvoiceID'
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   securitySchemes:
     ApiKey:
       type: apiKey

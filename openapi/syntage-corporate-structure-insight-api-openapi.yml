@@ -89,25 +89,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   schemas:
     HydraView:
       type: object
@@ -151,6 +132,40 @@ components:
               type: string
               format: iri-reference
               description: Last page IRI reference; omitted when there is no pagination
+    CorporateStructureCurrentPowersEntity:
+      type: object
+      description: 'A person or company appearing in the latest Company Verification
+
+        report for the entity with at least one currently effective power of
+
+        attorney. A simplified projection of a found entity, limited to the
+
+        holder''s identity and their current powers — no cap-table holdings,
+
+        share totals, or ownership percentages.
+
+        '
+      required:
+      - name
+      - entityType
+      - powers
+      properties:
+        name:
+          type: string
+          description: Full name of the holder, as resolved by the upstream pipeline.
+          example: Juan Pérez García
+        entityType:
+          type: string
+          description: Whether the holder is a natural person or a legal entity.
+          enum:
+          - person
+          - company
+          example: person
+        powers:
+          type: array
+          description: Currently effective powers of attorney granted to this holder, ordered by grant date ascending.
+          items:
+            $ref: '#/components/schemas/CorporateStructureCurrentPowersPower'
     CorporateStructureCurrentPowersPower:
       type: object
       description: A single currently effective power of attorney granted to a holder.
@@ -255,40 +270,6 @@ components:
           type: boolean
           description: Whether the grantee may dispose of or sell real estate on behalf of the principal.
           example: false
-    CorporateStructureCurrentPowersEntity:
-      type: object
-      description: 'A person or company appearing in the latest Company Verification
-
-        report for the entity with at least one currently effective power of
-
-        attorney. A simplified projection of a found entity, limited to the
-
-        holder''s identity and their current powers — no cap-table holdings,
-
-        share totals, or ownership percentages.
-
-        '
-      required:
-      - name
-      - entityType
-      - powers
-      properties:
-        name:
-          type: string
-          description: Full name of the holder, as resolved by the upstream pipeline.
-          example: Juan Pérez García
-        entityType:
-          type: string
-          description: Whether the holder is a natural person or a legal entity.
-          enum:
-          - person
-          - company
-          example: person
-        powers:
-          type: array
-          description: Currently effective powers of attorney granted to this holder, ordered by grant date ascending.
-          items:
-            $ref: '#/components/schemas/CorporateStructureCurrentPowersPower'
     Collection:
       allOf:
       - $ref: '#/components/schemas/HydraView'
@@ -325,6 +306,25 @@ components:
       schema:
         type: string
         format: uuid
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

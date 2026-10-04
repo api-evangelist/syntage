@@ -58,15 +58,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     Unauthorized:
       description: Unauthorized
       content:
@@ -186,6 +177,15 @@ components:
                                                 type: number
                                                 description: Ending balance data
                                                 example: 2173831.27
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   parameters:
     entityId:
       name: entityId

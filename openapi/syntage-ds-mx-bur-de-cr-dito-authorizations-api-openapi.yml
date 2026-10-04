@@ -340,164 +340,26 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   schemas:
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
     uuid:
       type: string
       format: uuid
       example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
-    CredentialStatus:
-      type: string
-      enum:
-      - waiting
-      - pending
-      - valid
-      - invalid
-      - disabled
-      - deactivated
-      - error
-      x-enumDeprecated:
-        deactivated: Legacy status retained for existing records. The `disabled` status is used for credentials that can no longer be used.
-      description: 'Credential validation status:
-
-
-        | Value | Description |
-
-        | --- | --- |
-
-        | `waiting` | Credential validation is temporarily disabled, usually because of an ongoing incident. The credential will be validated later. |
-
-        | `pending` | Credential validation has been requested and is waiting to be processed. |
-
-        | `valid` | The credential was accepted by SAT and can be used for extractions. |
-
-        | `invalid` | SAT rejected the credential during validation. |
-
-        | `disabled` | SAT reported the credential as disabled or otherwise unrecoverable during validation. |
-
-        | `deactivated` | **Deprecated.** Legacy status retained for existing records. The `disabled` status is used for credentials that can no longer be used. |
-
-        | `error` | Credential validation failed because of an unexpected error. |
-
-        '
-      example: pending
     EntityTagCollection:
       type: array
       items:
@@ -528,21 +390,6 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
     Taxpayer:
       type: object
       properties:
@@ -564,25 +411,16 @@ components:
           description: Taxpayer registration date
         name:
           $ref: '#/components/schemas/TaxpayerName'
-    EntityType:
-      type: string
-      enum:
-      - company
-      - person
-      description: Type of entity
-      example: company
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
     CredentialType:
       type: string
       enum:
       - ciec
       - efirma
       example: ciec
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
     EntityTag:
       type: object
       properties:
@@ -883,12 +721,47 @@ components:
             format: date-time
             description: Date and time when the authorization was deleted
             example: '2024-01-31T00:00:00+00:00'
-    TaxpayerPersonType:
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    CredentialStatus:
       type: string
       enum:
-      - physical
-      - legal
-      example: physical
+      - waiting
+      - pending
+      - valid
+      - invalid
+      - disabled
+      - deactivated
+      - error
+      x-enumDeprecated:
+        deactivated: Legacy status retained for existing records. The `disabled` status is used for credentials that can no longer be used.
+      description: 'Credential validation status:
+
+
+        | Value | Description |
+
+        | --- | --- |
+
+        | `waiting` | Credential validation is temporarily disabled, usually because of an ongoing incident. The credential will be validated later. |
+
+        | `pending` | Credential validation has been requested and is waiting to be processed. |
+
+        | `valid` | The credential was accepted by SAT and can be used for extractions. |
+
+        | `invalid` | SAT rejected the credential during validation. |
+
+        | `disabled` | SAT reported the credential as disabled or otherwise unrecoverable during validation. |
+
+        | `deactivated` | **Deprecated.** Legacy status retained for existing records. The `disabled` status is used for credentials that can no longer be used. |
+
+        | `error` | Credential validation failed because of an unexpected error. |
+
+        '
+      example: pending
     Credential:
       type: object
       properties:
@@ -915,6 +788,133 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
+    EntityType:
+      type: string
+      enum:
+      - company
+      - person
+      description: Type of entity
+      example: company
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    TaxpayerPersonType:
+      type: string
+      enum:
+      - physical
+      - legal
+      example: physical
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

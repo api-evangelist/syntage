@@ -43,6 +43,17 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
 components:
   responses:
+    DatasourceMXSyntageScoreCalculate:
+      description: Syntage Score calculation started
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     NotFound:
       description: Not found
       content:
@@ -72,17 +83,6 @@ components:
                 type: string
                 description: Concatenated violation messages
                 example: 'exampleField: Syntage score already exists.'
-    DatasourceMXSyntageScoreCalculate:
-      description: Syntage Score calculation started
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   parameters:
     entityId:
       name: entityId

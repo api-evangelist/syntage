@@ -83,9 +83,16 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  schemas:
+    TaxpayerID:
+      type: string
+      minLength: 12
+      maxLength: 13
+      description: RFC (Registro Federal de Contribuyentes)
+      example: PEIC211118IS0
   responses:
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -93,8 +100,8 @@ components:
             properties:
               message:
                 type: string
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -111,13 +118,6 @@ components:
       schema:
         type: string
         format: uuid
-  schemas:
-    TaxpayerID:
-      type: string
-      minLength: 12
-      maxLength: 13
-      description: RFC (Registro Federal de Contribuyentes)
-      example: PEIC211118IS0
   securitySchemes:
     ApiKey:
       type: apiKey

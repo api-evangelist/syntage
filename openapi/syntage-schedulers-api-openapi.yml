@@ -97,212 +97,46 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    SchedulerCollection:
-      description: Scheduler collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/SchedulerCollection'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Scheduler:
-      description: Scheduler resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/Scheduler
-            - $ref: '#/components/schemas/Scheduler'
-  parameters:
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   schemas:
-    uuid:
-      type: string
-      format: uuid
-      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    SchedulerCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/Scheduler
-          '@id':
-            default: /schedulers
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/Scheduler'
-    HydraView:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:totalItems:
-          type: integer
-          description: Total number of items found
-          minimum: 0
-          example: 1
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:first:
-              type: string
-              format: iri-reference
-              description: First page IRI reference; omitted when there is no pagination
-            hydra:next:
-              type: string
-              format: iri-reference
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              format: iri-reference
-              description: Last page IRI reference; omitted when there is no pagination
-    ExtractionOptions:
-      type: object
-      description: Extractor options; check the available options for each extractor in [Extractions](https://docs.syntage.com/api-reference/extractions/overview#extractors)
-      example:
-        types:
-        - I
-        - E
-        - P
-        period:
-          from: '2020-01-01T00:00:00.000Z'
-          to: '2020-03-31T23:59:59.000Z'
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
-    EntityTagCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/EntityTag'
     updatedAt:
       type: string
       description: Date and time the resource was last updated
       example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    EntityTagCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/EntityTag'
+    SchedulerUpdateInput:
+      type: object
+      properties:
+        name:
+          type: string
+          writeOnly: true
+          description: Scheduler name
+          example: Daily Invoices Scheduler
+        isEnabled:
+          type: boolean
+          writeOnly: true
+          description: Whether the scheduler is enabled
+          example: true
+        tags:
+          type: array
+          writeOnly: true
+          description: Tags to associate with the scheduler; sending this key replaces the existing tag collection
+          example:
+          - /entity-tags/91106968-1abd-4d64-85c1-4e73d96fb997
+          items:
+            type: string
+            format: iri-reference
     Collection:
       allOf:
       - $ref: '#/components/schemas/HydraView'
@@ -330,11 +164,71 @@ components:
                       type: string
                     required:
                       type: boolean
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
+    SchedulerCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/Scheduler
+          '@id':
+            default: /schedulers
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/Scheduler'
+    Scheduler:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Scheduler IRI reference
+          example: /schedulers/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: Scheduler
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type:
+          - string
+          - 'null'
+          example: Daily Invoices Scheduler
+          description: Scheduler name; may be null for first-time schedulers created automatically by the platform
+        type:
+          type: string
+          description: Scheduler type
+          example: recurring
+          enum:
+          - recurring
+        isEnabled:
+          type: boolean
+          description: Whether the scheduler is enabled
+          example: true
+        rules:
+          $ref: '#/components/schemas/SchedulerRuleCollection'
+        tags:
+          $ref: '#/components/schemas/EntityTagCollection'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    ExtractionOptions:
+      type: object
+      description: Extractor options; check the available options for each extractor in [Extractions](https://docs.syntage.com/api-reference/extractions/overview#extractors)
+      example:
+        types:
+        - I
+        - E
+        - P
+        period:
+          from: '2020-01-01T00:00:00.000Z'
+          to: '2020-03-31T23:59:59.000Z'
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
     SchedulerRule:
       type: object
       properties:
@@ -399,28 +293,48 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    SchedulerUpdateInput:
+    HydraView:
       type: object
       properties:
-        name:
+        '@context':
           type: string
-          writeOnly: true
-          description: Scheduler name
-          example: Daily Invoices Scheduler
-        isEnabled:
-          type: boolean
-          writeOnly: true
-          description: Whether the scheduler is enabled
-          example: true
-        tags:
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
           type: array
-          writeOnly: true
-          description: Tags to associate with the scheduler; sending this key replaces the existing tag collection
-          example:
-          - /entity-tags/91106968-1abd-4d64-85c1-4e73d96fb997
           items:
-            type: string
-            format: iri-reference
+            type: object
+        hydra:totalItems:
+          type: integer
+          description: Total number of items found
+          minimum: 0
+          example: 1
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:first:
+              type: string
+              format: iri-reference
+              description: First page IRI reference; omitted when there is no pagination
+            hydra:next:
+              type: string
+              format: iri-reference
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              format: iri-reference
+              description: Last page IRI reference; omitted when there is no pagination
     SchedulerRuleCollection:
       allOf:
       - $ref: '#/components/schemas/Collection'
@@ -446,44 +360,61 @@ components:
                 example: /schedulers/rules?page=2
               hydra:last:
                 example: /schedulers/rules?page=3
-    Scheduler:
+    CursorCollection:
       type: object
       properties:
+        '@context':
+          type: string
         '@id':
           type: string
-          format: iri-reference
-          description: Scheduler IRI reference
-          example: /schedulers/91106968-1abd-4d64-85c1-4e73d96fb997
         '@type':
           type: string
-          description: JSON-LD resource type
-          default: Scheduler
-        id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          type:
-          - string
-          - 'null'
-          example: Daily Invoices Scheduler
-          description: Scheduler name; may be null for first-time schedulers created automatically by the platform
-        type:
-          type: string
-          description: Scheduler type
-          example: recurring
-          enum:
-          - recurring
-        isEnabled:
-          type: boolean
-          description: Whether the scheduler is enabled
-          example: true
-        rules:
-          $ref: '#/components/schemas/SchedulerRuleCollection'
-        tags:
-          $ref: '#/components/schemas/EntityTagCollection'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
     SchedulerInput:
       type: object
       required:
@@ -537,18 +468,87 @@ components:
       - rug
       - background_check
   requestBodies:
-    SchedulerCreate:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SchedulerInput'
     SchedulerUpdate:
       required: true
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/SchedulerUpdateInput'
+    SchedulerCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SchedulerInput'
+  responses:
+    SchedulerCollection:
+      description: Scheduler collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/SchedulerCollection'
+    Scheduler:
+      description: Scheduler resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Scheduler
+            - $ref: '#/components/schemas/Scheduler'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     ApiKey:
       type: apiKey

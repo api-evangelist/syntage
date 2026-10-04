@@ -94,25 +94,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   schemas:
     TaxpayerID:
       type: string
@@ -120,6 +101,12 @@ components:
       maxLength: 13
       description: RFC (Registro Federal de Contribuyentes)
       example: PEIC211118IS0
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
     BlacklistStatusSource:
       type: string
       description: The blacklist status if a taxpayer is found in the list 69-B from SAT
@@ -129,12 +116,6 @@ components:
       - definitive
       - favorable
       example: presumed
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
   parameters:
     entityId:
       name: entityId
@@ -144,6 +125,25 @@ components:
       schema:
         type: string
         format: uuid
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

@@ -62,15 +62,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     InvoicingConcentrationInsight:
       description: Entity invoicing concentration
       content:
@@ -103,6 +94,15 @@ components:
                           type: number
     Unauthorized:
       description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:

@@ -438,112 +438,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    TaxRetentionReceiver:
-      type: object
-      properties:
-        rfc:
-          $ref: '#/components/schemas/TaxpayerID'
-        name:
-          $ref: '#/components/schemas/TaxpayerName'
-        nationality:
-          $ref: '#/components/schemas/TaxpayerNationality'
-        curp:
-          $ref: '#/components/schemas/TaxpayerCurp'
-    TaxRetentionIssuer:
-      type: object
-      properties:
-        rfc:
-          $ref: '#/components/schemas/TaxpayerID'
-        name:
-          $ref: '#/components/schemas/TaxpayerName'
-        curp:
-          $ref: '#/components/schemas/TaxpayerCurp'
-    TaxRetentionUUID:
-      type: string
-      format: uuid
-      description: Tax retention UUID (Folio fiscal)
-      example: def404af-5eef-4112-aa99-d1ec8493b89a
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    TaxRetentionCertifiedAt:
-      type: string
-      format: date-time
-      description: Tax return certification date
-      example: '2019-01-03T21:10:41.000Z'
-    TaxRetentionPac:
-      type: string
-      minLength: 12
-      maxLength: 12
-      description: Certification provider tax ID (Proveedor Autorizado de Certificación)
-      example: SAT970701NN3
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
-    TaxRetentionCanceledAt:
-      type:
-      - string
-      - 'null'
-      format: date-time
-      description: Set when the tax retention is canceled.
-    TaxRetentionTotalRetainedAmount:
-      type: number
-      format: float
-      description: Total retained tax amount
-      example: 1550.7
     TaxpayerID:
       type: string
       minLength: 12
@@ -554,41 +448,18 @@ components:
       type: string
       description: Date and time the resource was last updated
       example: '2020-01-01T12:15:00.000Z'
-    TaxRetentionTotalTaxableAmount:
-      type: number
-      format: float
-      description: Subtraction between `totalOperationAmount` and `totalExemptAmount`
-      example: 43249
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
-    TaxRetentionPeriodFrom:
+    TaxRetentionVersion:
       type:
-      - string
+      - number
       - 'null'
-      format: date-time
-      description: Start date for the tax retention period
+      format: float
+      description: CFDI version
+      example: 1
     CollectionLimit:
       type: integer
       default: 20
       minimum: 1
       maximum: 1000
-    TaxpayerCurp:
-      type: string
-      minLength: 18
-      maxLength: 18
-      description: Unique Population Registry Code (CURP)
-      example: PEIC123456ABCDEF12
-    TaxpayerNationality:
-      type: string
-      description: Indicator to know if the taxpayer is Mexican or from other countries.
-      example: national
-      enum:
-      - national
-      - foreign
     TaxRetentionCode:
       type:
       - string
@@ -624,100 +495,23 @@ components:
       - '26'
       externalDocs:
         url: https://syntage.com/docs/catalogs#clave-de-retenciones
-    TaxRetentionIssuedAt:
+    TaxpayerNationality:
       type: string
-      format: date-time
-      description: Tax retention issue date
-      example: '2019-01-03T21:10:40.000Z'
+      description: Indicator to know if the taxpayer is Mexican or from other countries.
+      example: national
+      enum:
+      - national
+      - foreign
+    TaxRetentionHasXML:
+      type: boolean
+      description: '`true` when the CFDI is available in the XML format. The file can be downloaded through the [retrieve a tax retention CFDI](#operation/GetTaxRetentionCFDI) operation
+
+        '
     TaxRetentionHasPDF:
       type: boolean
       description: '`true` when the CFDI is available in the PDF format. The file can be downloaded through the [retrieve a tax retention CFDI](#operation/GetTaxRetentionCFDI) operation
 
         '
-    TaxpayerName:
-      type: string
-      minLength: 1
-      maxLength: 254
-      description: Taxpayer name
-      example: Pedro Infante Cruz
-    TaxRetentionTotalOperationAmount:
-      type: number
-      format: float
-      description: Operation amount
-      example: 53249.8
-    TaxRetentionPeriodTo:
-      type:
-      - string
-      - 'null'
-      format: date-time
-      description: End date for the tax retention period
-    TaxRetentionInternalIdentifier:
-      type:
-      - string
-      - 'null'
-      description: An open field for internal identification. Commonly used to identify a tax retention
-      maxLength: 40
-      example: '00001'
-    TaxRetentionDescription:
-      type:
-      - string
-      - 'null'
-      example: Información referente a la fiduciaria
-      description: Retention type description when `code` is `25` (other retention types)
-    TaxRetentionItem:
-      type: object
-      properties:
-        baseAmount:
-          type: number
-          format: float
-          description: Tax base amount for this retained tax item
-          example: 45905
-        taxType:
-          type: string
-          description: SAT tax type code
-          example: '002'
-        retainedAmount:
-          type: number
-          format: float
-          description: Amount retained for this tax item
-          example: 7344
-        paymentType:
-          type: string
-          description: Whether the retained tax payment is provisional or definitive
-          example: provisional
-          enum:
-          - provisional
-          - definitive
-    InvoiceID:
-      type: string
-      format: uuid
-      description: Invoice ID
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-    TaxRetentionVersion:
-      type:
-      - number
-      - 'null'
-      format: float
-      description: CFDI version
-      example: 1
-    TaxRetentionID:
-      type: string
-      format: uuid
-      description: Tax retention ID
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-    TaxpayerTaxRetentionCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/TaxRetention
-          '@id':
-            default: /entities/{entityId}/tax-retentions
-            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/tax-retentions
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/TaxRetention'
     TaxRetention:
       type: object
       properties:
@@ -782,19 +576,271 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    TaxRetentionHasXML:
-      type: boolean
-      description: '`true` when the CFDI is available in the XML format. The file can be downloaded through the [retrieve a tax retention CFDI](#operation/GetTaxRetentionCFDI) operation
-
-        '
+    TaxRetentionPeriodFrom:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Start date for the tax retention period
+    TaxRetentionCertifiedAt:
+      type: string
+      format: date-time
+      description: Tax return certification date
+      example: '2019-01-03T21:10:41.000Z'
+    InvoiceID:
+      type: string
+      format: uuid
+      description: Invoice ID
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
     TaxRetentionTotalExemptAmount:
       type: number
       format: float
       description: Exempt amount
       example: 1000.8
+    TaxRetentionIssuedAt:
+      type: string
+      format: date-time
+      description: Tax retention issue date
+      example: '2019-01-03T21:10:40.000Z'
+    TaxRetentionTotalRetainedAmount:
+      type: number
+      format: float
+      description: Total retained tax amount
+      example: 1550.7
+    TaxRetentionIssuer:
+      type: object
+      properties:
+        rfc:
+          $ref: '#/components/schemas/TaxpayerID'
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+        curp:
+          $ref: '#/components/schemas/TaxpayerCurp'
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    TaxpayerTaxRetentionCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/TaxRetention
+          '@id':
+            default: /entities/{entityId}/tax-retentions
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/tax-retentions
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/TaxRetention'
+    TaxpayerCurp:
+      type: string
+      minLength: 18
+      maxLength: 18
+      description: Unique Population Registry Code (CURP)
+      example: PEIC123456ABCDEF12
+    TaxRetentionInternalIdentifier:
+      type:
+      - string
+      - 'null'
+      description: An open field for internal identification. Commonly used to identify a tax retention
+      maxLength: 40
+      example: '00001'
+    TaxRetentionID:
+      type: string
+      format: uuid
+      description: Tax retention ID
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+    TaxpayerName:
+      type: string
+      minLength: 1
+      maxLength: 254
+      description: Taxpayer name
+      example: Pedro Infante Cruz
+    TaxRetentionCanceledAt:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: Set when the tax retention is canceled.
+    TaxRetentionPeriodTo:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      description: End date for the tax retention period
+    TaxRetentionTotalOperationAmount:
+      type: number
+      format: float
+      description: Operation amount
+      example: 53249.8
+    TaxRetentionTotalTaxableAmount:
+      type: number
+      format: float
+      description: Subtraction between `totalOperationAmount` and `totalExemptAmount`
+      example: 43249
+    TaxRetentionUUID:
+      type: string
+      format: uuid
+      description: Tax retention UUID (Folio fiscal)
+      example: def404af-5eef-4112-aa99-d1ec8493b89a
+    TaxRetentionReceiver:
+      type: object
+      properties:
+        rfc:
+          $ref: '#/components/schemas/TaxpayerID'
+        name:
+          $ref: '#/components/schemas/TaxpayerName'
+        nationality:
+          $ref: '#/components/schemas/TaxpayerNationality'
+        curp:
+          $ref: '#/components/schemas/TaxpayerCurp'
+    TaxRetentionItem:
+      type: object
+      properties:
+        baseAmount:
+          type: number
+          format: float
+          description: Tax base amount for this retained tax item
+          example: 45905
+        taxType:
+          type: string
+          description: SAT tax type code
+          example: '002'
+        retainedAmount:
+          type: number
+          format: float
+          description: Amount retained for this tax item
+          example: 7344
+        paymentType:
+          type: string
+          description: Whether the retained tax payment is provisional or definitive
+          example: provisional
+          enum:
+          - provisional
+          - definitive
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
+    TaxRetentionDescription:
+      type:
+      - string
+      - 'null'
+      example: Información referente a la fiduciaria
+      description: Retention type description when `code` is `25` (other retention types)
+    TaxRetentionPac:
+      type: string
+      minLength: 12
+      maxLength: 12
+      description: Certification provider tax ID (Proveedor Autorizado de Certificación)
+      example: SAT970701NN3
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    invoiceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/InvoiceID'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   responses:
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -802,6 +848,24 @@ components:
             properties:
               message:
                 type: string
+    TaxpayerTaxRetentionCollection:
+      description: Taxpayer tax retention collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/TaxpayerTaxRetentionCollection'
+    TaxRetention:
+      description: Tax retention resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/TaxRetention
+            - $ref: '#/components/schemas/TaxRetention'
     TaxRetentionCFDI:
       description: Tax retention CFDI response
       content:
@@ -861,26 +925,8 @@ components:
             type: string
             format: binary
           example: <pdf-binary-data>
-    TaxpayerTaxRetentionCollection:
-      description: Taxpayer tax retention collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/TaxpayerTaxRetentionCollection'
-    TaxRetention:
-      description: Tax retention resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/TaxRetention
-            - $ref: '#/components/schemas/TaxRetention'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -888,52 +934,6 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    invoiceId:
-      name: id
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/InvoiceID'
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   securitySchemes:
     ApiKey:
       type: apiKey

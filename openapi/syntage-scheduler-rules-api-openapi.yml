@@ -80,59 +80,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    SchedulerRule:
-      description: Scheduler rule resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/SchedulerRule
-            - $ref: '#/components/schemas/SchedulerRule'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  requestBodies:
-    SchedulerRuleUpdate:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SchedulerRuleUpdateInput'
-    SchedulerRuleCreate:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SchedulerRuleInput'
   schemas:
     SchedulerRuleUpdateInput:
       type: object
@@ -146,29 +93,10 @@ components:
           writeOnly: true
           description: Cron expression that controls when the rule runs
           example: '@daily'
-    uuid:
-      type: string
-      format: uuid
-      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
     updatedAt:
       type: string
       description: Date and time the resource was last updated
       example: '2020-01-01T12:15:00.000Z'
-    ExtractionOptions:
-      type: object
-      description: Extractor options; check the available options for each extractor in [Extractions](https://docs.syntage.com/api-reference/extractions/overview#extractors)
-      example:
-        types:
-        - I
-        - E
-        - P
-        period:
-          from: '2020-01-01T00:00:00.000Z'
-          to: '2020-03-31T23:59:59.000Z'
     SchedulerRule:
       type: object
       properties:
@@ -205,6 +133,17 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
+    ExtractionOptions:
+      type: object
+      description: Extractor options; check the available options for each extractor in [Extractions](https://docs.syntage.com/api-reference/extractions/overview#extractors)
+      example:
+        types:
+        - I
+        - E
+        - P
+        period:
+          from: '2020-01-01T00:00:00.000Z'
+          to: '2020-03-31T23:59:59.000Z'
     SchedulerRuleInput:
       type: object
       required:
@@ -225,6 +164,14 @@ components:
           writeOnly: true
           description: Cron expression that controls when the rule runs
           example: '@daily'
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
     ExtractionExtractor:
       type: string
       description: Extractor to run, which retrieves resources from the corresponding datasource
@@ -243,6 +190,59 @@ components:
       - bil
       - rug
       - background_check
+  parameters:
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    SchedulerRule:
+      description: Scheduler rule resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/SchedulerRule
+            - $ref: '#/components/schemas/SchedulerRule'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  requestBodies:
+    SchedulerRuleCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SchedulerRuleInput'
+    SchedulerRuleUpdate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SchedulerRuleUpdateInput'
   securitySchemes:
     ApiKey:
       type: apiKey

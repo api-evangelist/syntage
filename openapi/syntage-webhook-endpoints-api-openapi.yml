@@ -118,123 +118,20 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    WebhookEndpoint:
-      description: Webhook endpoint resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/WebhookEndpoint
-            - $ref: '#/components/schemas/WebhookEndpoint'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    ConstraintViolation:
-      description: Validation error
-      content:
-        application/ld+json:
-          schema:
-            type: object
-            properties:
-              '@context':
-                type: string
-                default: /contexts/ConstraintViolation
-              '@type':
-                type: string
-                default: ConstraintViolation
-              hydra:title:
-                type: string
-                default: An error occurred
-              hydra:description:
-                type: string
-                description: Concatenated violation messages
-                example: 'exampleField: This value should not be blank.'
-              violations:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    propertyPath:
-                      type: string
-                      description: Property access path
-                      example: exampleField
-                    message:
-                      type: string
-                      description: Validaton error message
-                      example: This value should not be blank.
-    WebhookEndpointCollection:
-      description: Webhook endpoint collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/WebhookEndpointCollection'
-  parameters:
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   schemas:
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
     uuid:
       type: string
       format: uuid
       example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    WebhookEndpointContentType:
-      type: string
-      description: Content type used for webhook delivery payloads
-      enum:
-      - application/ld+json
-      - application/json
     WebhookEndpointEventType:
       type: string
       description: Event type delivered to a webhook endpoint
@@ -289,6 +186,71 @@ components:
       - sat_certificate.updated
       - company_verification_report.created
       - company_verification_report.updated
+    WebhookEndpoint:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Webhook endpoint IRI
+          example: /webhook-endpoints/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          default: WebhookEndpoint
+        id:
+          $ref: '#/components/schemas/uuid'
+        url:
+          $ref: '#/components/schemas/WebhookEndpointUrl'
+        signingSecret:
+          type: string
+          description: Secret used to verify `X-Syntage-Signature` delivery headers
+          example: 54471a278d46c86ec6cd365983552a28
+        events:
+          type: array
+          example:
+          - extraction.updated
+          - invoice.created
+          description: Event types delivered to this endpoint
+          items:
+            $ref: '#/components/schemas/WebhookEndpointEventType'
+        enabled:
+          default: true
+          allOf:
+          - $ref: '#/components/schemas/WebhookEndpointEnabled'
+        contentType:
+          default: application/ld+json
+          anyOf:
+          - $ref: '#/components/schemas/WebhookEndpointContentType'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    WebhookEndpointEnabled:
+      type: boolean
+      example: true
+      description: Whether Syntage sends matching events to this endpoint
+    WebhookEndpointCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/WebhookEndpoint
+          '@id':
+            default: /webhook-endpoints
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/WebhookEndpoint'
+    WebhookEndpointContentType:
+      type: string
+      description: Content type used for webhook delivery payloads
+      enum:
+      - application/ld+json
+      - application/json
     CursorCollection:
       type: object
       properties:
@@ -344,70 +306,6 @@ components:
                     type: string
                   required:
                     type: boolean
-    WebhookEndpointCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/WebhookEndpoint
-          '@id':
-            default: /webhook-endpoints
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/WebhookEndpoint'
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    WebhookEndpointEnabled:
-      type: boolean
-      example: true
-      description: Whether Syntage sends matching events to this endpoint
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    WebhookEndpoint:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Webhook endpoint IRI
-          example: /webhook-endpoints/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          default: WebhookEndpoint
-        id:
-          $ref: '#/components/schemas/uuid'
-        url:
-          $ref: '#/components/schemas/WebhookEndpointUrl'
-        signingSecret:
-          type: string
-          description: Secret used to verify `X-Syntage-Signature` delivery headers
-          example: 54471a278d46c86ec6cd365983552a28
-        events:
-          type: array
-          example:
-          - extraction.updated
-          - invoice.created
-          description: Event types delivered to this endpoint
-          items:
-            $ref: '#/components/schemas/WebhookEndpointEventType'
-        enabled:
-          default: true
-          allOf:
-          - $ref: '#/components/schemas/WebhookEndpointEnabled'
-        contentType:
-          default: application/ld+json
-          anyOf:
-          - $ref: '#/components/schemas/WebhookEndpointContentType'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
     WebhookEndpointUrl:
       type: string
       format: url
@@ -476,6 +374,108 @@ components:
                 description: Payload content type for webhook deliveries
                 anyOf:
                 - $ref: '#/components/schemas/WebhookEndpointContentType'
+  responses:
+    ConstraintViolation:
+      description: Validation error
+      content:
+        application/ld+json:
+          schema:
+            type: object
+            properties:
+              '@context':
+                type: string
+                default: /contexts/ConstraintViolation
+              '@type':
+                type: string
+                default: ConstraintViolation
+              hydra:title:
+                type: string
+                default: An error occurred
+              hydra:description:
+                type: string
+                description: Concatenated violation messages
+                example: 'exampleField: This value should not be blank.'
+              violations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    propertyPath:
+                      type: string
+                      description: Property access path
+                      example: exampleField
+                    message:
+                      type: string
+                      description: Validaton error message
+                      example: This value should not be blank.
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    WebhookEndpointCollection:
+      description: Webhook endpoint collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/WebhookEndpointCollection'
+    WebhookEndpoint:
+      description: Webhook endpoint resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/WebhookEndpoint
+            - $ref: '#/components/schemas/WebhookEndpoint'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  parameters:
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     ApiKey:
       type: apiKey

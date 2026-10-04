@@ -170,15 +170,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     NotFound:
       description: Not found
       content:
@@ -188,15 +179,15 @@ components:
             properties:
               message:
                 type: string
-  parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   schemas:
     HydraView:
       type: object
@@ -240,6 +231,15 @@ components:
               type: string
               format: iri-reference
               description: Last page IRI reference; omitted when there is no pagination
+  parameters:
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     ApiKey:
       type: apiKey

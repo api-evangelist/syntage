@@ -175,167 +175,19 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    WebhookRequest:
-      description: Webhook request resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/WebhookRequest
-            - $ref: '#/components/schemas/WebhookRequest'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    WebhookRequestCollection:
-      description: Webhook request collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/WebhookRequestCollection'
   schemas:
-    uuid:
-      type: string
-      format: uuid
-      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    WebhookEndpointContentType:
-      type: string
-      description: Content type used for webhook delivery payloads
-      enum:
-      - application/ld+json
-      - application/json
-    WebhookEndpointEventType:
-      type: string
-      description: Event type delivered to a webhook endpoint
-      enum:
-      - credential.created
-      - credential.updated
-      - credential.deleted
-      - link.created
-      - link.updated
-      - link.deleted
-      - extraction.created
-      - extraction.updated
-      - invoice.created
-      - invoice.updated
-      - invoice.deleted
-      - tax_return.created
-      - tax_return.updated
-      - tax_return.deleted
-      - file.created
-      - export.created
-      - export.updated
-      - tax_status.created
-      - tax_status.updated
-      - tax_status.deleted
-      - tax_compliance_check.created
-      - tax_compliance_check.updated
-      - tax_compliance_check.deleted
-      - tax_retention.created
-      - tax_retention.updated
-      - tax_retention.deleted
-      - invoice_payment.created
-      - invoice_payment.updated
-      - invoice_line_item.created
-      - invoice_line_item.updated
-      - electronic_accounting_record.created
-      - electronic_accounting_record.updated
-      - rpc_entidades.created
-      - rpc_entidades.updated
-      - rpc_socios.created
-      - rpc_socios.updated
-      - rpc_acto.created
-      - rpc_acto.updated
-      - shareholder_relation.created
-      - shareholder_relation.updated
-      - shareholder_relation_source.created
-      - rug_garantia.created
-      - rug_garantia.updated
-      - buro_de_credito_report.created
-      - buro_de_credito_report.updated
-      - background_check.created
-      - sat_certificate.created
-      - sat_certificate.updated
-      - company_verification_report.created
-      - company_verification_report.updated
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
+    WebhookRequestCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/WebhookRequest
+          '@id':
+            default: /webhook-requests
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/WebhookRequest'
     updatedAt:
       type: string
       description: Date and time the resource was last updated
@@ -345,10 +197,6 @@ components:
       format: url
       description: Endpoint URL used for the delivery attempt
       example: https://example.com/webhooks/syntage
-    WebhookEndpointEnabled:
-      type: boolean
-      example: true
-      description: Whether Syntage sends matching events to this endpoint
     EventType:
       type: string
       enum:
@@ -409,15 +257,69 @@ components:
       default: 20
       minimum: 1
       maximum: 1000
-    EventSource:
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    EventResource:
       type: string
       format: iri-reference
-      description: Source that originated the event
-      example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
-    WebhookRequestResponseStatusCode:
-      type: integer
-      description: HTTP status code returned by the endpoint, or `0` when Syntage did not receive a response
-      example: 200
+      description: Resource related to the event
+      example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
+    WebhookEndpointEventType:
+      type: string
+      description: Event type delivered to a webhook endpoint
+      enum:
+      - credential.created
+      - credential.updated
+      - credential.deleted
+      - link.created
+      - link.updated
+      - link.deleted
+      - extraction.created
+      - extraction.updated
+      - invoice.created
+      - invoice.updated
+      - invoice.deleted
+      - tax_return.created
+      - tax_return.updated
+      - tax_return.deleted
+      - file.created
+      - export.created
+      - export.updated
+      - tax_status.created
+      - tax_status.updated
+      - tax_status.deleted
+      - tax_compliance_check.created
+      - tax_compliance_check.updated
+      - tax_compliance_check.deleted
+      - tax_retention.created
+      - tax_retention.updated
+      - tax_retention.deleted
+      - invoice_payment.created
+      - invoice_payment.updated
+      - invoice_line_item.created
+      - invoice_line_item.updated
+      - electronic_accounting_record.created
+      - electronic_accounting_record.updated
+      - rpc_entidades.created
+      - rpc_entidades.updated
+      - rpc_socios.created
+      - rpc_socios.updated
+      - rpc_acto.created
+      - rpc_acto.updated
+      - shareholder_relation.created
+      - shareholder_relation.updated
+      - shareholder_relation_source.created
+      - rug_garantia.created
+      - rug_garantia.updated
+      - buro_de_credito_report.created
+      - buro_de_credito_report.updated
+      - background_check.created
+      - sat_certificate.created
+      - sat_certificate.updated
+      - company_verification_report.created
+      - company_verification_report.updated
     WebhookRequest:
       type: object
       properties:
@@ -485,28 +387,126 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    WebhookRequestCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/WebhookRequest
-          '@id':
-            default: /webhook-requests
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/WebhookRequest'
-    EventResource:
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    WebhookRequestResponseStatusCode:
+      type: integer
+      description: HTTP status code returned by the endpoint, or `0` when Syntage did not receive a response
+      example: 200
+    WebhookEndpointEnabled:
+      type: boolean
+      example: true
+      description: Whether Syntage sends matching events to this endpoint
+    EventSource:
       type: string
       format: iri-reference
-      description: Resource related to the event
-      example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Source that originated the event
+      example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
+    WebhookEndpointContentType:
+      type: string
+      description: Content type used for webhook delivery payloads
+      enum:
+      - application/ld+json
+      - application/json
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
     WebhookEndpointUrl:
       type: string
       format: url
       description: Public HTTPS URL where Syntage sends matching webhook events
       example: https://example.com/webhooks/syntage
+  responses:
+    WebhookRequest:
+      description: Webhook request resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/WebhookRequest
+            - $ref: '#/components/schemas/WebhookRequest'
+    WebhookRequestCollection:
+      description: Webhook request collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/WebhookRequestCollection'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   parameters:
     collectionCursorNextPageParam:
       name: id[lt]
@@ -516,14 +516,6 @@ components:
       description: Collection cursor pointer to the next page
       schema:
         type: string
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
     collectionLimit:
       name: itemsPerPage
       in: query
@@ -539,6 +531,14 @@ components:
       description: Collection cursor pointer to the previous page
       schema:
         type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     ApiKey:
       type: apiKey

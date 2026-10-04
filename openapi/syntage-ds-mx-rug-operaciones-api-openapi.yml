@@ -94,168 +94,32 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    RugOperacion:
-      description: RUG operación resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/RugOperacion
-            - $ref: '#/components/schemas/RugOperacionFull'
-    TaxpayerRugOperacionCollection:
-      description: RUG operación collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/TaxpayerRugOperacionCollection'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    updatedAtStrictlyAfter:
-      name: updatedAt[strictly_after]
-      in: query
-      description: Filter by the date the resource was last updated (greater than `>`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    createdAtBefore:
-      name: createdAt[before]
-      in: query
-      description: Filter by resource creation date (less than or equal `<=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtStrictlyBefore:
-      name: createdAt[strictly_before]
-      in: query
-      description: Filter by resource creation date (less than `<`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    updatedAtAfter:
-      name: updatedAt[after]
-      in: query
-      description: Filter by the date the resource was last updated (greater than or equal `>=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtAfter:
-      name: createdAt[after]
-      in: query
-      description: Filter by resource creation date (greater than or equal `>=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    orderUpdatedAt:
-      name: order[updatedAt]
-      in: query
-      description: Order by resource update date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    createdAtStrictlyAfter:
-      name: createdAt[strictly_after]
-      in: query
-      description: Filter by resource creation date (greater than `>`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
-    updatedAtBefore:
-      name: updatedAt[before]
-      in: query
-      description: Filter by the date the resource was last updated (less than or equal `<=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    updatedAtStrictlyBefore:
-      name: updatedAt[strictly_before]
-      in: query
-      description: Filter by the date the resource was last updated (less than `<`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
   schemas:
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    RugOperacionNumeroDeAsiento:
+    RugNumeroDeGarantia:
       type: number
-      description: RUG seat number for the operation
-      example: 12345678
+      description: RUG guarantee number
+      example: 123456
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    RugOperacionOtorgante:
+      type: object
+      description: Grantor associated with a RUG operation
+      properties:
+        nombre:
+          type: string
+          description: Grantor name
+          example: El Otorgante de Garantías Mobiliarias, S.A. de C.V.
+        folio_electronico:
+          type: string
+          description: Grantor electronic folio
+          example: 34011*7
     TaxpayerRugOperacionCollection:
       allOf:
       - $ref: '#/components/schemas/CursorCollection'
@@ -269,6 +133,73 @@ components:
           hydra:member:
             items:
               $ref: '#/components/schemas/RugOperacionFull'
+    RugOperacionTipo:
+      type: string
+      description: Type of RUG operation
+      enum:
+      - anotacion
+      - aviso_preventivo
+      - cancelacion
+      - cancelacion_de_anotacion
+      - certificacion
+      - inscripcion
+      - modificacion
+      - modificacion_de_anotacion
+      - rectificacion_de_anotacion
+      - rectificacion_por_error
+      - renovacion_o_reduccion_de_vigencia
+      - renovacion_vigencia_de_anotacion
+      - transmision
+      example: inscripcion
+    RugOperacionFile:
+      type: string
+      format: iri-reference
+      description: File resource for the RUG operation document
+      example: /files/99c13810-868f-482e-a6f1-878254248d27
+    RugOperacionNumeroDeAsiento:
+      type: number
+      description: RUG seat number for the operation
+      example: 12345678
+    RugOperacionFecha:
+      type: string
+      format: date-time
+      description: Date and time of the RUG operation
+      example: 2021-10-12 00:00:00+00:00
+    RugOperacionID:
+      type: string
+      format: uuid
+      description: RUG operación identifier
+      example: 99c13810-868f-482e-a6f1-878254248d27
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    RugOperacionPartial:
+      type: object
+      description: RUG operation summary
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: RUG operation IRI reference
+          example: /datasources/rug/operaciones/99c13810-868f-482e-a6f1-878254248d27
+        '@type':
+          type: string
+          default: RugOperacion
+        id:
+          $ref: '#/components/schemas/RugOperacionID'
+        numeroDeAsiento:
+          $ref: '#/components/schemas/RugOperacionNumeroDeAsiento'
+        tipo:
+          $ref: '#/components/schemas/RugOperacionTipo'
+        fecha:
+          $ref: '#/components/schemas/RugOperacionFecha'
+        file:
+          $ref: '#/components/schemas/RugOperacionFile'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
     RugOperacionBoleta:
       type: object
       description: Parsed RUG boleta data for the operation
@@ -441,50 +372,20 @@ components:
             certificado_rug:
               type: string
               example: EMAILADDRESS=contacto_rug@economia.gob.mx, O=Secretaria de Economia, OU=Direccion General de Normatividad Mercantil, CN=RUG. Ernesto del Castillo Hernandez, T=Di rector de Coordinacion del Registro Publico de Comercio, STREET="Insurgentes Sur 1940, Piso 1", OID.2.5.4.17=01030, C=MX, ST=Ciudad de Mexico, L=Alvaro Obregon, OID.2.5.4.45=#030E0043414845363731313037535638, SERIALNUMBER=CAHE671107HDFSRR03 , OID.2.5.4.20=(55)5229 6100 Ext. 33529
-    RugOperacionTipo:
-      type: string
-      description: Type of RUG operation
-      enum:
-      - anotacion
-      - aviso_preventivo
-      - cancelacion
-      - cancelacion_de_anotacion
-      - certificacion
-      - inscripcion
-      - modificacion
-      - modificacion_de_anotacion
-      - rectificacion_de_anotacion
-      - rectificacion_por_error
-      - renovacion_o_reduccion_de_vigencia
-      - renovacion_vigencia_de_anotacion
-      - transmision
-      example: inscripcion
-    RugOperacionPartial:
-      type: object
-      description: RUG operation summary
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: RUG operation IRI reference
-          example: /datasources/rug/operaciones/99c13810-868f-482e-a6f1-878254248d27
-        '@type':
-          type: string
-          default: RugOperacion
-        id:
-          $ref: '#/components/schemas/RugOperacionID'
-        numeroDeAsiento:
-          $ref: '#/components/schemas/RugOperacionNumeroDeAsiento'
-        tipo:
-          $ref: '#/components/schemas/RugOperacionTipo'
-        fecha:
-          $ref: '#/components/schemas/RugOperacionFecha'
-        file:
-          $ref: '#/components/schemas/RugOperacionFile'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
+    RugOperacionFull:
+      allOf:
+      - $ref: '#/components/schemas/RugOperacionPartial'
+      - type: object
+        description: Full RUG operation details
+        properties:
+          numeroDeGarantia:
+            $ref: '#/components/schemas/RugNumeroDeGarantia'
+          otorgantes:
+            type: array
+            items:
+              $ref: '#/components/schemas/RugOperacionOtorgante'
+          boleta:
+            $ref: '#/components/schemas/RugOperacionBoleta'
     CursorCollection:
       type: object
       properties:
@@ -540,66 +441,165 @@ components:
                     type: string
                   required:
                     type: boolean
-    RugOperacionID:
-      type: string
-      format: uuid
-      description: RUG operación identifier
-      example: 99c13810-868f-482e-a6f1-878254248d27
-    RugOperacionFecha:
-      type: string
-      format: date-time
-      description: Date and time of the RUG operation
-      example: 2021-10-12 00:00:00+00:00
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
     CollectionOrder:
       type: string
       enum:
       - asc
       - desc
       example: asc
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    RugOperacionFull:
-      allOf:
-      - $ref: '#/components/schemas/RugOperacionPartial'
-      - type: object
-        description: Full RUG operation details
-        properties:
-          numeroDeGarantia:
-            $ref: '#/components/schemas/RugNumeroDeGarantia'
-          otorgantes:
-            type: array
-            items:
-              $ref: '#/components/schemas/RugOperacionOtorgante'
-          boleta:
-            $ref: '#/components/schemas/RugOperacionBoleta'
-    RugNumeroDeGarantia:
-      type: number
-      description: RUG guarantee number
-      example: 123456
-    RugOperacionFile:
-      type: string
-      format: iri-reference
-      description: File resource for the RUG operation document
-      example: /files/99c13810-868f-482e-a6f1-878254248d27
-    RugOperacionOtorgante:
-      type: object
-      description: Grantor associated with a RUG operation
-      properties:
-        nombre:
-          type: string
-          description: Grantor name
-          example: El Otorgante de Garantías Mobiliarias, S.A. de C.V.
-        folio_electronico:
-          type: string
-          description: Grantor electronic folio
-          example: 34011*7
+  parameters:
+    updatedAtStrictlyBefore:
+      name: updatedAt[strictly_before]
+      in: query
+      description: Filter by the date the resource was last updated (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
+      in: query
+      description: Filter by resource creation date (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    updatedAtBefore:
+      name: updatedAt[before]
+      in: query
+      description: Filter by the date the resource was last updated (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    createdAtAfter:
+      name: createdAt[after]
+      in: query
+      description: Filter by resource creation date (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    createdAtBefore:
+      name: createdAt[before]
+      in: query
+      description: Filter by resource creation date (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtStrictlyAfter:
+      name: updatedAt[strictly_after]
+      in: query
+      description: Filter by the date the resource was last updated (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    updatedAtAfter:
+      name: updatedAt[after]
+      in: query
+      description: Filter by the date the resource was last updated (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
+      in: query
+      description: Filter by resource creation date (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    RugOperacion:
+      description: RUG operación resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/RugOperacion
+            - $ref: '#/components/schemas/RugOperacionFull'
+    TaxpayerRugOperacionCollection:
+      description: RUG operación collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/TaxpayerRugOperacionCollection'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

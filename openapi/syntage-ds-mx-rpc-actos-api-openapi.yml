@@ -62,21 +62,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
     collectionCursorPreviousPageParam:
       name: id[gt]
       in: query
@@ -85,6 +70,14 @@ components:
       description: Collection cursor pointer to the previous page
       schema:
         type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
     collectionCursorNextPageParam:
       name: id[lt]
       in: query
@@ -101,44 +94,31 @@ components:
       schema:
         type: string
         format: uuid
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    EntityRpcActoCollection:
-      description: RPC actos collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/EntityRpcActoCollection'
-    RpcActo:
-      description: RPC acto resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/RpcActo
-            - $ref: '#/components/schemas/RpcActo'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
   schemas:
+    EntityRpcActoCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/RpcActo
+          '@id':
+            default: /entities/{entityId}/datasources/mx/rpc/actos
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/datasources/mx/rpc/actos
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/RpcActo'
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
     RpcEntidadeLookupBy:
       type: string
       description: Search source that produced the RPC entidade
@@ -146,10 +126,79 @@ components:
       - entity
       - shareholder
       example: entity
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    RpcActo:
+      allOf:
+      - $ref: '#/components/schemas/RpcEntidadeActo'
+      - type: object
+        properties:
+          '@id':
+            type: string
+            format: iri-reference
+            description: RPC acto IRI reference
+            example: /rpc/actos/91106968-1abd-4d64-85c1-4e73d96fb997
+          '@type':
+            type: string
+            default: RpcActo
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
     RpcEntidadeActo:
       type: object
       description: Registry act nested in an RPC entidade response
@@ -211,15 +260,10 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    updatedAt:
+    createdAt:
       type: string
-      description: Date and time the resource was last updated
+      description: Date and time the resource was created
       example: '2020-01-01T12:15:00.000Z'
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
     File:
       type: object
       properties:
@@ -266,87 +310,43 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
-    RpcActo:
-      allOf:
-      - $ref: '#/components/schemas/RpcEntidadeActo'
-      - type: object
-        properties:
-          '@id':
-            type: string
-            format: iri-reference
-            description: RPC acto IRI reference
-            example: /rpc/actos/91106968-1abd-4d64-85c1-4e73d96fb997
-          '@type':
-            type: string
-            default: RpcActo
+  responses:
     EntityRpcActoCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/RpcActo
-          '@id':
-            default: /entities/{entityId}/datasources/mx/rpc/actos
-            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/datasources/mx/rpc/actos
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/RpcActo'
+      description: RPC actos collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EntityRpcActoCollection'
+    RpcActo:
+      description: RPC acto resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/RpcActo
+            - $ref: '#/components/schemas/RpcActo'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

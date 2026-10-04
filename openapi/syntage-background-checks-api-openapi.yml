@@ -216,160 +216,160 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    orderScore:
-      name: order[score]
-      in: query
-      description: Order by background check score
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    backgroundCheckId:
-      name: backgroundCheckId
-      in: path
-      required: true
-      description: The background check ID
-      example: 91ab5678-1234-5678-9abc-def012345678
-      schema:
-        type: string
-        format: uuid
-    backgroundCheckStatusFilter:
-      name: status
-      in: query
-      description: Filter background checks by status
-      schema:
-        $ref: '#/components/schemas/BackgroundCheckStatus'
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    backgroundCheckCategoryFilter:
-      name: category
-      in: query
-      description: Filter background check records by category
-      schema:
-        $ref: '#/components/schemas/BackgroundCheckCategory'
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    orderUpdatedAt:
-      name: order[updatedAt]
-      in: query
-      description: Order by resource update date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    backgroundCheckCountryFilter:
-      name: country
-      in: query
-      description: Filter background checks by country
-      schema:
-        $ref: '#/components/schemas/BackgroundCheckCountry'
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   schemas:
-    BackgroundCheckRecordSectionField:
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    BackgroundCheckDatabase:
       type: object
       required:
       - id
       - name
-      - value
+      - country
       properties:
         id:
           type: string
           format: uuid
-          description: Unique field ID
-          example: 37ef1234-5678-9012-cdef-345678901234
+          description: Unique background check database ID
+          example: 55f01234-5678-9012-cdef-345678901234
         name:
           type: string
-          description: Display name for the field
-          example: Full Name
-        value:
+          description: Display name of the database
+          example: Mexico Criminal Records Database
+        country:
+          allOf:
+          - $ref: '#/components/schemas/BackgroundCheckCountry'
+          description: Country covered by this database
+    File:
+      type: object
+      properties:
+        '@id':
           type: string
-          description: Value returned for the field
-          example: Juan Manuel Perez Gonzalez
+          format: iri-reference
+          description: File IRI reference
+          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: File
+          example: File
+        id:
+          type: string
+          format: uuid
+          description: Unique file ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          type: string
+          description: File category, such as an invoice CFDI XML or PDF
+          example: invoice.cfdi.xml
+        resource:
+          type: string
+          description: IRI of the resource that produced or owns the file
+          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
+        mimeType:
+          type: string
+          description: Media type of the file content
+          example: text/xml
+        extension:
+          type: string
+          description: File extension for the stored content
+          example: xml
+        size:
+          type: integer
+          description: File size in bytes
+          example: 40544
+        filename:
+          type: string
+          description: Suggested filename for the file content
+          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    Collection:
+      allOf:
+      - $ref: '#/components/schemas/HydraView'
+      - type: object
+        properties:
+          hydra:search:
+            type: object
+            properties:
+              '@type':
+                type: string
+              hydra:template:
+                type: string
+              hydra:variableRepresentation:
+                type: string
+              hydra:mapping:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                    variable:
+                      type: string
+                    property:
+                      type: string
+                    required:
+                      type: boolean
+    BackgroundCheckStatus:
+      type: string
+      enum:
+      - pending
+      - completed
+      - error
+      description: 'Status of the background check:
+
+        - **pending**: Background check is being processed
+
+        - **completed**: Background check has been completed successfully
+
+        - **error**: Background check encountered an error during processing
+
+        '
+      example: completed
     createdAt:
       type: string
       description: Date and time the resource was created
       example: '2020-01-01T12:15:00.000Z'
-    BackgroundCheckDatabaseStatus:
+    BackgroundCheckScore:
       type: object
       required:
       - id
-      - database
       - category
+      - score
       - status
+      - recordsCount
       properties:
         id:
           type: string
           format: uuid
-          description: Unique database status ID
-          example: 64ef1234-5678-9012-cdef-345678901234
-        database:
-          allOf:
-          - $ref: '#/components/schemas/BackgroundCheckDatabase'
-          description: Database checked by the provider
+          description: Unique category score ID
+          example: 73de0123-4567-8901-bcde-f23456789012
         category:
           allOf:
           - $ref: '#/components/schemas/BackgroundCheckCategory'
-          description: Category checked in this database
+          description: Category this score applies to
+        score:
+          type: number
+          format: float
+          description: Score returned for this background check category
+          example: 92.3
         status:
           type: string
-          description: Provider status for this database check
-          example: completed
+          description: Provider status for this category check
+          example: clean
+        recordsCount:
+          type: integer
+          description: Number of records found for this category
+          example: 3
     HydraView:
       type: object
       properties:
@@ -412,61 +412,83 @@ components:
               type: string
               format: iri-reference
               description: Last page IRI reference; omitted when there is no pagination
-    CursorCollection:
+    BackgroundCheckRecord:
       type: object
+      required:
+      - id
+      - category
+      - database
+      - sections
+      - title
       properties:
-        '@context':
-          type: string
         '@id':
           type: string
+          format: iri-reference
+          description: Background Check Record IRI reference
+          example: /background-checks/91ab5678-1234-5678-9abc-def012345678/records/82cd9012-3456-7890-abcd-ef1234567890
         '@type':
           type: string
-          default: hydra:Collection
-        hydra:member:
+          default: BackgroundCheckRecord
+        id:
+          type: string
+          format: uuid
+          description: Unique background check record ID
+          example: 82cd9012-3456-7890-abcd-ef1234567890
+        category:
+          allOf:
+          - $ref: '#/components/schemas/BackgroundCheckCategory'
+          description: Category that groups this record
+        database:
+          allOf:
+          - $ref: '#/components/schemas/BackgroundCheckDatabase'
+          description: Database where this record was found
+        sections:
           type: array
           items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
+            $ref: '#/components/schemas/BackgroundCheckRecordSection'
+          description: Sections of detailed fields returned for this record
+        title:
+          type: string
+          description: Display title for the record
+          example: Criminal records
+    BackgroundCheckCountry:
+      type: string
+      enum:
+      - MX
+      - ALL
+      description: 'Country scope for background check:
+
+        - **MX**: Mexico-specific background checks
+
+        - **ALL**: International background checks across multiple countries
+
+        '
+      example: MX
+    BackgroundCheckDatabaseStatus:
+      type: object
+      required:
+      - id
+      - database
+      - category
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique database status ID
+          example: 64ef1234-5678-9012-cdef-345678901234
+        database:
+          allOf:
+          - $ref: '#/components/schemas/BackgroundCheckDatabase'
+          description: Database checked by the provider
+        category:
+          allOf:
+          - $ref: '#/components/schemas/BackgroundCheckCategory'
+          description: Category checked in this database
+        status:
+          type: string
+          description: Provider status for this database check
+          example: completed
     BackgroundCheckCategory:
       type: string
       enum:
@@ -528,10 +550,67 @@ components:
 
         '
       example: criminal_record
-    updatedAt:
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    CollectionOrder:
       type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
+      enum:
+      - asc
+      - desc
+      example: asc
     BackgroundCheck:
       type: object
       required:
@@ -596,158 +675,26 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
-    Collection:
-      allOf:
-      - $ref: '#/components/schemas/HydraView'
-      - type: object
-        properties:
-          hydra:search:
-            type: object
-            properties:
-              '@type':
-                type: string
-              hydra:template:
-                type: string
-              hydra:variableRepresentation:
-                type: string
-              hydra:mapping:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    '@type':
-                      type: string
-                    variable:
-                      type: string
-                    property:
-                      type: string
-                    required:
-                      type: boolean
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    BackgroundCheckStatus:
-      type: string
-      enum:
-      - pending
-      - completed
-      - error
-      description: 'Status of the background check:
-
-        - **pending**: Background check is being processed
-
-        - **completed**: Background check has been completed successfully
-
-        - **error**: Background check encountered an error during processing
-
-        '
-      example: completed
-    File:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: File IRI reference
-          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: File
-          example: File
-        id:
-          type: string
-          format: uuid
-          description: Unique file ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        type:
-          type: string
-          description: File category, such as an invoice CFDI XML or PDF
-          example: invoice.cfdi.xml
-        resource:
-          type: string
-          description: IRI of the resource that produced or owns the file
-          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
-        mimeType:
-          type: string
-          description: Media type of the file content
-          example: text/xml
-        extension:
-          type: string
-          description: File extension for the stored content
-          example: xml
-        size:
-          type: integer
-          description: File size in bytes
-          example: 40544
-        filename:
-          type: string
-          description: Suggested filename for the file content
-          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    BackgroundCheckRecord:
+    BackgroundCheckRecordSectionField:
       type: object
       required:
       - id
-      - category
-      - database
-      - sections
-      - title
+      - name
+      - value
       properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Background Check Record IRI reference
-          example: /background-checks/91ab5678-1234-5678-9abc-def012345678/records/82cd9012-3456-7890-abcd-ef1234567890
-        '@type':
-          type: string
-          default: BackgroundCheckRecord
         id:
           type: string
           format: uuid
-          description: Unique background check record ID
-          example: 82cd9012-3456-7890-abcd-ef1234567890
-        category:
-          allOf:
-          - $ref: '#/components/schemas/BackgroundCheckCategory'
-          description: Category that groups this record
-        database:
-          allOf:
-          - $ref: '#/components/schemas/BackgroundCheckDatabase'
-          description: Database where this record was found
-        sections:
-          type: array
-          items:
-            $ref: '#/components/schemas/BackgroundCheckRecordSection'
-          description: Sections of detailed fields returned for this record
-        title:
+          description: Unique field ID
+          example: 37ef1234-5678-9012-cdef-345678901234
+        name:
           type: string
-          description: Display title for the record
-          example: Criminal records
-    BackgroundCheckCountry:
-      type: string
-      enum:
-      - MX
-      - ALL
-      description: 'Country scope for background check:
-
-        - **MX**: Mexico-specific background checks
-
-        - **ALL**: International background checks across multiple countries
-
-        '
-      example: MX
+          description: Display name for the field
+          example: Full Name
+        value:
+          type: string
+          description: Value returned for the field
+          example: Juan Manuel Perez Gonzalez
     BackgroundCheckRecordSection:
       type: object
       required:
@@ -769,57 +716,110 @@ components:
           items:
             $ref: '#/components/schemas/BackgroundCheckRecordSectionField'
           description: Fields included in this record section
-    BackgroundCheckDatabase:
-      type: object
-      required:
-      - id
-      - name
-      - country
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique background check database ID
-          example: 55f01234-5678-9012-cdef-345678901234
-        name:
-          type: string
-          description: Display name of the database
-          example: Mexico Criminal Records Database
-        country:
-          allOf:
-          - $ref: '#/components/schemas/BackgroundCheckCountry'
-          description: Country covered by this database
-    BackgroundCheckScore:
-      type: object
-      required:
-      - id
-      - category
-      - score
-      - status
-      - recordsCount
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique category score ID
-          example: 73de0123-4567-8901-bcde-f23456789012
-        category:
-          allOf:
-          - $ref: '#/components/schemas/BackgroundCheckCategory'
-          description: Category this score applies to
-        score:
-          type: number
-          format: float
-          description: Score returned for this background check category
-          example: 92.3
-        status:
-          type: string
-          description: Provider status for this category check
-          example: clean
-        recordsCount:
-          type: integer
-          description: Number of records found for this category
-          example: 3
+  parameters:
+    orderScore:
+      name: order[score]
+      in: query
+      description: Order by background check score
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    orderUpdatedAt:
+      name: order[updatedAt]
+      in: query
+      description: Order by resource update date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    backgroundCheckCountryFilter:
+      name: country
+      in: query
+      description: Filter background checks by country
+      schema:
+        $ref: '#/components/schemas/BackgroundCheckCountry'
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    backgroundCheckCategoryFilter:
+      name: category
+      in: query
+      description: Filter background check records by category
+      schema:
+        $ref: '#/components/schemas/BackgroundCheckCategory'
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    backgroundCheckId:
+      name: backgroundCheckId
+      in: path
+      required: true
+      description: The background check ID
+      example: 91ab5678-1234-5678-9abc-def012345678
+      schema:
+        type: string
+        format: uuid
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    backgroundCheckStatusFilter:
+      name: status
+      in: query
+      description: Filter background checks by status
+      schema:
+        $ref: '#/components/schemas/BackgroundCheckStatus'
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   securitySchemes:
     ApiKey:
       type: apiKey

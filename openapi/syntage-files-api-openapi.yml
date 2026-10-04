@@ -53,72 +53,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    DownloadFile:
-      description: File content
-      content:
-        text/xml:
-          schema:
-            type: string
-          example: <xml>...</xml>
-        application/pdf:
-          schema:
-            type: string
-            format: binary
-          example: <pdf-binary-data>
-        application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
-          schema:
-            type: string
-            format: binary
-          example: <xlsx-binary-data>
-        application/json:
-          schema:
-            type: string
-          example:
-          - example: null
-        application/zip:
-          schema:
-            type: string
-            format: binary
-          example: <zip-binary-data>
-    File:
-      description: File resource response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/File'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   schemas:
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
     updatedAt:
       type: string
       description: Date and time the resource was last updated
@@ -169,6 +104,71 @@ components:
           $ref: '#/components/schemas/createdAt'
         updatedAt:
           $ref: '#/components/schemas/updatedAt'
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+  parameters:
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    DownloadFile:
+      description: File content
+      content:
+        text/xml:
+          schema:
+            type: string
+          example: <xml>...</xml>
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+          example: <pdf-binary-data>
+        application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+          schema:
+            type: string
+            format: binary
+          example: <xlsx-binary-data>
+        application/json:
+          schema:
+            type: string
+          example:
+          - example: null
+        application/zip:
+          schema:
+            type: string
+            format: binary
+          example: <zip-binary-data>
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    File:
+      description: File resource response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/File'
   securitySchemes:
     ApiKey:
       type: apiKey

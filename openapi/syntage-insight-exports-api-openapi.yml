@@ -78,6 +78,15 @@ components:
             properties:
               message:
                 type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     NotFound:
       description: Not found
       content:
@@ -107,15 +116,6 @@ components:
                 type: string
                 description: Concatenated violation messages
                 example: 'exampleField: Syntage score already exists.'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
   parameters:
     entityId:
       name: entityId

@@ -198,8 +198,8 @@ components:
                       type: string
                       format: date
                       example: '2024-08-01'
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
@@ -207,8 +207,8 @@ components:
             properties:
               message:
                 type: string
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:

@@ -133,225 +133,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    Event:
-      description: Event resource response
-      content:
-        application/ld+json:
-          schema:
-            allOf:
-            - type: object
-              properties:
-                '@context':
-                  type: string
-                  default: /contexts/Event
-            - $ref: '#/components/schemas/Event'
-    EventCollection:
-      description: Event collection response
-      content:
-        application/ld+json:
-          schema:
-            $ref: '#/components/schemas/EventCollection'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  parameters:
-    orderCreatedAt:
-      name: order[createdAt]
-      in: query
-      description: Order by resource creation date
-      schema:
-        $ref: '#/components/schemas/CollectionOrder'
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    createdAtBefore:
-      name: createdAt[before]
-      in: query
-      description: Filter by resource creation date (less than or equal `<=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtStrictlyBefore:
-      name: createdAt[strictly_before]
-      in: query
-      description: Filter by resource creation date (less than `<`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    createdAtAfter:
-      name: createdAt[after]
-      in: query
-      description: Filter by resource creation date (greater than or equal `>=`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    resourceId:
-      name: id
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionLimit:
-      name: itemsPerPage
-      in: query
-      required: false
-      description: Number of items per page
-      schema:
-        $ref: '#/components/schemas/CollectionLimit'
-    createdAtStrictlyAfter:
-      name: createdAt[strictly_after]
-      in: query
-      description: Filter by resource creation date (greater than `>`)
-      example: '2020-01-17 11:47:27'
-      schema:
-        type: string
-        format: date-time
-    collectionCursorPreviousPageParam:
-      name: id[gt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the previous page
-      schema:
-        type: string
   schemas:
-    uuid:
-      type: string
-      format: uuid
-      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
-    Event:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Event IRI reference
-          example: /events/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: Event
-        id:
-          $ref: '#/components/schemas/uuid'
-        taxpayer:
-          $ref: '#/components/schemas/Taxpayer'
-        type:
-          $ref: '#/components/schemas/EventType'
-        source:
-          $ref: '#/components/schemas/EventSource'
-        resource:
-          $ref: '#/components/schemas/EventResource'
-        data:
-          type: object
-          description: Resource data (data.object) and changes (data.changes)
-          example:
-            object:
-              id: 91106968-1abd-4d64-85c1-4e73d96fb997
-              rfc: PEIC211118IS0
-              type: ciec
-              status: valid
-              createdAt: '2020-01-17 11:47:27'
-            changes:
-              status:
-                old: pending
-                new: valid
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
-    CursorCollection:
-      type: object
-      properties:
-        '@context':
-          type: string
-        '@id':
-          type: string
-        '@type':
-          type: string
-          default: hydra:Collection
-        hydra:member:
-          type: array
-          items:
-            type: object
-        hydra:view:
-          type: object
-          description: Pagination information
-          properties:
-            '@id':
-              type: string
-              format: iri-reference
-              description: Current page IRI reference
-            '@type':
-              type: string
-              default: hydra:PartialCollectionView
-            hydra:next:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Next page IRI reference; omitted when there is no pagination
-            hydra:last:
-              type: string
-              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
-              description: Last page IRI reference; omitted when there is no pagination
-        hydra:search:
-          type: object
-          properties:
-            '@type':
-              type: string
-            hydra:template:
-              type: string
-            hydra:variableRepresentation:
-              type: string
-            hydra:mapping:
-              type: array
-              items:
-                type: object
-                properties:
-                  '@type':
-                    type: string
-                  variable:
-                    type: string
-                  property:
-                    type: string
-                  required:
-                    type: boolean
     TaxpayerID:
       type: string
       minLength: 12
@@ -362,12 +144,6 @@ components:
       type: string
       description: Date and time the resource was last updated
       example: '2020-01-01T12:15:00.000Z'
-    CollectionOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      example: asc
     EventType:
       type: string
       enum:
@@ -428,11 +204,15 @@ components:
       default: 20
       minimum: 1
       maximum: 1000
-    EventSource:
+    uuid:
+      type: string
+      format: uuid
+      example: e0a24894-7fbf-48ae-bfb0-efaae30a6319
+    EventResource:
       type: string
       format: iri-reference
-      description: Source that originated the event
-      example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Resource related to the event
+      example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
     Taxpayer:
       type: object
       properties:
@@ -454,12 +234,21 @@ components:
           description: Taxpayer registration date
         name:
           $ref: '#/components/schemas/TaxpayerName'
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
     TaxpayerName:
       type: string
       minLength: 1
       maxLength: 254
       description: Taxpayer name
       example: Pedro Infante Cruz
+    EventSource:
+      type: string
+      format: iri-reference
+      description: Source that originated the event
+      example: /extractions/91106968-1abd-4d64-85c1-4e73d96fb997
     EventCollection:
       allOf:
       - $ref: '#/components/schemas/CursorCollection'
@@ -472,17 +261,228 @@ components:
           hydra:member:
             items:
               $ref: '#/components/schemas/Event'
+    Event:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Event IRI reference
+          example: /events/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: Event
+        id:
+          $ref: '#/components/schemas/uuid'
+        taxpayer:
+          $ref: '#/components/schemas/Taxpayer'
+        type:
+          $ref: '#/components/schemas/EventType'
+        source:
+          $ref: '#/components/schemas/EventSource'
+        resource:
+          $ref: '#/components/schemas/EventResource'
+        data:
+          type: object
+          description: Resource data (data.object) and changes (data.changes)
+          example:
+            object:
+              id: 91106968-1abd-4d64-85c1-4e73d96fb997
+              rfc: PEIC211118IS0
+              type: ciec
+              status: valid
+              createdAt: '2020-01-17 11:47:27'
+            changes:
+              status:
+                old: pending
+                new: valid
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    CursorCollection:
+      type: object
+      properties:
+        '@context':
+          type: string
+        '@id':
+          type: string
+        '@type':
+          type: string
+          default: hydra:Collection
+        hydra:member:
+          type: array
+          items:
+            type: object
+        hydra:view:
+          type: object
+          description: Pagination information
+          properties:
+            '@id':
+              type: string
+              format: iri-reference
+              description: Current page IRI reference
+            '@type':
+              type: string
+              default: hydra:PartialCollectionView
+            hydra:next:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[lt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Next page IRI reference; omitted when there is no pagination
+            hydra:last:
+              type: string
+              example: /entity/2a15f539-3251-48e1-aaeb-a154dc9c6edb/resource?id[gt]=9b8e5365-0b36-45f5-9c76-fbe439632367
+              description: Last page IRI reference; omitted when there is no pagination
+        hydra:search:
+          type: object
+          properties:
+            '@type':
+              type: string
+            hydra:template:
+              type: string
+            hydra:variableRepresentation:
+              type: string
+            hydra:mapping:
+              type: array
+              items:
+                type: object
+                properties:
+                  '@type':
+                    type: string
+                  variable:
+                    type: string
+                  property:
+                    type: string
+                  required:
+                    type: boolean
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
     TaxpayerPersonType:
       type: string
       enum:
       - physical
       - legal
       example: physical
-    EventResource:
-      type: string
-      format: iri-reference
-      description: Resource related to the event
-      example: /credentials/91106968-1abd-4d64-85c1-4e73d96fb997
+  parameters:
+    createdAtStrictlyBefore:
+      name: createdAt[strictly_before]
+      in: query
+      description: Filter by resource creation date (less than `<`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+    createdAtAfter:
+      name: createdAt[after]
+      in: query
+      description: Filter by resource creation date (greater than or equal `>=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    collectionLimit:
+      name: itemsPerPage
+      in: query
+      required: false
+      description: Number of items per page
+      schema:
+        $ref: '#/components/schemas/CollectionLimit'
+    orderCreatedAt:
+      name: order[createdAt]
+      in: query
+      description: Order by resource creation date
+      schema:
+        $ref: '#/components/schemas/CollectionOrder'
+    createdAtBefore:
+      name: createdAt[before]
+      in: query
+      description: Filter by resource creation date (less than or equal `<=`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    createdAtStrictlyAfter:
+      name: createdAt[strictly_after]
+      in: query
+      description: Filter by resource creation date (greater than `>`)
+      example: '2020-01-17 11:47:27'
+      schema:
+        type: string
+        format: date-time
+    collectionCursorPreviousPageParam:
+      name: id[gt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the previous page
+      schema:
+        type: string
+    resourceId:
+      name: id
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Event:
+      description: Event resource response
+      content:
+        application/ld+json:
+          schema:
+            allOf:
+            - type: object
+              properties:
+                '@context':
+                  type: string
+                  default: /contexts/Event
+            - $ref: '#/components/schemas/Event'
+    EventCollection:
+      description: Event collection response
+      content:
+        application/ld+json:
+          schema:
+            $ref: '#/components/schemas/EventCollection'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   securitySchemes:
     ApiKey:
       type: apiKey
