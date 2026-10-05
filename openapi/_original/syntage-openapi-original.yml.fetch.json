@@ -1,0 +1,12 @@
+{
+ "url": "https://api.syntage.com/openapi.yaml",
+ "requested_url": "https://api.syntage.com/openapi.yaml",
+ "status": 200,
+ "content_type": "application/yaml",
+ "bytes": 1280814,
+ "sha256": "70e7c93c7f0d862ae66c7c72e3c98d95e4a03c8f733f15fac9198caeac0492ae",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.951), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
