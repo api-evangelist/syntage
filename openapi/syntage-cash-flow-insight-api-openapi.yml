@@ -74,6 +74,15 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     CashFlowInsight:
       description: Entity cash flow
       content:
@@ -200,15 +209,6 @@ components:
                       example: '2024-08-01'
     Unauthorized:
       description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    NotFound:
-      description: Not found
       content:
         application/json:
           schema:

@@ -141,6 +141,15 @@ components:
                     required:
                       type: boolean
   responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     ShareholdersInsight:
       description: Shareholders insight
       content:
@@ -244,15 +253,6 @@ components:
                               additionalProperties: true
     Unauthorized:
       description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-    NotFound:
-      description: Not found
       content:
         application/json:
           schema:

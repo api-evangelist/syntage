@@ -131,152 +131,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    ElectronicAccountingRecordMonth:
-      type: integer
-      example: 3
-      enum:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
-      - 10
-      - 11
-      - 12
-      - 13
-    updatedAt:
-      type: string
-      description: Date and time the resource was last updated
-      example: '2020-01-01T12:15:00.000Z'
-    ElectronicAccountingRecordYear:
-      type: integer
-      description: Fiscal year
-      example: 2022
-    CollectionLimit:
-      type: integer
-      default: 20
-      minimum: 1
-      maximum: 1000
-    ElectronicAccountingRecordReason:
-      type: string
-      example: EM
-      enum:
-      - AF
-      - DE
-      - CO
-      - FC
-      - EM
-    ElectronicAccountingRecord:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: Electronic Accounting Record IRI reference
-          example: /electronic-accounting-records/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          default: ElectronicAccountingRecord
-        id:
-          $ref: '#/components/schemas/ElectronicAccountingRecordID'
-        year:
-          $ref: '#/components/schemas/ElectronicAccountingRecordYear'
-        month:
-          $ref: '#/components/schemas/ElectronicAccountingRecordMonth'
-        type:
-          $ref: '#/components/schemas/ElectronicAccountingRecordType'
-        reason:
-          $ref: '#/components/schemas/ElectronicAccountingRecordReason'
-        fileType:
-          $ref: '#/components/schemas/ElectronicAccountingRecordXmlFileType'
-        filename:
-          $ref: '#/components/schemas/ElectronicAccountingRecordFilename'
-        code:
-          $ref: '#/components/schemas/ElectronicAccountingRecordCode'
-        receivedAt:
-          $ref: '#/components/schemas/ElectronicAccountingRecordReceivedAt'
-        status:
-          $ref: '#/components/schemas/ElectronicAccountingRecordStatus'
-        files:
-          $ref: '#/components/schemas/ElectronicAccountingRecordFiles'
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    ElectronicAccountingRecordStatus:
-      type: string
-      example: accepted
-      enum:
-      - received
-      - accepted
-      - rejected
-    File:
-      type: object
-      properties:
-        '@id':
-          type: string
-          format: iri-reference
-          description: File IRI reference
-          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
-        '@type':
-          type: string
-          description: JSON-LD resource type
-          default: File
-          example: File
-        id:
-          type: string
-          format: uuid
-          description: Unique file ID
-          example: 91106968-1abd-4d64-85c1-4e73d96fb997
-        type:
-          type: string
-          description: File category, such as an invoice CFDI XML or PDF
-          example: invoice.cfdi.xml
-        resource:
-          type: string
-          description: IRI of the resource that produced or owns the file
-          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
-        mimeType:
-          type: string
-          description: Media type of the file content
-          example: text/xml
-        extension:
-          type: string
-          description: File extension for the stored content
-          example: xml
-        size:
-          type: integer
-          description: File size in bytes
-          example: 40544
-        filename:
-          type: string
-          description: Suggested filename for the file content
-          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
-        createdAt:
-          $ref: '#/components/schemas/createdAt'
-        updatedAt:
-          $ref: '#/components/schemas/updatedAt'
-    TaxpayerElectronicAccountingRecordCollection:
-      allOf:
-      - $ref: '#/components/schemas/CursorCollection'
-      - type: object
-        properties:
-          '@context':
-            default: /contexts/ElectronicAccountingRecord
-          '@id':
-            default: /entities/{entityId}/electronic-accounting-records
-            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/electronic-accounting-records
-          hydra:member:
-            items:
-              $ref: '#/components/schemas/ElectronicAccountingRecord'
-    createdAt:
-      type: string
-      description: Date and time the resource was created
-      example: '2020-01-01T12:15:00.000Z'
     ElectronicAccountingRecordXmlFileType:
       type: string
       example: B
@@ -286,22 +140,19 @@ components:
       - PL
       - XF
       - XC
-    ElectronicAccountingRecordFiles:
-      type: array
-      description: 'Electronic accounting record files: (ack receipt, ack processing, XML and digital stamp)'
-      items:
-        $ref: '#/components/schemas/File'
-    ElectronicAccountingRecordType:
-      type:
-      - string
-      - 'null'
-      example: N
-      enum:
-      - N
-      - C
-    ElectronicAccountingRecordCode:
+    ElectronicAccountingRecordYear:
+      type: integer
+      description: Fiscal year
+      example: 2022
+    ElectronicAccountingRecordReceivedAt:
       type: string
-      example: '0002220300000000124236'
+      format: date-time
+    CollectionOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      example: asc
     CursorCollection:
       type: object
       properties:
@@ -357,23 +208,172 @@ components:
                     type: string
                   required:
                     type: boolean
-    CollectionOrder:
+    ElectronicAccountingRecordReason:
       type: string
+      example: EM
       enum:
-      - asc
-      - desc
-      example: asc
+      - AF
+      - DE
+      - CO
+      - FC
+      - EM
+    ElectronicAccountingRecordType:
+      type:
+      - string
+      - 'null'
+      example: N
+      enum:
+      - N
+      - C
+    createdAt:
+      type: string
+      description: Date and time the resource was created
+      example: '2020-01-01T12:15:00.000Z'
+    ElectronicAccountingRecordStatus:
+      type: string
+      example: accepted
+      enum:
+      - received
+      - accepted
+      - rejected
+    File:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: File IRI reference
+          example: /files/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          description: JSON-LD resource type
+          default: File
+          example: File
+        id:
+          type: string
+          format: uuid
+          description: Unique file ID
+          example: 91106968-1abd-4d64-85c1-4e73d96fb997
+        type:
+          type: string
+          description: File category, such as an invoice CFDI XML or PDF
+          example: invoice.cfdi.xml
+        resource:
+          type: string
+          description: IRI of the resource that produced or owns the file
+          example: /invoices/7c45e9c6-8f7f-4d0e-b6e5-65fef6c8c2f9
+        mimeType:
+          type: string
+          description: Media type of the file content
+          example: text/xml
+        extension:
+          type: string
+          description: File extension for the stored content
+          example: xml
+        size:
+          type: integer
+          description: File size in bytes
+          example: 40544
+        filename:
+          type: string
+          description: Suggested filename for the file content
+          example: 6f3c5312-2849-4525-86f6-c48a54c64c60.xml
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
+    ElectronicAccountingRecordCode:
+      type: string
+      example: '0002220300000000124236'
     ElectronicAccountingRecordFilename:
       type: string
       example: PEIC211118IS0202203BN.zip
+    updatedAt:
+      type: string
+      description: Date and time the resource was last updated
+      example: '2020-01-01T12:15:00.000Z'
     ElectronicAccountingRecordID:
       type: string
       format: uuid
       description: Electronic Accounting Record ID
       example: 91106968-1abd-4d64-85c1-4e73d96fb997
-    ElectronicAccountingRecordReceivedAt:
-      type: string
-      format: date-time
+    ElectronicAccountingRecordMonth:
+      type: integer
+      example: 3
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+    CollectionLimit:
+      type: integer
+      default: 20
+      minimum: 1
+      maximum: 1000
+    TaxpayerElectronicAccountingRecordCollection:
+      allOf:
+      - $ref: '#/components/schemas/CursorCollection'
+      - type: object
+        properties:
+          '@context':
+            default: /contexts/ElectronicAccountingRecord
+          '@id':
+            default: /entities/{entityId}/electronic-accounting-records
+            example: /entities/91106968-1abd-4d64-85c1-4e73d96fb997/electronic-accounting-records
+          hydra:member:
+            items:
+              $ref: '#/components/schemas/ElectronicAccountingRecord'
+    ElectronicAccountingRecordFiles:
+      type: array
+      description: 'Electronic accounting record files: (ack receipt, ack processing, XML and digital stamp)'
+      items:
+        $ref: '#/components/schemas/File'
+    ElectronicAccountingRecord:
+      type: object
+      properties:
+        '@id':
+          type: string
+          format: iri-reference
+          description: Electronic Accounting Record IRI reference
+          example: /electronic-accounting-records/91106968-1abd-4d64-85c1-4e73d96fb997
+        '@type':
+          type: string
+          default: ElectronicAccountingRecord
+        id:
+          $ref: '#/components/schemas/ElectronicAccountingRecordID'
+        year:
+          $ref: '#/components/schemas/ElectronicAccountingRecordYear'
+        month:
+          $ref: '#/components/schemas/ElectronicAccountingRecordMonth'
+        type:
+          $ref: '#/components/schemas/ElectronicAccountingRecordType'
+        reason:
+          $ref: '#/components/schemas/ElectronicAccountingRecordReason'
+        fileType:
+          $ref: '#/components/schemas/ElectronicAccountingRecordXmlFileType'
+        filename:
+          $ref: '#/components/schemas/ElectronicAccountingRecordFilename'
+        code:
+          $ref: '#/components/schemas/ElectronicAccountingRecordCode'
+        receivedAt:
+          $ref: '#/components/schemas/ElectronicAccountingRecordReceivedAt'
+        status:
+          $ref: '#/components/schemas/ElectronicAccountingRecordStatus'
+        files:
+          $ref: '#/components/schemas/ElectronicAccountingRecordFiles'
+        createdAt:
+          $ref: '#/components/schemas/createdAt'
+        updatedAt:
+          $ref: '#/components/schemas/updatedAt'
   responses:
     TaxpayerElectronicAccountingRecordCollection:
       description: Electronic accounting record collection response
@@ -381,6 +381,15 @@ components:
         application/ld+json:
           schema:
             $ref: '#/components/schemas/TaxpayerElectronicAccountingRecordCollection'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     ElectronicAccountingRecord:
       description: Electronic Accounting Record resource response
       content:
@@ -393,15 +402,6 @@ components:
                   type: string
                   default: /contexts/ElectronicAccountingRecord
             - $ref: '#/components/schemas/ElectronicAccountingRecord'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
     Unauthorized:
       description: Unauthorized
       content:
@@ -412,22 +412,6 @@ components:
               message:
                 type: string
   parameters:
-    entityId:
-      name: entityId
-      in: path
-      required: true
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      schema:
-        type: string
-        format: uuid
-    collectionCursorNextPageParam:
-      name: id[lt]
-      in: query
-      required: false
-      example: 91106968-1abd-4d64-85c1-4e73d96fb997
-      description: Collection cursor pointer to the next page
-      schema:
-        type: string
     collectionLimit:
       name: itemsPerPage
       in: query
@@ -443,6 +427,22 @@ components:
       description: Collection cursor pointer to the previous page
       schema:
         type: string
+    collectionCursorNextPageParam:
+      name: id[lt]
+      in: query
+      required: false
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      description: Collection cursor pointer to the next page
+      schema:
+        type: string
+    entityId:
+      name: entityId
+      in: path
+      required: true
+      example: 91106968-1abd-4d64-85c1-4e73d96fb997
+      schema:
+        type: string
+        format: uuid
     resourceId:
       name: id
       in: path

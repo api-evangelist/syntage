@@ -91,8 +91,8 @@ components:
       description: RFC (Registro Federal de Contribuyentes)
       example: PEIC211118IS0
   responses:
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -100,8 +100,8 @@ components:
             properties:
               message:
                 type: string
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
